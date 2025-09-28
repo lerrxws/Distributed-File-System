@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package lock;
+
+option go_package = "proto-gen/lock;lock";
+
+service Lock {
+    rpc Acquire (AcquireRequest) returns (AcquireReply);
+    rpc Release (ReleaseRequest) returns (ReleaseReply);
+    rpc Stop (StopRequest) returns (StopReply);
+}
+
+message AcquireRequest {
+    string lockId = 1;
+}
+
+message AcquireReply {
+    bool result = 1;
+}
+
+message ReleaseRequest {
+    string lockId = 1;
+}
+
+message ReleaseReply {
+    bool result = 1;
+}
+
+message StopRequest {}
+
+message StopReply {
+    bool result = 1;
+}
+
