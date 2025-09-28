@@ -1,0 +1,29 @@
+go mod init NAME
+
+go get google.golang.org/grpc
+
+go get google.golang.org/protobuf
+
+
+$env:Path += ";C:\Users\lerrxwsb\go\bin"   
+-- set path to protoc.exe
+
+protoc -I api/proto --go_out=pkg/api --go_opt=paths=source_relative --go-grpc_out=pkg/api --go-grpc_opt=paths=source_relative api/proto/adder.proto
+-- protoc - compiler
+-- -I = include path
+-- --go_out=pkg/api - destination dir for generated .pb.go files
+-- --go-grpc_out - generate grpc files (.pb.grpc.go)
+-- --go-grpc_opt=paths=source_relative
+    Аналогічно: зберігає структуру директорій відносно api/proto/.
+    Тобто api/proto/adder.proto → pkg/api/adder_grpc.pb.go.
+-- api/proto/adder.proto - file to compile/work with
+
+go build -v .\cmd\server\
+
+
+-------------------------------- evas ------------------------------------------------------------
+
+$env:Path += ";C:\Users\lerrxwsb\evans_windows_amd64"
+C:\Users\lerrxwsb\protoc-32.1-win64\bin
+
+evans api/protoadder.proto -p 8080

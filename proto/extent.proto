@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package extent;
+
+option go_package = "proto-gen/extent;extent";
+
+service Extent {
+    rpc Get (GetRequest) returns (GetReply);
+    rpc Put (PutRequest) returns (PutReply);
+    rpc Stop (StopRequest) returns (StopReply);
+}
+
+message GetRequest {
+    string fileName = 1;
+}
+
+message GetReply {
+    bytes data = 1;
+}
+
+message PutRequest {
+    string fileName = 1;
+    bytes data = 2;
+}
+
+message PutReply {
+    bool result = 1;
+}
+
+message StopRequest {}
+
+message StopReply {
+    bool result = 1;
+}
