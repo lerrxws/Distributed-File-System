@@ -7,7 +7,6 @@ import (
 	api "dfs/proto-gen/lock"
 
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // GRPCServer
@@ -17,7 +16,7 @@ type LockServer struct {
     locked []string
 	grpc  *grpc.Server
 
-	api.UnimplementedLockServer
+	api.UnimplementedLockServiceServer
 }
 
 func NewLockServer(grpcServer *grpc.Server) *LockServer {
@@ -30,7 +29,7 @@ func NewLockServer(grpcServer *grpc.Server) *LockServer {
 }
 
 
-func (s* LockServer) Acquire(ctx context.Context, req *api.AcquireRequest) (* api.AcquireReply, error) {
+func (s* LockServer) Acquire(ctx context.Context, req *api.AcquireRequest) (* api.AcquireResponse, error) {
 	s.mu.Lock() // block server so there won`t be 2 person trying to get 1 file
     defer s.mu.Unlock() // auto unlock when function ends
 
@@ -42,15 +41,15 @@ func (s* LockServer) Acquire(ctx context.Context, req *api.AcquireRequest) (* ap
 	}
 
 	s.locked = append(s.locked, req.LockId)
-	return &api.AcquireReply{Result: wrapperspb.Bool(true)}, nil
+	return &api.AcquireResponse{Success: true}, nil
 }
 
-func (s *LockServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api.ReleaseReply, error) {
+func (s *LockServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api.ReleaseResponse, error) {
     s.mu.Lock()
     defer s.mu.Unlock()
 
 	if !slices.Contains(s.locked, req.LockId) {
-		return &api.ReleaseReply{Result: wrapperspb.Bool(false)}, nil
+		return &api.ReleaseResponse{}, nil
 	}
 
     for i, v := range s.locked {
@@ -61,13 +60,13 @@ func (s *LockServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api
         }
     }
 
-    return &api.ReleaseReply{Result: wrapperspb.Bool(true)}, nil
+    return &api.ReleaseResponse{}, nil
 }
 
-func (s *LockServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopReply, error) {
+func (s *LockServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
     go func() {
         // shut down server in a goroutine so we can return the response first
         s.grpc.GracefulStop()
     }()
-    return &api.StopReply{Result: wrapperspb.Bool(true)}, nil
+    return &api.StopResponse{}, nil
 }

@@ -11,7 +11,6 @@ import (
 	"strings"
 
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 
@@ -19,7 +18,7 @@ type ExtentServer struct {
 	rootpath string
 	grpc  *grpc.Server
 
-	api.UnimplementedExtentServer
+	api.UnimplementedExtentServiceServer
 }
 
 func NewExtentServer(rootpath string, grpcServer *grpc.Server) *ExtentServer {
@@ -31,13 +30,13 @@ func NewExtentServer(rootpath string, grpcServer *grpc.Server) *ExtentServer {
 	return s
 }
 
-func (s *ExtentServer) Get(ctx context.Context, req *api.GetRequest) (* api.GetReply, error){
+func (s *ExtentServer) Get(ctx context.Context, req *api.GetRequest) (* api.GetResponse, error){
 	fullPath := s.rootpath + req.FileName
 
 	if strings.HasSuffix(fullPath, "/") {
 		files, err := os.ReadDir(fullPath)
 		if err != nil {
-			return &api.GetReply{Data: nil}, nil
+			return &api.GetResponse{FileData: nil}, nil
 		}
 
 		var fileNames []string
@@ -52,19 +51,19 @@ func (s *ExtentServer) Get(ctx context.Context, req *api.GetRequest) (* api.GetR
 
 		data := []byte(strings.Join(fileNames, "\n"))
 
-		return &api.GetReply{Data: data}, nil
+		return &api.GetResponse{FileData: data}, nil
 	}
 
 	data, err := os.ReadFile(fullPath)
 	if err != nil {
-		return &api.GetReply{Data: nil}, nil
+		return &api.GetResponse{FileData: nil}, nil
 	}
 
-	return &api.GetReply{Data: data}, nil
+	return &api.GetResponse{FileData: data}, nil
 
 }
 
-func (s *ExtentServer) Put(ctx context.Context, req *api.PutRequest) (* api.PutReply, error) {
+func (s *ExtentServer) Put(ctx context.Context, req *api.PutRequest) (* api.PutResponse, error) {
 	fullPath := s.rootpath + req.FileName
 
 	// check wether it is directory
@@ -75,61 +74,61 @@ func (s *ExtentServer) Put(ctx context.Context, req *api.PutRequest) (* api.PutR
 		// }
 
 		// if no data -> delete
-		if req.Data == nil {
+		if req.FileData == nil {
 
 			// check if directory is empty
 			if len(files) != 0 {
 				fmt.Println("have files")
-				return &api.PutReply{Result: wrapperspb.Bool(false)}, nil
+				return &api.PutResponse{Success: false}, nil
 			}
 
 			err := os.Remove(fullPath)
 			if err != nil {
-				return &api.PutReply{Result: wrapperspb.Bool(false)}, nil
+				return &api.PutResponse{Success: false}, nil
 			}
 
-			return &api.PutReply{Result: wrapperspb.Bool(true)}, nil
+			return &api.PutResponse{Success: true}, nil
 		}
 
 		// create new directory
 		err := os.MkdirAll(fullPath, 0755) // mkdir -> fails if parents of dir don`t exist so we use mkdirall that creates parents also 
 		if err != nil {
-			return &api.PutReply{Result: wrapperspb.Bool(false)}, err
+			return &api.PutResponse{Success: false}, err
 		}
-		return &api.PutReply{Result: wrapperspb.Bool(true)}, nil
+		return &api.PutResponse{Success: true}, nil
 	}
 
 	// if type is file
 	// if no data -> remove
-	if req.Data == nil {
+	if req.FileData == nil {
 		_, err := os.ReadFile(fullPath)
 		if err != nil {
-			return &api.PutReply{Result: wrapperspb.Bool(false)}, nil
+			return &api.PutResponse{Success: false}, nil
 		}
 
 		err = os.Remove(fullPath)
 		if err != nil {
-			return &api.PutReply{Result: wrapperspb.Bool(false)}, nil
+			return &api.PutResponse{Success: false}, nil
 		}
 
-		return &api.PutReply{Result: wrapperspb.Bool(true)}, nil
+		return &api.PutResponse{Success: false}, nil
 	}
 
 	// create new file
-	err := os.WriteFile(fullPath, req.Data, 0644)
+	err := os.WriteFile(fullPath, req.FileData, 0644)
     if err != nil {
-        return &api.PutReply{Result: wrapperspb.Bool(false)}, err
+        return &api.PutResponse{Success: false}, nil
     }
 
-	return &api.PutReply{Result: wrapperspb.Bool(true)}, err
+	return &api.PutResponse{Success: true}, nil
 
 }
 
 
-func (s *ExtentServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopReply, error) {
+func (s *ExtentServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
 	go func() {
         // shut down server in a goroutine so we can return the response first
         s.grpc.GracefulStop()
     }()
-    return &api.StopReply{Result: wrapperspb.Bool(true)}, nil
+    return &api.StopResponse{}, nil
 }

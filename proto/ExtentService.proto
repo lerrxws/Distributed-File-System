@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package dfs.extent;
+
+service ExtentService {
+  rpc stop(StopRequest) returns (StopResponse);
+  rpc get(GetRequest) returns (GetResponse);
+  rpc put(PutRequest) returns (PutResponse);
+}
+
+message StopRequest {
+}
+
+message StopResponse {
+}
+
+message GetRequest {
+  string fileName = 1;
+}
+
+message GetResponse {
+  optional bytes fileData = 1;
+}
+
+message PutRequest {
+  string fileName = 1;
+  optional bytes fileData = 2;
+}
+
+message PutResponse {
+  bool success = 1;
+}

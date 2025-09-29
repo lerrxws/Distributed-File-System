@@ -24,6 +24,9 @@ go build -v .\cmd\server\
 -------------------------------- evas ------------------------------------------------------------
 
 $env:Path += ";C:\Users\lerrxwsb\evans_windows_amd64"
-C:\Users\lerrxwsb\protoc-32.1-win64\bin
+$env:Path += ";C:\Users\lerrxwsb\protoc-32.1-win64\bin"
 
 evans api/protoadder.proto -p 8080
+
+protoc --go_out=proto-gen/lock --go-grpc_out=proto-gen/lock --go_opt=Mproto/LockService.proto=. --go-grpc_opt=Mproto/LockService.proto=. proto/LockService.proto     
+ -- with package name

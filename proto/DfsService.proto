@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package dfs.dfs;
+
+service DfsService {
+  rpc stop(StopRequest) returns (StopResponse);
+  rpc dir(DirRequest) returns (DirResponse);
+  rpc mkdir(MkdirRequest) returns (MkdirResponse);
+  rpc rmdir(RmdirRequest) returns (RmdirResponse);
+  rpc get(GetRequest) returns (GetResponse);
+  rpc put(PutRequest) returns (PutResponse);
+  rpc delete(DeleteRequest) returns (DeleteResponse);
+}
+
+message StopRequest {
+}
+
+message StopResponse {
+}
+
+message DirRequest {
+  string directoryName = 1;
+}
+
+message DirResponse {
+  bool success = 1;
+  repeated string dirList = 2;
+}
+
+message MkdirRequest {
+  string directoryName = 1;
+}
+
+message MkdirResponse {
+  bool success = 1;
+}
+
+message RmdirRequest {
+  string directoryName = 1;
+}
+
+message RmdirResponse {
+  bool success = 1;
+}
+
+message GetRequest {
+  string fileName = 1;
+}
+
+message GetResponse {
+  optional bytes fileData = 1;
+}
+
+message PutRequest {
+  string fileName = 1;
+  optional bytes fileData = 2;
+}
+
+message PutResponse {
+  bool success = 1;
+}
+
+message DeleteRequest {
+  string fileName = 1;
+}
+
+message DeleteResponse {
+  bool success = 1;
+}

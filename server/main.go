@@ -21,7 +21,7 @@ func main() {
 	// srv := extent.NewExtentServer("C:/Users/lerrxwsb/Desktop/tuke/DS/dfs/", s)
 
 
-	api.RegisterLockServer(s, srv)
+	api.RegisterLockServiceServer(s, srv)
 	// api.RegisterExtentServer(s, srv)
 	lis, err := net.Listen("tcp", ":8080")
     if err != nil {

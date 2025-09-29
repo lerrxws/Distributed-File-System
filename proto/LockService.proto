@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package dfs.lock;
+
+service LockService {
+  rpc stop(StopRequest) returns (StopResponse);
+  rpc acquire(AcquireRequest) returns (AcquireResponse);
+  rpc release(ReleaseRequest) returns (ReleaseResponse);
+}
+
+message StopRequest {
+}
+
+message StopResponse {
+}
+
+message AcquireRequest {
+  string lockId = 1;
+  string ownerId = 2;
+  int64 sequence = 3;
+}
+
+message AcquireResponse {
+  bool success = 1;
+}
+
+message ReleaseRequest {
+  string lockId = 1;
+  string ownerId = 2;
+}
+
+message ReleaseResponse {
+}
