@@ -9,6 +9,7 @@ package lock
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -67,7 +68,7 @@ func (x *AcquireRequest) GetLockId() string {
 
 type AcquireReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        bool                   `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Result        *wrapperspb.BoolValue  `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -102,11 +103,11 @@ func (*AcquireReply) Descriptor() ([]byte, []int) {
 	return file_proto_lock_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AcquireReply) GetResult() bool {
+func (x *AcquireReply) GetResult() *wrapperspb.BoolValue {
 	if x != nil {
 		return x.Result
 	}
-	return false
+	return nil
 }
 
 type ReleaseRequest struct {
@@ -155,7 +156,7 @@ func (x *ReleaseRequest) GetLockId() string {
 
 type ReleaseReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        bool                   `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Result        *wrapperspb.BoolValue  `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -190,11 +191,11 @@ func (*ReleaseReply) Descriptor() ([]byte, []int) {
 	return file_proto_lock_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ReleaseReply) GetResult() bool {
+func (x *ReleaseReply) GetResult() *wrapperspb.BoolValue {
 	if x != nil {
 		return x.Result
 	}
-	return false
+	return nil
 }
 
 type StopRequest struct {
@@ -235,7 +236,7 @@ func (*StopRequest) Descriptor() ([]byte, []int) {
 
 type StopReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        bool                   `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Result        *wrapperspb.BoolValue  `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -270,29 +271,29 @@ func (*StopReply) Descriptor() ([]byte, []int) {
 	return file_proto_lock_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *StopReply) GetResult() bool {
+func (x *StopReply) GetResult() *wrapperspb.BoolValue {
 	if x != nil {
 		return x.Result
 	}
-	return false
+	return nil
 }
 
 var File_proto_lock_proto protoreflect.FileDescriptor
 
 const file_proto_lock_proto_rawDesc = "" +
 	"\n" +
-	"\x10proto/lock.proto\x12\x04lock\"(\n" +
+	"\x10proto/lock.proto\x12\x04lock\x1a\x1egoogle/protobuf/wrappers.proto\"(\n" +
 	"\x0eAcquireRequest\x12\x16\n" +
-	"\x06lockId\x18\x01 \x01(\tR\x06lockId\"&\n" +
-	"\fAcquireReply\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\bR\x06result\"(\n" +
+	"\x06lockId\x18\x01 \x01(\tR\x06lockId\"B\n" +
+	"\fAcquireReply\x122\n" +
+	"\x06result\x18\x01 \x01(\v2\x1a.google.protobuf.BoolValueR\x06result\"(\n" +
 	"\x0eReleaseRequest\x12\x16\n" +
-	"\x06lockId\x18\x01 \x01(\tR\x06lockId\"&\n" +
-	"\fReleaseReply\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\bR\x06result\"\r\n" +
-	"\vStopRequest\"#\n" +
-	"\tStopReply\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\bR\x06result2\x9c\x01\n" +
+	"\x06lockId\x18\x01 \x01(\tR\x06lockId\"B\n" +
+	"\fReleaseReply\x122\n" +
+	"\x06result\x18\x01 \x01(\v2\x1a.google.protobuf.BoolValueR\x06result\"\r\n" +
+	"\vStopRequest\"?\n" +
+	"\tStopReply\x122\n" +
+	"\x06result\x18\x01 \x01(\v2\x1a.google.protobuf.BoolValueR\x06result2\x9c\x01\n" +
 	"\x04Lock\x123\n" +
 	"\aAcquire\x12\x14.lock.AcquireRequest\x1a\x12.lock.AcquireReply\x123\n" +
 	"\aRelease\x12\x14.lock.ReleaseRequest\x1a\x12.lock.ReleaseReply\x12*\n" +
@@ -312,25 +313,29 @@ func file_proto_lock_proto_rawDescGZIP() []byte {
 
 var file_proto_lock_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_lock_proto_goTypes = []any{
-	(*AcquireRequest)(nil), // 0: lock.AcquireRequest
-	(*AcquireReply)(nil),   // 1: lock.AcquireReply
-	(*ReleaseRequest)(nil), // 2: lock.ReleaseRequest
-	(*ReleaseReply)(nil),   // 3: lock.ReleaseReply
-	(*StopRequest)(nil),    // 4: lock.StopRequest
-	(*StopReply)(nil),      // 5: lock.StopReply
+	(*AcquireRequest)(nil),       // 0: lock.AcquireRequest
+	(*AcquireReply)(nil),         // 1: lock.AcquireReply
+	(*ReleaseRequest)(nil),       // 2: lock.ReleaseRequest
+	(*ReleaseReply)(nil),         // 3: lock.ReleaseReply
+	(*StopRequest)(nil),          // 4: lock.StopRequest
+	(*StopReply)(nil),            // 5: lock.StopReply
+	(*wrapperspb.BoolValue)(nil), // 6: google.protobuf.BoolValue
 }
 var file_proto_lock_proto_depIdxs = []int32{
-	0, // 0: lock.Lock.Acquire:input_type -> lock.AcquireRequest
-	2, // 1: lock.Lock.Release:input_type -> lock.ReleaseRequest
-	4, // 2: lock.Lock.Stop:input_type -> lock.StopRequest
-	1, // 3: lock.Lock.Acquire:output_type -> lock.AcquireReply
-	3, // 4: lock.Lock.Release:output_type -> lock.ReleaseReply
-	5, // 5: lock.Lock.Stop:output_type -> lock.StopReply
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	6, // 0: lock.AcquireReply.result:type_name -> google.protobuf.BoolValue
+	6, // 1: lock.ReleaseReply.result:type_name -> google.protobuf.BoolValue
+	6, // 2: lock.StopReply.result:type_name -> google.protobuf.BoolValue
+	0, // 3: lock.Lock.Acquire:input_type -> lock.AcquireRequest
+	2, // 4: lock.Lock.Release:input_type -> lock.ReleaseRequest
+	4, // 5: lock.Lock.Stop:input_type -> lock.StopRequest
+	1, // 6: lock.Lock.Acquire:output_type -> lock.AcquireReply
+	3, // 7: lock.Lock.Release:output_type -> lock.ReleaseReply
+	5, // 8: lock.Lock.Stop:output_type -> lock.StopReply
+	6, // [6:9] is the sub-list for method output_type
+	3, // [3:6] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_proto_lock_proto_init() }

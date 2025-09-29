@@ -7,6 +7,7 @@ import (
 	api "dfs/proto-gen/lock"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // GRPCServer
@@ -41,7 +42,7 @@ func (s* LockServer) Acquire(ctx context.Context, req *api.AcquireRequest) (* ap
 	}
 
 	s.locked = append(s.locked, req.LockId)
-	return &api.AcquireReply{Result: true}, nil
+	return &api.AcquireReply{Result: wrapperspb.Bool(true)}, nil
 }
 
 func (s *LockServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api.ReleaseReply, error) {
@@ -58,7 +59,7 @@ func (s *LockServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api
         }
     }
 
-    return &api.ReleaseReply{Result: true}, nil
+    return &api.ReleaseReply{Result: wrapperspb.Bool(true)}, nil
 }
 
 func (s *LockServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopReply, error) {
@@ -66,5 +67,5 @@ func (s *LockServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopR
         // shut down server in a goroutine so we can return the response first
         s.grpc.GracefulStop()
     }()
-    return &api.StopReply{Result: true}, nil
+    return &api.StopReply{Result: wrapperspb.Bool(true)}, nil
 }

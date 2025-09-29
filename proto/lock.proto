@@ -4,6 +4,8 @@ package lock;
 
 option go_package = "proto-gen/lock;lock";
 
+import "google/protobuf/wrappers.proto";
+
 service Lock {
     rpc Acquire (AcquireRequest) returns (AcquireReply);
     rpc Release (ReleaseRequest) returns (ReleaseReply);
@@ -15,7 +17,7 @@ message AcquireRequest {
 }
 
 message AcquireReply {
-    bool result = 1;
+    google.protobuf.BoolValue  result = 1;
 }
 
 message ReleaseRequest {
@@ -23,12 +25,12 @@ message ReleaseRequest {
 }
 
 message ReleaseReply {
-    bool result = 1;
+    google.protobuf.BoolValue  result = 1;
 }
 
 message StopRequest {}
 
 message StopReply {
-    bool result = 1;
+    google.protobuf.BoolValue  result = 1;
 }
 

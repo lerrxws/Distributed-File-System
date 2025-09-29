@@ -9,6 +9,7 @@ package extent
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -163,7 +164,7 @@ func (x *PutRequest) GetData() []byte {
 
 type PutReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        bool                   `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Result        *wrapperspb.BoolValue  `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -198,11 +199,11 @@ func (*PutReply) Descriptor() ([]byte, []int) {
 	return file_proto_extent_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *PutReply) GetResult() bool {
+func (x *PutReply) GetResult() *wrapperspb.BoolValue {
 	if x != nil {
 		return x.Result
 	}
-	return false
+	return nil
 }
 
 type StopRequest struct {
@@ -243,7 +244,7 @@ func (*StopRequest) Descriptor() ([]byte, []int) {
 
 type StopReply struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Result        bool                   `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
+	Result        *wrapperspb.BoolValue  `protobuf:"bytes,1,opt,name=result,proto3" json:"result,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -278,18 +279,18 @@ func (*StopReply) Descriptor() ([]byte, []int) {
 	return file_proto_extent_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *StopReply) GetResult() bool {
+func (x *StopReply) GetResult() *wrapperspb.BoolValue {
 	if x != nil {
 		return x.Result
 	}
-	return false
+	return nil
 }
 
 var File_proto_extent_proto protoreflect.FileDescriptor
 
 const file_proto_extent_proto_rawDesc = "" +
 	"\n" +
-	"\x12proto/extent.proto\x12\x06extent\"(\n" +
+	"\x12proto/extent.proto\x12\x06extent\x1a\x1egoogle/protobuf/wrappers.proto\"(\n" +
 	"\n" +
 	"GetRequest\x12\x1a\n" +
 	"\bfileName\x18\x01 \x01(\tR\bfileName\"\x1e\n" +
@@ -298,12 +299,12 @@ const file_proto_extent_proto_rawDesc = "" +
 	"\n" +
 	"PutRequest\x12\x1a\n" +
 	"\bfileName\x18\x01 \x01(\tR\bfileName\x12\x12\n" +
-	"\x04data\x18\x02 \x01(\fR\x04data\"\"\n" +
-	"\bPutReply\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\bR\x06result\"\r\n" +
-	"\vStopRequest\"#\n" +
-	"\tStopReply\x12\x16\n" +
-	"\x06result\x18\x01 \x01(\bR\x06result2\x92\x01\n" +
+	"\x04data\x18\x02 \x01(\fR\x04data\">\n" +
+	"\bPutReply\x122\n" +
+	"\x06result\x18\x01 \x01(\v2\x1a.google.protobuf.BoolValueR\x06result\"\r\n" +
+	"\vStopRequest\"?\n" +
+	"\tStopReply\x122\n" +
+	"\x06result\x18\x01 \x01(\v2\x1a.google.protobuf.BoolValueR\x06result2\x92\x01\n" +
 	"\x06Extent\x12+\n" +
 	"\x03Get\x12\x12.extent.GetRequest\x1a\x10.extent.GetReply\x12+\n" +
 	"\x03Put\x12\x12.extent.PutRequest\x1a\x10.extent.PutReply\x12.\n" +
@@ -323,25 +324,28 @@ func file_proto_extent_proto_rawDescGZIP() []byte {
 
 var file_proto_extent_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_proto_extent_proto_goTypes = []any{
-	(*GetRequest)(nil),  // 0: extent.GetRequest
-	(*GetReply)(nil),    // 1: extent.GetReply
-	(*PutRequest)(nil),  // 2: extent.PutRequest
-	(*PutReply)(nil),    // 3: extent.PutReply
-	(*StopRequest)(nil), // 4: extent.StopRequest
-	(*StopReply)(nil),   // 5: extent.StopReply
+	(*GetRequest)(nil),           // 0: extent.GetRequest
+	(*GetReply)(nil),             // 1: extent.GetReply
+	(*PutRequest)(nil),           // 2: extent.PutRequest
+	(*PutReply)(nil),             // 3: extent.PutReply
+	(*StopRequest)(nil),          // 4: extent.StopRequest
+	(*StopReply)(nil),            // 5: extent.StopReply
+	(*wrapperspb.BoolValue)(nil), // 6: google.protobuf.BoolValue
 }
 var file_proto_extent_proto_depIdxs = []int32{
-	0, // 0: extent.Extent.Get:input_type -> extent.GetRequest
-	2, // 1: extent.Extent.Put:input_type -> extent.PutRequest
-	4, // 2: extent.Extent.Stop:input_type -> extent.StopRequest
-	1, // 3: extent.Extent.Get:output_type -> extent.GetReply
-	3, // 4: extent.Extent.Put:output_type -> extent.PutReply
-	5, // 5: extent.Extent.Stop:output_type -> extent.StopReply
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	6, // 0: extent.PutReply.result:type_name -> google.protobuf.BoolValue
+	6, // 1: extent.StopReply.result:type_name -> google.protobuf.BoolValue
+	0, // 2: extent.Extent.Get:input_type -> extent.GetRequest
+	2, // 3: extent.Extent.Put:input_type -> extent.PutRequest
+	4, // 4: extent.Extent.Stop:input_type -> extent.StopRequest
+	1, // 5: extent.Extent.Get:output_type -> extent.GetReply
+	3, // 6: extent.Extent.Put:output_type -> extent.PutReply
+	5, // 7: extent.Extent.Stop:output_type -> extent.StopReply
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_proto_extent_proto_init() }
