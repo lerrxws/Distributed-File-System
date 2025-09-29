@@ -49,12 +49,14 @@ func (s *LockServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api
     s.mu.Lock()
     defer s.mu.Unlock()
 
-    // шукаємо і видаляємо елемент зі слайсу
+	if !slices.Contains(s.locked, req.LockId) {
+		return &api.ReleaseReply{Result: wrapperspb.Bool(false)}, nil
+	}
+
     for i, v := range s.locked {
         if v == req.LockId {
-            // видаляємо req.LockId зі списку locked
             s.locked = append(s.locked[:i], s.locked[i+1:]...)
-            s.cond.Broadcast() // будимо клієнтів, які чекали
+            s.cond.Broadcast()
             break
         }
     }
