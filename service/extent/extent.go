@@ -14,15 +14,15 @@ import (
 )
 
 
-type ExtentServer struct {
+type ExtentServiceServer struct {
 	rootpath string
 	grpc  *grpc.Server
 
 	api.UnimplementedExtentServiceServer
 }
 
-func NewExtentServer(rootpath string, grpcServer *grpc.Server) *ExtentServer {
-    s := &ExtentServer{
+func NewExtentServiceServer(rootpath string, grpcServer *grpc.Server) *ExtentServiceServer {
+    s := &ExtentServiceServer{
         rootpath: rootpath,
         grpc:     grpcServer,
     }
@@ -30,7 +30,7 @@ func NewExtentServer(rootpath string, grpcServer *grpc.Server) *ExtentServer {
 	return s
 }
 
-func (s *ExtentServer) Get(ctx context.Context, req *api.GetRequest) (* api.GetResponse, error){
+func (s *ExtentServer) get(ctx context.Context, req *api.GetRequest) (* api.GetResponse, error){
 	fullPath := s.rootpath + req.FileName
 
 	if strings.HasSuffix(fullPath, "/") {
@@ -63,7 +63,7 @@ func (s *ExtentServer) Get(ctx context.Context, req *api.GetRequest) (* api.GetR
 
 }
 
-func (s *ExtentServer) Put(ctx context.Context, req *api.PutRequest) (* api.PutResponse, error) {
+func (s *ExtentServer) put(ctx context.Context, req *api.PutRequest) (* api.PutResponse, error) {
 	fullPath := s.rootpath + req.FileName
 
 	// check wether it is directory
@@ -78,7 +78,6 @@ func (s *ExtentServer) Put(ctx context.Context, req *api.PutRequest) (* api.PutR
 
 			// check if directory is empty
 			if len(files) != 0 {
-				fmt.Println("have files")
 				return &api.PutResponse{Success: false}, nil
 			}
 
@@ -125,7 +124,7 @@ func (s *ExtentServer) Put(ctx context.Context, req *api.PutRequest) (* api.PutR
 }
 
 
-func (s *ExtentServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
+func (s *ExtentServer) stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
 	go func() {
         // shut down server in a goroutine so we can return the response first
         s.grpc.GracefulStop()
