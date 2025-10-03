@@ -30,3 +30,6 @@ evans api/protoadder.proto -p 8080
 
 protoc --go_out=proto-gen/lock --go-grpc_out=proto-gen/lock --go_opt=Mproto/LockService.proto=. --go-grpc_opt=Mproto/LockService.proto=. proto/LockService.proto     
  -- with package name
+
+
+

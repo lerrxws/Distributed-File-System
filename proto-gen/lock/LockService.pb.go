@@ -155,7 +155,7 @@ func (x *AcquireRequest) GetSequence() int64 {
 
 type AcquireResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success       *bool                  `protobuf:"varint,1,opt,name=success,proto3,oneof" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -191,8 +191,8 @@ func (*AcquireResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *AcquireResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -295,9 +295,11 @@ const file_proto_LockService_proto_rawDesc = "" +
 	"\x0eAcquireRequest\x12\x16\n" +
 	"\x06lockId\x18\x01 \x01(\tR\x06lockId\x12\x18\n" +
 	"\aownerId\x18\x02 \x01(\tR\aownerId\x12\x1a\n" +
-	"\bsequence\x18\x03 \x01(\x03R\bsequence\"+\n" +
-	"\x0fAcquireResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"B\n" +
+	"\bsequence\x18\x03 \x01(\x03R\bsequence\"<\n" +
+	"\x0fAcquireResponse\x12\x1d\n" +
+	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01B\n" +
+	"\n" +
+	"\b_success\"B\n" +
 	"\x0eReleaseRequest\x12\x16\n" +
 	"\x06lockId\x18\x01 \x01(\tR\x06lockId\x12\x18\n" +
 	"\aownerId\x18\x02 \x01(\tR\aownerId\"\x11\n" +
@@ -347,6 +349,7 @@ func file_proto_LockService_proto_init() {
 	if File_proto_LockService_proto != nil {
 		return
 	}
+	file_proto_LockService_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

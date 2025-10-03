@@ -12,6 +12,9 @@ param (
     [string]$arg2
 )
 
+$pidFile = ".\exe-files\extentserver.pid"
+$exePath = ".\exe-files\extentserver.exe"
+
 switch ($command) {
     "start" { 
         if (-not $arg1 -or -not $arg2) {
@@ -25,10 +28,13 @@ switch ($command) {
         $rootDirectory = $arg2
 
         Write-Host "Building Extent Service..."
-        & go build -o extentserver.exe .\servers\extent\extentserver.go
+        & go build -o $exePath .\servers\extent\extentserver.go
 
         Write-Host "Starting Extent Service on port $extentPort"
-        & .\extentserver.exe $extentPort, $rootDirectory
+        $proc = Start-Process $exePath -ArgumentList $extentPort, $rootDirectory -PassThru
+        $pidNum = $proc.Id
+        Set-Content -Path $pidFile -Value $pidNum
+        Write-Host "Started Lock Service with PID $pidNum"
     }
 
     "stop" {
@@ -39,10 +45,12 @@ switch ($command) {
 
         # TODO: write regex check
 
-        $extentAddr = $arg1
-        Write-Host "Stopping Extent Service at $extentAddr"
-
-        grpcurl -plaintext $extentAddr extent.ExtentServiceServer/Stop
+        $pidNum = Get-Content -Path $pidFile
+        
+        Write-Host "Stopping Lock Service with PID $pidNum"
+        Stop-Process -Id $pidNum -Force
+        Remove-Item $pidFile -Force
+        # Remove-Item $exePath -Force
     }
     Default {
         Write-Host "Unknown command. Use start or stop."

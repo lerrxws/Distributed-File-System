@@ -21,7 +21,7 @@ message AcquireRequest {
 }
 
 message AcquireResponse {
-  bool success = 1;
+  optional bool success = 1;
 }
 
 message ReleaseRequest {

@@ -139,7 +139,7 @@ func (x *DirRequest) GetDirectoryName() string {
 
 type DirResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success       *bool                  `protobuf:"varint,1,opt,name=success,proto3,oneof" json:"success,omitempty"`
 	DirList       []string               `protobuf:"bytes,2,rep,name=dirList,proto3" json:"dirList,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -176,8 +176,8 @@ func (*DirResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *DirResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -235,7 +235,7 @@ func (x *MkdirRequest) GetDirectoryName() string {
 
 type MkdirResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success       *bool                  `protobuf:"varint,1,opt,name=success,proto3,oneof" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -271,8 +271,8 @@ func (*MkdirResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *MkdirResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -323,7 +323,7 @@ func (x *RmdirRequest) GetDirectoryName() string {
 
 type RmdirResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success       *bool                  `protobuf:"varint,1,opt,name=success,proto3,oneof" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -359,8 +359,8 @@ func (*RmdirResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *RmdirResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -507,7 +507,7 @@ func (x *PutRequest) GetFileData() []byte {
 
 type PutResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success       *bool                  `protobuf:"varint,1,opt,name=success,proto3,oneof" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -543,8 +543,8 @@ func (*PutResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *PutResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -595,7 +595,7 @@ func (x *DeleteRequest) GetFileName() string {
 
 type DeleteResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success       *bool                  `protobuf:"varint,1,opt,name=success,proto3,oneof" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -631,8 +631,8 @@ func (*DeleteResponse) Descriptor() ([]byte, []int) {
 }
 
 func (x *DeleteResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
+	if x != nil && x.Success != nil {
+		return *x.Success
 	}
 	return false
 }
@@ -646,18 +646,24 @@ const file_proto_DfsService_proto_rawDesc = "" +
 	"\fStopResponse\"2\n" +
 	"\n" +
 	"DirRequest\x12$\n" +
-	"\rdirectoryName\x18\x01 \x01(\tR\rdirectoryName\"A\n" +
-	"\vDirResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\adirList\x18\x02 \x03(\tR\adirList\"4\n" +
+	"\rdirectoryName\x18\x01 \x01(\tR\rdirectoryName\"R\n" +
+	"\vDirResponse\x12\x1d\n" +
+	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01\x12\x18\n" +
+	"\adirList\x18\x02 \x03(\tR\adirListB\n" +
+	"\n" +
+	"\b_success\"4\n" +
 	"\fMkdirRequest\x12$\n" +
-	"\rdirectoryName\x18\x01 \x01(\tR\rdirectoryName\")\n" +
-	"\rMkdirResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"4\n" +
+	"\rdirectoryName\x18\x01 \x01(\tR\rdirectoryName\":\n" +
+	"\rMkdirResponse\x12\x1d\n" +
+	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01B\n" +
+	"\n" +
+	"\b_success\"4\n" +
 	"\fRmdirRequest\x12$\n" +
-	"\rdirectoryName\x18\x01 \x01(\tR\rdirectoryName\")\n" +
-	"\rRmdirResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"(\n" +
+	"\rdirectoryName\x18\x01 \x01(\tR\rdirectoryName\":\n" +
+	"\rRmdirResponse\x12\x1d\n" +
+	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01B\n" +
+	"\n" +
+	"\b_success\"(\n" +
 	"\n" +
 	"GetRequest\x12\x1a\n" +
 	"\bfileName\x18\x01 \x01(\tR\bfileName\";\n" +
@@ -668,13 +674,17 @@ const file_proto_DfsService_proto_rawDesc = "" +
 	"PutRequest\x12\x1a\n" +
 	"\bfileName\x18\x01 \x01(\tR\bfileName\x12\x1f\n" +
 	"\bfileData\x18\x02 \x01(\fH\x00R\bfileData\x88\x01\x01B\v\n" +
-	"\t_fileData\"'\n" +
-	"\vPutResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"+\n" +
+	"\t_fileData\"8\n" +
+	"\vPutResponse\x12\x1d\n" +
+	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01B\n" +
+	"\n" +
+	"\b_success\"+\n" +
 	"\rDeleteRequest\x12\x1a\n" +
-	"\bfileName\x18\x01 \x01(\tR\bfileName\"*\n" +
-	"\x0eDeleteResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2\x82\x03\n" +
+	"\bfileName\x18\x01 \x01(\tR\bfileName\";\n" +
+	"\x0eDeleteResponse\x12\x1d\n" +
+	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01B\n" +
+	"\n" +
+	"\b_success2\x82\x03\n" +
 	"\n" +
 	"DfsService\x123\n" +
 	"\x04stop\x12\x14.dfs.dfs.StopRequest\x1a\x15.dfs.dfs.StopResponse\x120\n" +
@@ -741,8 +751,13 @@ func file_proto_DfsService_proto_init() {
 	if File_proto_DfsService_proto != nil {
 		return
 	}
+	file_proto_DfsService_proto_msgTypes[3].OneofWrappers = []any{}
+	file_proto_DfsService_proto_msgTypes[5].OneofWrappers = []any{}
+	file_proto_DfsService_proto_msgTypes[7].OneofWrappers = []any{}
 	file_proto_DfsService_proto_msgTypes[9].OneofWrappers = []any{}
 	file_proto_DfsService_proto_msgTypes[10].OneofWrappers = []any{}
+	file_proto_DfsService_proto_msgTypes[11].OneofWrappers = []any{}
+	file_proto_DfsService_proto_msgTypes[13].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
