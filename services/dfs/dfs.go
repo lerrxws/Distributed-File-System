@@ -44,7 +44,7 @@ func NewDfsServiceServer(lockAddr, extentAddr string, grpcServer *grpc.Server) (
 
 func acquireLock(ctx context.Context, lockClient lock.LockServiceClient, lockId string) error {
     lockResp, err := lockClient.Acquire(ctx, &lock.AcquireRequest{LockId: lockId, OwnerId: "user", Sequence: 1})
-    if err != nil || !lockResp.Success {
+    if err != nil || !(*lockResp.Success) {
         return fmt.Errorf("failed to acquire lock for %s", lockId)
     }
     return nil
@@ -108,7 +108,7 @@ func (s *DfsServiceServer) Mkdir(ctx context.Context, req *api.MkdirRequest) (*a
 		FileName: req.DirectoryName,
 		FileData: []byte{},
 	})
-	if err != nil || !resp.Success {
+	if err != nil || !(*resp.Success) {
 		return &api.MkdirResponse{Success: false}, fmt.Errorf("unable to create directory %s", req.DirectoryName)
 	}
 
@@ -130,7 +130,7 @@ func (s *DfsServiceServer) Rmdir(ctx context.Context, req *api.RmdirRequest) (*a
 	defer releaseLock(ctx, s.lockClient, req.DirectoryName)
 
 	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{FileName: req.DirectoryName})
-	if err != nil || !resp.Success {
+	if err != nil || !(*resp.Success) {
     	return &api.RmdirResponse{Success: false}, fmt.Errorf("unable to remove directory %s", req.DirectoryName)
 	}
 
@@ -158,7 +158,7 @@ func (s *DfsServiceServer) Put(ctx context.Context, req *api.PutRequest) (*api.P
 	}
 
 	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{FileName: req.FileName, FileData: req.FileData})
-	if err != nil || !resp.Success {
+	if err != nil || !(*resp.Success) {
 		return &api.PutResponse{Success: false}, fmt.Errorf("unable to create a file %s", req.FileName)
 	}
 
@@ -182,7 +182,7 @@ func (s *DfsServiceServer) Get(ctx context.Context, req *api.GetRequest) (*api.G
 
 	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{FileName: req.FileName})
 	if (resp == &extent.GetResponse{}) || err != nil {
-    	return &api.GetResponse{}, fmt.Errorf("unable to process file %s", req.FileName)
+    	return &api.GetResponse{}, fmt.Errorf("here ->unable to process file %s", req.FileName)
 	}
 
 	return &api.GetResponse{FileData: resp.FileData}, nil
@@ -205,8 +205,8 @@ func (s *DfsServiceServer) Delete(ctx context.Context, req *api.DeleteRequest) (
 	defer releaseLock(ctx, s.lockClient, req.FileName)
 
 	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{FileName: req.FileName})
-	if err != nil || !resp.Success {
-		return &api.DeleteResponse{Success: false}, fmt.Errorf("unable to process file %s", req.FileName)
+	if err != nil || !(*resp.Success) {
+		return &api.DeleteResponse{Success: false}, fmt.Errorf("unable to delete file %s", req.FileName)
 	}
 
 	return &api.DeleteResponse{Success: true}, nil

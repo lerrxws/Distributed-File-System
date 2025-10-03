@@ -28,5 +28,5 @@ message PutRequest {
 }
 
 message PutResponse {
-  bool success = 1;
+  optional bool success = 1;
 }

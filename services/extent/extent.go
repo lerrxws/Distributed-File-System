@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/proto"
 )
 
 
@@ -71,23 +72,23 @@ func (s *ExtentServiceServer) Put(ctx context.Context, req *api.PutRequest) (* a
 
 			// check if directory is empty
 			if len(files) != 0 {
-				return &api.PutResponse{Success: false}, nil
+				return &api.PutResponse{Success: proto.Bool(false)}, nil
 			}
 
 			err := os.Remove(fullPath)
 			if err != nil {
-				return &api.PutResponse{Success: false}, nil
+				return &api.PutResponse{Success: proto.Bool(false)}, nil
 			}
 
-			return &api.PutResponse{Success: true}, nil
+			return &api.PutResponse{Success: proto.Bool(true)}, nil
 		}
 
 		// create new directory
 		err := os.MkdirAll(fullPath, 0755) // mkdir -> fails if parents of dir don`t exist so we use mkdirall that creates parents also 
 		if err != nil {
-			return &api.PutResponse{Success: false}, err
+			return &api.PutResponse{Success: proto.Bool(false)}, err
 		}
-		return &api.PutResponse{Success: true}, nil
+		return &api.PutResponse{Success: proto.Bool(true)}, nil
 	}
 
 	// if type is file
@@ -95,24 +96,24 @@ func (s *ExtentServiceServer) Put(ctx context.Context, req *api.PutRequest) (* a
 	if req.FileData == nil {
 		_, err := os.ReadFile(fullPath)
 		if err != nil {
-			return &api.PutResponse{Success: false}, nil
+			return &api.PutResponse{Success: proto.Bool(false)}, nil
 		}
 
 		err = os.Remove(fullPath)
 		if err != nil {
-			return &api.PutResponse{Success: false}, nil
+			return &api.PutResponse{Success: proto.Bool(false)}, nil
 		}
 
-		return &api.PutResponse{Success: false}, nil
+		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
 	// create new file
 	err := os.WriteFile(fullPath, req.FileData, 0644)
     if err != nil {
-        return &api.PutResponse{Success: false}, nil
+        return &api.PutResponse{Success: proto.Bool(false)}, nil
     }
 
-	return &api.PutResponse{Success: true}, nil
+	return &api.PutResponse{Success: proto.Bool(true)}, nil
 
 }
 
