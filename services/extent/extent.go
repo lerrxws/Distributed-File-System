@@ -104,7 +104,7 @@ func (s *ExtentServiceServer) Put(ctx context.Context, req *api.PutRequest) (* a
 			return &api.PutResponse{Success: proto.Bool(false)}, nil
 		}
 
-		return &api.PutResponse{Success: proto.Bool(false)}, nil
+		return &api.PutResponse{Success: proto.Bool(true)}, nil
 	}
 
 	// create new file

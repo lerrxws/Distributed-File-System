@@ -1,17 +1,20 @@
 param (
     # command
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory = $true)]
     [string]$command,
 
     # port / addr
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory = $false)]
     [string]$arg1
 )
 
 if (-not $arg1) {
-    Write-Host "Usage: .\lockservice.ps1 stop <ARG1>"
+    Write-Host "Usage: .\lockservice.ps1 start <PORT> | stop <PORT>"
     exit 1
 }
+
+$pidFile = ".\exe-files\lockserver.pid"
+$exePath = ".\exe-files\lockserver.exe"
 
 switch ($command) {
     "start" {
@@ -19,20 +22,24 @@ switch ($command) {
         $lockPort = $arg1
 
         Write-Host "Building Lock Service..."
-        & go build -o lockserver.exe .\servers\lock\lockserver.go
+        & go build -o $exePath .\servers\lock\lockserver.go
 
         Write-Host "Starting Lock Service on port $lockPort"
-        & .\lockserver.exe $lockPort
+        $proc = Start-Process $exePath -ArgumentList $lockPort -PassThru
+        $pidNum = $proc.Id
+        Set-Content -Path $pidFile -Value $pidNum
+        Write-Host "Started Lock Service with PID $pidNum"
     }
 
     "stop" {
-        # TODO: write regex check - addr:port
+        # TODO: optionally check if port matches
+        $pidNum = Get-Content -Path $pidFile
+        
+        Write-Host "Stopping Lock Service with PID $pidNum"
+        Stop-Process -Id $pidNum -Force
+        Remove-Item $pidFile -Force
+        # Remove-Item $exePath -Force
 
-        $lockAddr = $arg1
-
-        Write-Host "Stopping Lock Service at $lockAddr"
-
-        #Start-Process -NoNewWindow -FilePath "evans" -ArgumentList "-r", "-p", $port, "-s", "lock.LockServiceServer", "-c", "Stop"
     }
 
     Default {

@@ -23,7 +23,7 @@ message DirRequest {
 }
 
 message DirResponse {
-  bool success = 1;
+  optional bool success = 1;
   repeated string dirList = 2;
 }
 
@@ -32,7 +32,7 @@ message MkdirRequest {
 }
 
 message MkdirResponse {
-  bool success = 1;
+  optional bool success = 1;
 }
 
 message RmdirRequest {
@@ -40,7 +40,7 @@ message RmdirRequest {
 }
 
 message RmdirResponse {
-  bool success = 1;
+  optional bool success = 1;
 }
 
 message GetRequest {
@@ -57,7 +57,7 @@ message PutRequest {
 }
 
 message PutResponse {
-  bool success = 1;
+  optional bool success = 1;
 }
 
 message DeleteRequest {
@@ -65,5 +65,5 @@ message DeleteRequest {
 }
 
 message DeleteResponse {
-  bool success = 1;
+  optional bool success = 1;
 }
