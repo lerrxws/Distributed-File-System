@@ -21,13 +21,14 @@ func main() {
 	
 	s := grpc.NewServer()
 
-	srv, err := dfs.NewDfsServiceServer(lockAddr, extentAddr, s)
+	portStr := "" + port // <-- correct this line todo 
+	srv, err := dfs.NewDfsServiceServer(lockAddr, extentAddr, portStr,  s)
 	if err != nil {
 		log.Fatalf("failed while starting DFS server: %v", err)
 	}
 	dfsapi.RegisterDfsServiceServer(s, srv)
 
-	portStr := ":" + port
+	portStr = ":" + port
 	lis, err := net.Listen("tcp", portStr)
     if err != nil {
         log.Fatalf("failed to listen: %v", err)

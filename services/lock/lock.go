@@ -37,19 +37,12 @@ func (s* LockServiceServer) Acquire(ctx context.Context, req *api.AcquireRequest
 	// check if file has been locked already
 	// if it is we block a client
 	// we use "for" - if we have multiple clients that wants lock for that file that will iterate throw users
-
 	for slices.Contains(s.locked, req.LockId) {
 		s.cond.Wait()
 	}
 
-    // if slices.Contains(s.locked, req.LockId) {
-    //     return &api.AcquireResponse{Success: proto.Bool(false)}, nil
-    //     // return &api.AcquireResponse{Success: "false"}, nil
-    // }
-
 	s.locked = append(s.locked, req.LockId)
 	return &api.AcquireResponse{Success: proto.Bool(true)}, nil
-    // return &api.AcquireResponse{Success: "true"}, nil
 }
 
 func (s *LockServiceServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api.ReleaseResponse, error) {

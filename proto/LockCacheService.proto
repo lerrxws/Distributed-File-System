@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package dfs.dfs;
+
+service LockCacheService {
+  rpc revoke(RevokeRequest) returns (RevokeResponse);
+  rpc retry(RetryRequest) returns (RetryResponse);
+}
+
+message RevokeRequest {
+  string lockId = 1;
+}
+
+message RevokeResponse {
+}
+
+message RetryRequest {
+  string lockId = 1;
+  int64 sequence = 2;
+}
+
+message RetryResponse {
+}
