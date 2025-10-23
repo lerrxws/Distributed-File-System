@@ -10,6 +10,8 @@ import (
 	extent "dfs/proto-gen/extent"
 	lock "dfs/proto-gen/lock"
 
+	lockcache "dfs/services/lockcache"
+
 	seelog "github.com/cihub/seelog"
 
 	"google.golang.org/grpc"
@@ -47,6 +49,7 @@ func (dc *DfsClient) GetCurrentSeqNum() int64 {
 
 type DfsServiceServer struct {
 	lockClient   lock.LockServiceClient
+	cacheMangaer *lockcache.CacheManager
 	extentClient extent.ExtentServiceClient
 	dfsClient    *DfsClient
 	grpc         *grpc.Server
@@ -56,10 +59,13 @@ type DfsServiceServer struct {
 	api.UnimplementedDfsServiceServer
 }
 
-func NewDfsServiceServer(lockClient lock.LockServiceClient, extentClient extent.ExtentServiceClient,
+func NewDfsServiceServer(lockClient lock.LockServiceClient, cacheManager *lockcache.CacheManager,
+						 extentClient extent.ExtentServiceClient,
 						dfsClient *DfsClient, grpcServer *grpc.Server, logger seelog.LoggerInterface) (*DfsServiceServer, error) {
 	return &DfsServiceServer{
 		lockClient:   lockClient,
+		cacheMangaer: cacheManager,
+
 		extentClient: extentClient,
 		dfsClient:    dfsClient,
 		grpc:         grpcServer,
@@ -72,7 +78,7 @@ func (s *DfsServiceServer) acquireLock(ctx context.Context, lockClient lock.Lock
 
 	s.logger.Infof("Trying to acquire lock: lock_id=%s owner_id=%s seq=%d", lockId, s.dfsClient.ownerId, seqNum)
 
-	lockResp, err := lockClient.Acquire(ctx, &lock.AcquireRequest{LockId: lockId, OwnerId: s.dfsClient.ownerId, Sequence: seqNum})
+	lockResp, err := s.cacheMangaer.Acquire(ctx, &lock.AcquireRequest{LockId: lockId, OwnerId: s.dfsClient.ownerId, Sequence: seqNum})
 
 	if err != nil {
 		s.logger.Errorf("Failed to acquire lock %s: %v", lockId, err)
@@ -94,7 +100,7 @@ func (s *DfsServiceServer) releaseLock(ctx context.Context, lockClient lock.Lock
 	s.logger.Infof("Releasing lock: lock_id=%s owner_id=%s seq=%d",
 		lockId, s.dfsClient.ownerId, seq)
 
-	_, err := lockClient.Release(ctx, &lock.ReleaseRequest{
+	_, err := s.cacheMangaer.Release(ctx, &lock.ReleaseRequest{
 		LockId:   lockId,
 		OwnerId:  s.dfsClient.ownerId,
 		Sequence: seq,
@@ -116,33 +122,39 @@ func (s *DfsServiceServer) Stop(ctx context.Context, req *api.StopRequest) (*api
 }
 
 func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.DirResponse, error) {
-	if !strings.HasSuffix(req.DirectoryName, "/") {
-		return &api.DirResponse{Success: proto.Bool(false)}, nil
-	}
+	// if !strings.HasSuffix(req.DirectoryName, "/") {
+	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
+	// }
 
-	if req.DirectoryName == "" {
-		return &api.DirResponse{Success: proto.Bool(false)}, nil
-	}
+	// if req.DirectoryName == "" {
+	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
+	// }
 
 	err := s.acquireLock(ctx, s.lockClient, req.DirectoryName)
 	if err != nil {
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
+	fmt.Printf("enter your input: ")
+	fmt.Scanf("%s")
 	defer s.releaseLock(ctx, s.lockClient, req.DirectoryName)
 
-	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{
-		FileName: req.DirectoryName,
-	})
-	if err != nil {
-		return &api.DirResponse{Success: proto.Bool(false)}, nil
-	}
-	if resp == nil {
-		return &api.DirResponse{Success: proto.Bool(false)}, nil
-	}
+	// resp, err := s.extentClient.Get(ctx, &extent.GetRequest{
+	// 	FileName: req.DirectoryName,
+	// })
+	// if err != nil {
+	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
+	// }
+	// if resp == nil {
+	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
+	// }
 
-	fileDataString := string(resp.FileData)
-	fileDataList := strings.Split(fileDataString, "\n")
-	return &api.DirResponse{Success: proto.Bool(true), DirList: fileDataList}, nil
+	// fileDataString := string(resp.FileData)
+	// fileDataList := strings.Split(fileDataString, "\n")
+	// return &api.DirResponse{Success: proto.Bool(true), DirList: fileDataList}, nil
+
+	s.logger.Debugf("Lockid: %s\nOwnerId: %s\nSequence: %d", req.DirectoryName, s.dfsClient.ownerId, s.dfsClient.GetCurrentSeqNum())
+
+	return &api.DirResponse{Success: proto.Bool(true)}, nil
 }
 
 func (s *DfsServiceServer) Mkdir(ctx context.Context, req *api.MkdirRequest) (*api.MkdirResponse, error) {

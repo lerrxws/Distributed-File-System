@@ -6,9 +6,12 @@ import (
 	"os"
 
 	dfsapi "dfs/proto-gen/dfs"
+	lcapi "dfs/proto-gen/lockcache"
 	extentapi "dfs/proto-gen/extent"
 	lockapi "dfs/proto-gen/lock"
+
 	dfs "dfs/services/dfs"
+	lockcache "dfs/services/lockcache"
 
 	seelog "github.com/cihub/seelog"
 	"google.golang.org/grpc"
@@ -16,63 +19,80 @@ import (
 )
 
 func main() {
-	args := os.Args[1:]
-	if len(args) < 3 {
-		log.Fatalf("usage: dfsserver <listen_addr> <extent_addr> <lock_addr>")
+	if len(os.Args) < 4 {
+		log.Fatalf("Usage: dfsserver <listen_port> <extent_addr> <lock_addr>")
 	}
 
-	port := args[0]
-	extentAddr := args[1]
-	lockAddr := args[2]
+	port := os.Args[1]
+	extentAddr := os.Args[2]
+	lockAddr := os.Args[3]
 
-	s := grpc.NewServer()
+	logger := initLogger("configs/seelog-dfs.xml")
+	defer logger.Flush()
+
+	logger.Infof("[Main] Starting DFS server on port %s", port)
+
+	grpcServer := grpc.NewServer()
 
 	lockClient := connectLockClient(lockAddr)
-	if lockClient == nil {
-		log.Fatalf("[DfsServer] failed to connect to lock server at %s", lockAddr)
-	}
-
 	extentClient := connectExtentClient(extentAddr)
-	if extentClient == nil {
-		log.Fatalf("[DfsServer] failed to connect to extent server at %s", extentAddr)
-	}
-
 	dfsClient := dfs.NewDfsClient(port)
 
-	logger, _ := seelog.LoggerFromConfigAsFile("configs/seelog-dfs.xml")
+	cacheManager := lockcache.NewCacheManager(lockClient, logger)
+	releaser := lockcache.NewReleaser(cacheManager, logger)
+	releaser.Start()
 
-	srv, err := dfs.NewDfsServiceServer(lockClient, extentClient, dfsClient, s, logger)
+
+	dfsService, err := dfs.NewDfsServiceServer(lockClient, cacheManager, extentClient, dfsClient, grpcServer, logger)
 	if err != nil {
-		log.Fatalf("failed while starting DFS server: %v", err)
+		logger.Criticalf("[Main] Failed to initialize DFS service: %v", err)
+		os.Exit(1)
 	}
 
-	dfsapi.RegisterDfsServiceServer(s, srv)
+	lockCacheService := lockcache.NewLockCacheService(grpcServer, cacheManager, releaser, logger)
 
-	lis, err := net.Listen("tcp", ":"+port)
-	if err != nil {
-		log.Fatalf("failed to listen on %s: %v", port, err)
-	}
+	dfsapi.RegisterDfsServiceServer(grpcServer, dfsService)
+	lcapi.RegisterLockCacheServiceServer(grpcServer, lockCacheService)
 
-	log.Printf("DFS is running on %s\n", port)
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	startGrpcServer(grpcServer, port, logger)
 }
 
-func connectLockClient(lockAddr string) lockapi.LockServiceClient {
-	conn, err := grpc.NewClient(lockAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func initLogger(configPath string) seelog.LoggerInterface {
+	logger, err := seelog.LoggerFromConfigAsFile(configPath)
 	if err != nil {
-		log.Printf("failed to dial lock server at %s: %v", lockAddr, err)
-		return nil
+		log.Fatalf("Failed to initialize logger from %s: %v", configPath, err)
 	}
+	return logger
+}
+
+func connectLockClient(addr string) lockapi.LockServiceClient {
+	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("[Main] Failed to connect to Lock server at %s: %v", addr, err)
+	}
+	log.Printf("[Main] Connected to Lock server at %s", addr)
 	return lockapi.NewLockServiceClient(conn)
 }
 
-func connectExtentClient(extentAddr string) extentapi.ExtentServiceClient {
-	conn, err := grpc.NewClient(extentAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+func connectExtentClient(addr string) extentapi.ExtentServiceClient {
+	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Printf("failed to dial extent server at %s: %v", extentAddr, err)
-		return nil
+		log.Fatalf("[Main] Failed to connect to Extent server at %s: %v", addr, err)
 	}
+	log.Printf("[Main] Connected to Extent server at %s", addr)
 	return extentapi.NewExtentServiceClient(conn)
+}
+
+func startGrpcServer(server *grpc.Server, port string, logger seelog.LoggerInterface) {
+	listener, err := net.Listen("tcp", ":"+port)
+	if err != nil {
+		logger.Criticalf("Failed to listen on %s: %v", port, err)
+		os.Exit(1)
+	}
+
+	logger.Infof("[Main] DFS is running on port %s", port)
+	if err := server.Serve(listener); err != nil {
+		logger.Criticalf("gRPC serve failed: %v", err)
+		os.Exit(1)
+	}
 }
