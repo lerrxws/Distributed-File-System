@@ -27,7 +27,7 @@ func main() {
 	extentAddr := os.Args[2]
 	lockAddr := os.Args[3]
 
-	logger := initLogger("configs/seelog-dfs.xml")
+	logger := initLogger("configs/logs/seelog-dfs.xml")
 	defer logger.Flush()
 
 	logger.Infof("[Main] Starting DFS server on port %s", port)

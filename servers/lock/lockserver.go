@@ -16,7 +16,7 @@ import (
 func main() {
 	port := os.Args[1]
 
-	logger, _ := seelog.LoggerFromConfigAsFile("configs/seelog-lock.xml")
+	logger, _ := seelog.LoggerFromConfigAsFile("configs/logs/seelog-lock.xml")
 	
 	s := grpc.NewServer()
 
