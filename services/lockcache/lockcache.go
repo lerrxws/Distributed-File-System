@@ -55,12 +55,16 @@ func (cl *LockCacheService) Revoke(ctx context.Context, req *lcapi.RevokeRequest
 		for cacheInfo.State == Locked {
 			cacheInfo.cond.Wait()
 		}
-		// після виходу зі стану Locked — він або Free, або None
+
 		fallthrough
 
 	case Free:
 		cl.logger.Infof("[LockCacheService] Lock %s now Free — sending to Releaser", cacheInfo.LockId)
 		cl.releaser.AddTask(cacheInfo)
+		return &lcapi.RevokeResponse{}, nil
+	
+	case Releasing:
+		cl.logger.Infof("[LockCacheService] Lock %s is already in Releasing state — skipping duplicate revoke", cacheInfo.LockId)
 		return &lcapi.RevokeResponse{}, nil
 
 	default:

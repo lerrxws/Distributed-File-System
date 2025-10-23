@@ -30,3 +30,15 @@
 2025-10-23 23:35:02 [INFO] [Revoker] successfully sent revoke to 127.0.0.1:1003:DfsClient for lock f
 2025-10-23 23:35:02 [INFO] release request received: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
 2025-10-23 23:35:02 [WARN] release denied for lock f: sequence mismatch (expected=1, got=2)
+2025-10-23 23:53:13 [INFO] [Revoker] Initialized (queue capacity=100)
+2025-10-23 23:53:13 [INFO] [Revoker] Starting revoke task...
+2025-10-23 23:53:13 [INFO] [Revoker] Task successfully started.
+2025-10-23 23:53:13 [INFO] LockServiceServer initialized successfully
+2025-10-23 23:53:21 [INFO] [Acquire] received acquire request: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=1
+2025-10-23 23:53:21 [INFO] [Acquire] lock f successfully acquired by owner 127.0.0.1:1003:DfsClient
+2025-10-23 23:53:32 [INFO] [Acquire] received acquire request: lock_id=f owner_id=c seq=1
+2025-10-23 23:53:32 [INFO] [Acquire] acquire denied: lock_id=f already held by another client
+2025-10-23 23:53:32 [INFO] [Revoker] queued revoke task for lock f (owner 127.0.0.1:1003:DfsClient)
+2025-10-23 23:53:52 [INFO] [Revoker] successfully sent revoke to 127.0.0.1:1003:DfsClient for lock f
+2025-10-23 23:53:52 [INFO] release request received: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
+2025-10-23 23:53:52 [WARN] release denied for lock f: sequence mismatch (expected=1, got=2)

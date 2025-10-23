@@ -63,7 +63,14 @@ func (r *ReleaserTask) Stop() {
 
 func (r *ReleaserTask) handleRelease(cacheInfo *CacheInfo) {
 	r.logger.Debugf("[Releaser] Processing release task: lock=%s, owner=%s, seq=%d",
-		cacheInfo.LockId, cacheInfo.OwnerId, cacheInfo.SeqNum)
+		cacheInfo.LockId, cacheInfo.OwnerId, cacheInfo.SeqNum)	
+
+		cacheInfo.mu.Lock()
+		if cacheInfo.State != Releasing {
+			r.logger.Tracef("[Releaser] Changing state: %s → Releasing", cacheInfo.State)
+			cacheInfo.State = Releasing
+		}
+		cacheInfo.mu.Unlock()
 
 		resp, err := r.cacheManager.ReleaseRPC(context.Background(), &lockapi.ReleaseRequest{
 		LockId:   cacheInfo.LockId,
