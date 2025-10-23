@@ -2,79 +2,140 @@ package lock
 
 import (
 	"context"
+    "sync"
+
 	api "dfs/proto-gen/lock"
-	"slices"
-	"sync"
+
+	seelog "github.com/cihub/seelog"
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
 )
 
+type LockInfo struct {
+	lockId string
+	owner  string
+	seqNum int64
+}
+
+type LockManager struct {
+	lockManager map[string]*LockInfo
+}
+
+func NewLockManager() *LockManager {
+	return &LockManager{
+		lockManager: make(map[string]*LockInfo),
+	}
+}
+
+func (lm *LockManager) AddNewLockInfo(lockInfo *LockInfo) {
+	lm.lockManager[lockInfo.lockId] = lockInfo
+}
+
+func (lm *LockManager) RemoveLock(lockId string) {
+	delete(lm.lockManager, lockId)
+}
+
+func (lm *LockManager) IsLocked(lockId string) bool {
+	_, isLocked := lm.lockManager[lockId]
+	return isLocked
+}
+
+func (lm *LockManager) GetLockInfo(lockId string) *LockInfo {
+	return lm.lockManager[lockId]
+}
+
 // GRPCServer
 type LockServiceServer struct {
-	mu    sync.Mutex
-    cond  *sync.Cond        
-    locked []string
-	grpc  *grpc.Server
+	mu     sync.Mutex
+	cond   *sync.Cond
+	locked *LockManager
+	grpc   *grpc.Server
+
+	logger seelog.LoggerInterface
 
 	api.UnimplementedLockServiceServer
 }
 
-func NewLockServer(grpcServer *grpc.Server) *LockServiceServer {
-    s := &LockServiceServer{
-        locked: []string{},
-        grpc:   grpcServer,
-    }
-    s.cond = sync.NewCond(&s.mu)
-    return s
+func NewLockServer(grpcServer *grpc.Server, logger seelog.LoggerInterface) *LockServiceServer {
+	s := &LockServiceServer{
+		grpc:   grpcServer,
+		logger: logger,
+	}
+	s.locked = NewLockManager()
+	s.cond = sync.NewCond(&s.mu)
+
+    s.logger.Infof("LockServiceServer initialized successfully")
+
+	return s
 }
 
+func (s *LockServiceServer) Acquire(ctx context.Context, req *api.AcquireRequest) (*api.AcquireResponse, error) {
+	s.mu.Lock()         // block server so there won`t be 2 person trying to get 1 file
+	defer s.mu.Unlock() // auto unlock when function ends
 
-func (s* LockServiceServer) Acquire(ctx context.Context, req *api.AcquireRequest) (* api.AcquireResponse, error) {
-	s.mu.Lock() // block server so there won`t be 2 person trying to get 1 file
-    defer s.mu.Unlock() // auto unlock when function ends
+    s.logger.Infof("received acquire request: lock_id=%s owner_id=%s seq=%d", req.LockId, req.OwnerId, req.Sequence)
 
-	// check if file has been locked already
-	// if it is we block a client
-	// we use "for" - if we have multiple clients that wants lock for that file that will iterate throw users
-
-	for slices.Contains(s.locked, req.LockId) {
+	for s.locked.IsLocked(req.LockId) {
+        s.logger.Infof("lock %s is currently held by another owner, waiting...", req.LockId)
 		s.cond.Wait()
+        // return &api.AcquireResponse{Success: proto.Bool(false)}, nil
 	}
 
-    // if slices.Contains(s.locked, req.LockId) {
-    //     return &api.AcquireResponse{Success: proto.Bool(false)}, nil
-    //     // return &api.AcquireResponse{Success: "false"}, nil
-    // }
+	s.locked.AddNewLockInfo(&LockInfo{
+		lockId: req.LockId,
+		owner:  req.OwnerId,
+		seqNum: req.Sequence,
+	})
 
-	s.locked = append(s.locked, req.LockId)
+    s.logger.Infof("Lock %s successfully acquired by owner %s", req.LockId, req.OwnerId)
+
 	return &api.AcquireResponse{Success: proto.Bool(true)}, nil
-    // return &api.AcquireResponse{Success: "true"}, nil
 }
 
 func (s *LockServiceServer) Release(ctx context.Context, req *api.ReleaseRequest) (*api.ReleaseResponse, error) {
-    s.mu.Lock()
-    defer s.mu.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
-	if !slices.Contains(s.locked, req.LockId) {
+    s.logger.Infof("release request received: lock_id=%s owner_id=%s seq=%d", req.LockId, req.OwnerId, req.Sequence)
+
+	if !s.locked.IsLocked(req.LockId) {
+        s.logger.Warnf("lock %s already released or not found", req.LockId)
+
 		return &api.ReleaseResponse{}, nil
 	}
 
-    for i, v := range s.locked {
-        if v == req.LockId {
-            s.locked = append(s.locked[:i], s.locked[i+1:]...)
-            s.cond.Broadcast()
-            break
-        }
-    }
+	lockInfo := s.locked.GetLockInfo(req.LockId)
+	if req.OwnerId != lockInfo.owner {
+        s.logger.Warnf("release denied for lock %s: owner mismatch (expected=%s, got=%s)",
+			req.LockId, lockInfo.owner, req.OwnerId)
 
-    return &api.ReleaseResponse{}, nil
+		return &api.ReleaseResponse{}, nil
+	}
+
+	if req.Sequence != lockInfo.seqNum {
+        s.logger.Warnf("release denied for lock %s: sequence mismatch (expected=%d, got=%d)",
+			req.LockId, lockInfo.seqNum, req.Sequence)
+
+		return &api.ReleaseResponse{}, nil
+	}
+
+	s.locked.RemoveLock(req.LockId)
+	s.cond.Broadcast()
+
+    s.logger.Infof("lock %s released successfully by owner %s", req.LockId, req.OwnerId)
+
+	return &api.ReleaseResponse{}, nil
 }
 
 func (s *LockServiceServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
-    go func() {
-        // shut down server in a goroutine so we can return the response first
-        s.grpc.GracefulStop()
-    }()
-    return &api.StopResponse{}, nil
+    s.logger.Infof("received stop request — starting graceful shutdown")
+
+	go func() {
+		s.grpc.GracefulStop()
+	}()
+
+    s.logger.Infof("gRPC LockServer stopped successfully")
+
+	return &api.StopResponse{}, nil
 }

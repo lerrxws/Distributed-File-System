@@ -27,6 +27,7 @@ message AcquireResponse {
 message ReleaseRequest {
   string lockId = 1;
   string ownerId = 2;
+  int64 sequence = 3;
 }
 
 message ReleaseResponse {

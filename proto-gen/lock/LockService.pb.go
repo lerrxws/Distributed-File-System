@@ -201,6 +201,7 @@ type ReleaseRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	LockId        string                 `protobuf:"bytes,1,opt,name=lockId,proto3" json:"lockId,omitempty"`
 	OwnerId       string                 `protobuf:"bytes,2,opt,name=ownerId,proto3" json:"ownerId,omitempty"`
+	Sequence      int64                  `protobuf:"varint,3,opt,name=sequence,proto3" json:"sequence,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -247,6 +248,13 @@ func (x *ReleaseRequest) GetOwnerId() string {
 		return x.OwnerId
 	}
 	return ""
+}
+
+func (x *ReleaseRequest) GetSequence() int64 {
+	if x != nil {
+		return x.Sequence
+	}
+	return 0
 }
 
 type ReleaseResponse struct {
@@ -299,10 +307,11 @@ const file_proto_LockService_proto_rawDesc = "" +
 	"\x0fAcquireResponse\x12\x1d\n" +
 	"\asuccess\x18\x01 \x01(\bH\x00R\asuccess\x88\x01\x01B\n" +
 	"\n" +
-	"\b_success\"B\n" +
+	"\b_success\"^\n" +
 	"\x0eReleaseRequest\x12\x16\n" +
 	"\x06lockId\x18\x01 \x01(\tR\x06lockId\x12\x18\n" +
-	"\aownerId\x18\x02 \x01(\tR\aownerId\"\x11\n" +
+	"\aownerId\x18\x02 \x01(\tR\aownerId\x12\x1a\n" +
+	"\bsequence\x18\x03 \x01(\x03R\bsequence\"\x11\n" +
 	"\x0fReleaseResponse2\xc4\x01\n" +
 	"\vLockService\x125\n" +
 	"\x04stop\x12\x15.dfs.lock.StopRequest\x1a\x16.dfs.lock.StopResponse\x12>\n" +

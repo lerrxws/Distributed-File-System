@@ -3,19 +3,24 @@ package main
 import (
 	"log"
 	"net"
-
 	"os"
+
 	lockapi "dfs/proto-gen/lock"
 	lock "dfs/services/lock"
+
+	seelog "github.com/cihub/seelog"
+
 	"google.golang.org/grpc"
 )
 
 func main() {
 	port := os.Args[1]
+
+	logger, _ := seelog.LoggerFromConfigAsFile("configs/seelog-lock.xml")
 	
 	s := grpc.NewServer()
 
-	srv := lock.NewLockServer(s)
+	srv := lock.NewLockServer(s, logger)
 	lockapi.RegisterLockServiceServer(s, srv)
 
 	portStr := ":" + port
