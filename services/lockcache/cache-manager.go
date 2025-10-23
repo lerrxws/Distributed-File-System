@@ -141,7 +141,7 @@ func (cm *CacheManager) Release(ctx context.Context, req *lockapi.ReleaseRequest
 
 
 func (cm *CacheManager) ReleaseRPC(ctx context.Context, req *lockapi.ReleaseRequest) (*lockapi.ReleaseResponse, error) {
-	cacheInfo := cm.getOrCreateCache(req.LockId)
+	cacheInfo := cm.GetCacheInfo(req.LockId)
 
 	resp, err := cm.lockClient.Release(ctx, req)
 	if err != nil {

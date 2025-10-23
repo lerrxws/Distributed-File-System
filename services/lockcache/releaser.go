@@ -65,14 +65,7 @@ func (r *ReleaserTask) handleRelease(cacheInfo *CacheInfo) {
 	r.logger.Debugf("[Releaser] Processing release task: lock=%s, owner=%s, seq=%d",
 		cacheInfo.LockId, cacheInfo.OwnerId, cacheInfo.SeqNum)
 
-	cacheInfo.mu.Lock()
-	for cacheInfo.State != Free {
-		r.logger.Tracef("[Releaser] Waiting until lock %s becomes Free...", cacheInfo.LockId)
-		cacheInfo.cond.Wait()
-	}
-	cacheInfo.mu.Unlock()
-
-	resp, err := r.cacheManager.ReleaseRPC(context.Background(), &lockapi.ReleaseRequest{
+		resp, err := r.cacheManager.ReleaseRPC(context.Background(), &lockapi.ReleaseRequest{
 		LockId:   cacheInfo.LockId,
 		OwnerId:  cacheInfo.OwnerId,
 		Sequence: cacheInfo.SeqNum,
