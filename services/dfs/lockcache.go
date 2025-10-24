@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	api "dfs/proto-gen/dfs"
+	api "dfs/proto-gen/lockcache"
 	cache "dfs/services/dfs/lockcache"
 )
 
@@ -47,7 +47,6 @@ func (s *LockCacheService) Revoke(ctx context.Context, req *api.RevokeRequest) (
 
 	return &api.RevokeResponse{}, nil
 }
-
 
 func (s *LockCacheService) Retry( ctx context.Context, req *api.RetryRequest) (*api.RetryResponse, error) {
 	s.lockCache.Mu.Lock()
