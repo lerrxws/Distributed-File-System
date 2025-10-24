@@ -7,4 +7,5 @@ const (
 	Free      CacheState = "Free"
 	Locked    CacheState = "Locked"
 	Releasing CacheState = "Releasing"
+	Acquiring CacheState = "Acquiring"
 )

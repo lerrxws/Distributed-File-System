@@ -95,12 +95,31 @@ func (cl *LockCacheService) Retry(ctx context.Context, req *lcapi.RetryRequest) 
 		return &lcapi.RetryResponse{}, nil
 	}
 
-	cl.logger.Infof("[LockCacheService] Broadcasting retry signal for lock %s (seq=%d)", lockId, cacheInfo.SeqNum)
-	cacheInfo.cond.Broadcast()
+	switch cacheInfo.State {
+	case Acquiring:
+		cl.logger.Infof("[LockCacheService] Lock %s is in Acquiring state — broadcasting condition", lockId)
+		cacheInfo.State = None
+		cacheInfo.cond.Broadcast()
 
-	cl.logger.Infof("[LockCacheService] Retry signal broadcast completed for lock %s", lockId)
+	case None, Free:
+		cl.logger.Warnf("[LockCacheService] Retry received for lock %s but state is %s — likely late message, ignoring",
+			lockId, cacheInfo.State)
+
+	case Locked:
+		cl.logger.Infof("[LockCacheService] Lock %s already acquired — ignoring retry", lockId)
+
+	case Releasing:
+		cl.logger.Infof("[LockCacheService] Lock %s is currently releasing — retry ignored", lockId)
+
+	default:
+		cl.logger.Warnf("[LockCacheService] Unexpected state %s for retry of lock %s — ignoring",
+			cacheInfo.State, lockId)
+	}
+
+	cl.logger.Infof("[LockCacheService] Retry handling completed for lock %s", lockId)
 	return &lcapi.RetryResponse{}, nil
 }
+
 
 func (cl *LockCacheService) Stop() {
 	cl.logger.Infof("[LockCacheService] received stop request — starting graceful shutdown")

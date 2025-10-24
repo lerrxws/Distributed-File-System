@@ -64,8 +64,7 @@ func (s *LockServiceServer) Acquire(ctx context.Context, req *api.AcquireRequest
 			LockId:  lockInfo.LockId,
 			OwnerId: lockInfo.Owner,
 		})
-
-		s.retrier.AddTask(req)
+		s.retrier.AddClientForRetry(req.OwnerId, req.LockId, req.Sequence)
 
 		return &api.AcquireResponse{Success: proto.Bool(false)}, nil
 	}
@@ -100,12 +99,13 @@ func (s *LockServiceServer) Release(ctx context.Context, req *api.ReleaseRequest
 		return &api.ReleaseResponse{}, nil
 	}
 
-	if req.Sequence != lockInfo.SeqNum {
-		s.logger.Warnf("[Release] Denied for lock %s: sequence mismatch (expected=%d, got=%d)",
-			req.LockId, lockInfo.SeqNum, req.Sequence)
-		return &api.ReleaseResponse{}, nil
-	}
+	// if req.Sequence != lockInfo.SeqNum {
+	// 	s.logger.Warnf("[Release] Denied for lock %s: sequence mismatch (expected=%d, got=%d)",
+	// 		req.LockId, lockInfo.SeqNum, req.Sequence)
+	// 	return &api.ReleaseResponse{}, nil
+	// }
 
+	s.retrier.EnqueueRetriesForLock(req.LockId)
 	s.locked.RemoveLock(req.LockId)
 	s.logger.Infof("[Release] Lock %s released successfully by owner %s", req.LockId, req.OwnerId)
 

@@ -2,9 +2,11 @@ package extent
 
 import (
 	"context"
-	api "dfs/proto-gen/extent"
 	"os"
+	"path/filepath"
 	"strings"
+
+	api "dfs/proto-gen/extent"
 
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
@@ -108,10 +110,15 @@ func (s *ExtentServiceServer) Put(ctx context.Context, req *api.PutRequest) (* a
 	}
 
 	// create new file
+	dir := filepath.Dir(fullPath)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return &api.PutResponse{Success: proto.Bool(false)}, nil
+	}
+
 	err := os.WriteFile(fullPath, req.FileData, 0644)
-    if err != nil {
-        return &api.PutResponse{Success: proto.Bool(false)}, nil
-    }
+	if err != nil {
+		return &api.PutResponse{Success: proto.Bool(false)}, nil
+	}
 
 	return &api.PutResponse{Success: proto.Bool(true)}, nil
 

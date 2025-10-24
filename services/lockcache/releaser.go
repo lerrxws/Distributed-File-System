@@ -50,7 +50,7 @@ func (r *ReleaserTask) Start() {
 func (r *ReleaserTask) AddTask(cache *CacheInfo) {
 	select {
 	case r.releaseQueue <- cache:
-		r.logger.Debugf("[Releaser] Added release task for lock=%s", cache.LockId)
+		r.logger.Infof("[Releaser] Added release task for lock=%s", cache.LockId)
 	default:
 		r.logger.Warnf("[Releaser] Queue full — dropping task for lock=%s", cache.LockId)
 	}
@@ -62,17 +62,17 @@ func (r *ReleaserTask) Stop() {
 }
 
 func (r *ReleaserTask) handleRelease(cacheInfo *CacheInfo) {
-	r.logger.Debugf("[Releaser] Processing release task: lock=%s, owner=%s, seq=%d",
-		cacheInfo.LockId, cacheInfo.OwnerId, cacheInfo.SeqNum)	
+	r.logger.Infof("[Releaser] Processing release task: lock=%s, owner=%s, seq=%d",
+							cacheInfo.LockId, cacheInfo.OwnerId, cacheInfo.SeqNum)
 
-		cacheInfo.mu.Lock()
-		if cacheInfo.State != Releasing {
-			r.logger.Tracef("[Releaser] Changing state: %s → Releasing", cacheInfo.State)
-			cacheInfo.State = Releasing
-		}
-		cacheInfo.mu.Unlock()
+	cacheInfo.mu.Lock()
+	if cacheInfo.State != Releasing {
+		r.logger.Infof("[Releaser] Changing state: %s → Releasing", cacheInfo.State)
+		cacheInfo.State = Releasing
+	}
+	cacheInfo.mu.Unlock()
 
-		resp, err := r.cacheManager.ReleaseRPC(context.Background(), &lockapi.ReleaseRequest{
+	resp, err := r.cacheManager.ReleaseRPC(context.Background(), &lockapi.ReleaseRequest{
 		LockId:   cacheInfo.LockId,
 		OwnerId:  cacheInfo.OwnerId,
 		Sequence: cacheInfo.SeqNum,

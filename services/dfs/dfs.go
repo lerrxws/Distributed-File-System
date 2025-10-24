@@ -76,28 +76,28 @@ func NewDfsServiceServer(lockClient lock.LockServiceClient, cacheManager *lockca
 func (s *DfsServiceServer) acquireLock(ctx context.Context, lockClient lock.LockServiceClient, lockId string) error {
 	seqNum := s.dfsClient.GetNewSeqNum()
 
-	s.logger.Infof("Trying to acquire lock: lock_id=%s owner_id=%s seq=%d", lockId, s.dfsClient.ownerId, seqNum)
+	s.logger.Infof("[DFS] Trying to acquire lock: lock_id=%s owner_id=%s seq=%d", lockId, s.dfsClient.ownerId, seqNum)
 
 	lockResp, err := s.cacheMangaer.Acquire(ctx, &lock.AcquireRequest{LockId: lockId, OwnerId: s.dfsClient.ownerId, Sequence: seqNum})
 
 	if err != nil {
-		s.logger.Errorf("Failed to acquire lock %s: %v", lockId, err)
+		s.logger.Errorf("[DFS] Failed to acquire lock %s: %v", lockId, err)
 		return nil
 	}
 
 	if lockResp == nil || lockResp.Success == nil || !*lockResp.Success {
-		s.logger.Warnf("Lock %s not acquired (lock may be busy or denied)", lockId)
+		s.logger.Warnf("[DFS] Lock %s not acquired (lock may be busy or denied)", lockId)
 		return nil
 	}
 
-	s.logger.Infof("Lock %s successfully acquired by %s (seq=%d)", lockId, s.dfsClient.ownerId, seqNum)
+	s.logger.Infof("[DFS] Lock %s successfully acquired by %s (seq=%d)", lockId, s.dfsClient.ownerId, seqNum)
 	return nil
 }
 
 func (s *DfsServiceServer) releaseLock(ctx context.Context, lockClient lock.LockServiceClient, lockId string) {
 	seq := s.dfsClient.GetCurrentSeqNum()
 
-	s.logger.Infof("Releasing lock: lock_id=%s owner_id=%s seq=%d",
+	s.logger.Infof("[DFS] Releasing lock: lock_id=%s owner_id=%s seq=%d",
 		lockId, s.dfsClient.ownerId, seq)
 
 	_, err := s.cacheMangaer.Release(ctx, &lock.ReleaseRequest{
@@ -107,7 +107,7 @@ func (s *DfsServiceServer) releaseLock(ctx context.Context, lockClient lock.Lock
 	})
 
 	if err != nil {
-		s.logger.Errorf("Failed to release lock %s: %v", lockId, err)
+		s.logger.Errorf("[DFS] Failed to release lock %s: %v", lockId, err)
 		return
 	}
 
@@ -134,9 +134,6 @@ func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.D
 	if err != nil {
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
-	// fmt.Printf("enter your input: ")
-	// fmt.Scanf("%s")
-	// defer s.releaseLock(ctx, s.lockClient, req.DirectoryName)
 
 	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{
 		FileName: req.DirectoryName,
@@ -151,10 +148,6 @@ func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.D
 	fileDataString := string(resp.FileData)
 	fileDataList := strings.Split(fileDataString, "\n")
 	return &api.DirResponse{Success: proto.Bool(true), DirList: fileDataList}, nil
-
-	// s.logger.Debugf("Lockid: %s\nOwnerId: %s\nSequence: %d", req.DirectoryName, s.dfsClient.ownerId, s.dfsClient.GetCurrentSeqNum())
-
-	// return &api.DirResponse{Success: proto.Bool(true)}, nil
 }
 
 func (s *DfsServiceServer) Mkdir(ctx context.Context, req *api.MkdirRequest) (*api.MkdirResponse, error) {
@@ -206,29 +199,34 @@ func (s *DfsServiceServer) Rmdir(ctx context.Context, req *api.RmdirRequest) (*a
 }
 
 func (s *DfsServiceServer) Put(ctx context.Context, req *api.PutRequest) (*api.PutResponse, error) {
-	if req.FileName == "" {
-		return &api.PutResponse{Success: proto.Bool(false)}, nil
-	}
-
-	if strings.HasSuffix(req.FileName, "/") {
+	s.logger.Infof("[DFS] Put request: %s", req.FileName)
+	if req.FileName == "" || strings.HasSuffix(req.FileName, "/") {
+		s.logger.Warnf("[DFS] Put: invalid file name %s", req.FileName)
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
 	err := s.acquireLock(ctx, s.lockClient, req.FileName)
 	if err != nil {
+		s.logger.Errorf("[DFS] Put: failed to acquire lock for %s", req.FileName)
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 	defer s.releaseLock(ctx, s.lockClient, req.FileName)
 
 	if req.FileData == nil {
+		s.logger.Warnf("[DFS] Put: empty file data for %s", req.FileName)
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
-	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{FileName: req.FileName, FileData: req.FileData})
+	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{
+		FileName: req.FileName,
+		FileData: req.FileData,
+	})
 	if err != nil || !(*resp.Success) {
+		s.logger.Errorf("[DFS] Put: extent Put failed for %s: %v", req.FileName, err)
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
+	s.logger.Infof("[DFS] Put: file %s saved successfully", req.FileName)
 	return &api.PutResponse{Success: proto.Bool(true)}, nil
 }
 
