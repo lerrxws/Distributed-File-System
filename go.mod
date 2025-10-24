@@ -3,6 +3,7 @@ module dfs
 go 1.25.0
 
 require (
+	github.com/cihub/seelog v0.0.0-20170130134532-f561c5e57575
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect

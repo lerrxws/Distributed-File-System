@@ -32,4 +32,5 @@ protoc --go_out=proto-gen/lock --go-grpc_out=proto-gen/lock --go_opt=Mproto/Lock
  -- with package name
 
 
+seelog
 

@@ -1,0 +1,57 @@
+2025-10-25 00:36:23 [INFO] [Main] Starting LockServer initialization...
+2025-10-25 00:36:23 [INFO] [Revoker] Initialized (queue capacity=100)
+2025-10-25 00:36:23 [INFO] [Retrier] Initialized (queue capacity=100)
+2025-10-25 00:36:23 [INFO] [Revoker] Starting revoke task...
+2025-10-25 00:36:23 [INFO] [Revoker] Task successfully started.
+2025-10-25 00:36:23 [INFO] [Retrier] Starting retry task processor...
+2025-10-25 00:36:23 [INFO] [Retrier] Retry task processor started successfully.
+2025-10-25 00:36:23 [INFO] LockService] LockServiceServer initialized successfully
+2025-10-25 00:36:23 [INFO] [Main] LockServer is running on port :10001
+2025-10-25 00:36:46 [INFO] [Acquire] received acquire request: lock_id=a owner_id=127.0.0.1:10004:client1 seq=1
+2025-10-25 00:36:46 [INFO] [Acquire] lock a successfully acquired by owner 127.0.0.1:10004:client1
+2025-10-25 00:36:51 [INFO] [Acquire] received acquire request: lock_id=a owner_id=127.0.0.1:10005:client2 seq=2
+2025-10-25 00:36:51 [INFO] [Acquire] acquire denied: lock_id=a already held by another client
+2025-10-25 00:36:51 [INFO] [Revoker] queued revoke task for lock a (owner 127.0.0.1:10004:client1)
+2025-10-25 00:36:51 [INFO] [Retrier] Added pending client for lock a (owner=127.0.0.1:10005:client2, seq=2, total_waiting=1)
+2025-10-25 00:36:51 [INFO] [Revoker] successfully sent revoke to 127.0.0.1:10004:client1 for lock a
+2025-10-25 00:36:56 [INFO] [Release] Release request received: lock_id=a owner_id=127.0.0.1:10004:client1 seq=0
+2025-10-25 00:36:56 [INFO] [Retrier] Retrieved 1 pending clients for lock a
+2025-10-25 00:36:56 [INFO] [Retrier] Queued retry for lock a (owner=127.0.0.1:10005:client2, seq=2)
+2025-10-25 00:36:56 [INFO] [Release] Lock a released successfully by owner 127.0.0.1:10004:client1
+2025-10-25 00:36:56 [INFO] [Retrier] Successfully sent retry to 127.0.0.1:10005:client2 for lock a (seq=2)
+2025-10-25 00:37:01 [INFO] [Acquire] received acquire request: lock_id=/test-file owner_id=127.0.0.1:10004:client1 seq=3
+2025-10-25 00:37:01 [INFO] [Acquire] lock /test-file successfully acquired by owner 127.0.0.1:10004:client1
+2025-10-25 00:37:06 [INFO] [Acquire] received acquire request: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-25 00:37:06 [INFO] [Acquire] acquire denied: lock_id=/test-file already held by another client
+2025-10-25 00:37:06 [INFO] [Revoker] queued revoke task for lock /test-file (owner 127.0.0.1:10004:client1)
+2025-10-25 00:37:06 [INFO] [Retrier] Added pending client for lock /test-file (owner=127.0.0.1:10003:DfsClient, seq=1, total_waiting=1)
+2025-10-25 00:37:06 [INFO] [Revoker] successfully sent revoke to 127.0.0.1:10004:client1 for lock /test-file
+2025-10-25 00:37:11 [INFO] [Release] Release request received: lock_id=/test-file owner_id=127.0.0.1:10004:client1 seq=0
+2025-10-25 00:37:11 [INFO] [Retrier] Retrieved 1 pending clients for lock /test-file
+2025-10-25 00:37:11 [INFO] [Retrier] Queued retry for lock /test-file (owner=127.0.0.1:10003:DfsClient, seq=1)
+2025-10-25 00:37:11 [INFO] [Release] Lock /test-file released successfully by owner 127.0.0.1:10004:client1
+2025-10-25 00:37:11 [INFO] [Retrier] Successfully sent retry to 127.0.0.1:10003:DfsClient for lock /test-file (seq=1)
+2025-10-25 00:37:11 [INFO] [Acquire] received acquire request: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-25 00:37:11 [INFO] [Acquire] lock /test-file successfully acquired by owner 127.0.0.1:10003:DfsClient
+2025-10-25 00:37:16 [INFO] [Acquire] received acquire request: lock_id=/test-file owner_id=127.0.0.1:10004:client1 seq=4
+2025-10-25 00:37:16 [INFO] [Acquire] acquire denied: lock_id=/test-file already held by another client
+2025-10-25 00:37:16 [INFO] [Revoker] queued revoke task for lock /test-file (owner 127.0.0.1:10003:DfsClient)
+2025-10-25 00:37:16 [INFO] [Retrier] Added pending client for lock /test-file (owner=127.0.0.1:10004:client1, seq=4, total_waiting=1)
+2025-10-25 00:37:16 [INFO] [Revoker] successfully sent revoke to 127.0.0.1:10003:DfsClient for lock /test-file
+2025-10-25 00:37:16 [INFO] [Release] Release request received: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-25 00:37:16 [INFO] [Retrier] Retrieved 1 pending clients for lock /test-file
+2025-10-25 00:37:16 [INFO] [Retrier] Queued retry for lock /test-file (owner=127.0.0.1:10004:client1, seq=4)
+2025-10-25 00:37:16 [INFO] [Release] Lock /test-file released successfully by owner 127.0.0.1:10003:DfsClient
+2025-10-25 00:37:16 [INFO] [Retrier] Successfully sent retry to 127.0.0.1:10004:client1 for lock /test-file (seq=4)
+2025-10-25 00:37:21 [INFO] [Acquire] received acquire request: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
+2025-10-25 00:37:21 [INFO] [Acquire] lock /test-file successfully acquired by owner 127.0.0.1:10003:DfsClient
+2025-10-25 00:37:26 [INFO] [Acquire] received acquire request: lock_id=/test-file owner_id=127.0.0.1:10004:client1 seq=5
+2025-10-25 00:37:26 [INFO] [Acquire] acquire denied: lock_id=/test-file already held by another client
+2025-10-25 00:37:26 [INFO] [Revoker] queued revoke task for lock /test-file (owner 127.0.0.1:10003:DfsClient)
+2025-10-25 00:37:26 [INFO] [Retrier] Added pending client for lock /test-file (owner=127.0.0.1:10004:client1, seq=5, total_waiting=1)
+2025-10-25 00:37:26 [INFO] [Revoker] successfully sent revoke to 127.0.0.1:10003:DfsClient for lock /test-file
+2025-10-25 00:37:26 [INFO] [Release] Release request received: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
+2025-10-25 00:37:26 [INFO] [Retrier] Retrieved 1 pending clients for lock /test-file
+2025-10-25 00:37:26 [INFO] [Retrier] Queued retry for lock /test-file (owner=127.0.0.1:10004:client1, seq=5)
+2025-10-25 00:37:26 [INFO] [Release] Lock /test-file released successfully by owner 127.0.0.1:10003:DfsClient
+2025-10-25 00:37:26 [INFO] [Retrier] Successfully sent retry to 127.0.0.1:10004:client1 for lock /test-file (seq=5)
