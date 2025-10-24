@@ -1,82 +1,496 @@
-2025-10-23 23:30:14 [INFO] [Main] Starting DFS server on port 1003
-2025-10-23 23:30:14 [INFO] [Releaser] Starting release task...
-2025-10-23 23:30:14 [INFO] [Releaser] Task successfully started.
-2025-10-23 23:30:14 [INFO] [LockCacheService] Initializing LockCache service...
-2025-10-23 23:30:14 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
-2025-10-23 23:30:14 [INFO] [Main] DFS is running on port 1003
-2025-10-23 23:30:29 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=1
-2025-10-23 23:30:29 [INFO] [CacheManager] Lock f acquired (owner=127.0.0.1:1003:DfsClient, seq=1)
-2025-10-23 23:30:29 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=1)
-2025-10-23 23:30:42 [INFO] [LockCacheService] Received revoke request for lock f
-2025-10-23 23:30:42 [INFO] [LockCacheService] Lock f is Locked — waiting until it becomes Free...
-2025-10-23 23:30:49 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=1
-2025-10-23 23:30:49 [INFO] [CacheManager] Released lock f → Free
-2025-10-23 23:30:49 [INFO] Lock f released successfully by 127.0.0.1:1003:DfsClient
-2025-10-23 23:30:49 [INFO] [LockCacheService] Lock f now Free — sending to Releaser
-2025-10-23 23:30:49 [INFO] [CacheManager] Release RPC succeeded for f → None
-2025-10-23 23:30:49 [INFO] [Releaser] Lock f released successfully (server response: )
-2025-10-23 23:31:37 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:31:37 [INFO] [CacheManager] Lock f acquired (owner=127.0.0.1:1003:DfsClient, seq=2)
-2025-10-23 23:31:37 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=2)
-2025-10-23 23:32:14 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=3
-2025-10-23 23:32:14 [INFO] [CacheManager] Waiting for lock f...
-2025-10-23 23:32:28 [INFO] [LockCacheService] Received revoke request for lock f
-2025-10-23 23:32:28 [INFO] [LockCacheService] Lock f is Locked — waiting until it becomes Free...
-2025-10-23 23:32:42 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=3
-2025-10-23 23:32:42 [INFO] [CacheManager] Released lock f → Free
-2025-10-23 23:32:42 [INFO] Lock f released successfully by 127.0.0.1:1003:DfsClient
-2025-10-23 23:32:42 [INFO] [LockCacheService] Lock f now Free — sending to Releaser
-2025-10-23 23:32:42 [INFO] [CacheManager] Reused cached lock f (owner=127.0.0.1:1003:DfsClient)
-2025-10-23 23:32:42 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=3)
-2025-10-23 23:32:42 [INFO] [CacheManager] Release RPC succeeded for f → None
-2025-10-23 23:32:42 [INFO] [Releaser] Lock f released successfully (server response: )
-2025-10-23 23:32:57 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=3
-2025-10-23 23:32:57 [ERROR] Failed to release lock f: release: invalid state for lock f (None)
-2025-10-23 23:33:30 [INFO] [Main] Starting DFS server on port 1003
-2025-10-23 23:33:30 [INFO] [Releaser] Starting release task...
-2025-10-23 23:33:30 [INFO] [Releaser] Task successfully started.
-2025-10-23 23:33:30 [INFO] [LockCacheService] Initializing LockCache service...
-2025-10-23 23:33:30 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
-2025-10-23 23:33:30 [INFO] [Main] DFS is running on port 1003
-2025-10-23 23:33:54 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=1
-2025-10-23 23:33:54 [INFO] [CacheManager] Lock f acquired (owner=127.0.0.1:1003:DfsClient, seq=1)
-2025-10-23 23:33:54 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=1)
-2025-10-23 23:34:06 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:34:06 [INFO] [CacheManager] Waiting for lock f...
-2025-10-23 23:34:24 [INFO] [LockCacheService] Received revoke request for lock f
-2025-10-23 23:34:24 [INFO] [LockCacheService] Lock f is Locked — waiting until it becomes Free...
-2025-10-23 23:34:36 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:34:36 [INFO] [CacheManager] Released lock f → Free
-2025-10-23 23:34:36 [INFO] Lock f released successfully by 127.0.0.1:1003:DfsClient
-2025-10-23 23:34:36 [INFO] [CacheManager] Reused cached lock f (owner=127.0.0.1:1003:DfsClient)
-2025-10-23 23:34:36 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=2)
-2025-10-23 23:35:02 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:35:02 [INFO] [CacheManager] Released lock f → Free
-2025-10-23 23:35:02 [INFO] Lock f released successfully by 127.0.0.1:1003:DfsClient
-2025-10-23 23:35:02 [INFO] [LockCacheService] Lock f now Free — sending to Releaser
-2025-10-23 23:35:02 [INFO] [CacheManager] Release RPC succeeded for f → None
-2025-10-23 23:35:02 [INFO] [Releaser] Lock f released successfully (server response: )
-2025-10-23 23:53:03 [INFO] [Main] Starting DFS server on port 1003
-2025-10-23 23:53:03 [INFO] [Releaser] Starting release task...
-2025-10-23 23:53:03 [INFO] [Releaser] Task successfully started.
-2025-10-23 23:53:03 [INFO] [LockCacheService] Initializing LockCache service...
-2025-10-23 23:53:03 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
-2025-10-23 23:53:03 [INFO] [Main] DFS is running on port 1003
-2025-10-23 23:53:21 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=1
-2025-10-23 23:53:21 [INFO] [CacheManager] Lock f acquired (owner=127.0.0.1:1003:DfsClient, seq=1)
-2025-10-23 23:53:21 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=1)
-2025-10-23 23:53:27 [INFO] Trying to acquire lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:53:27 [INFO] [CacheManager] Waiting for lock f...
-2025-10-23 23:53:32 [INFO] [LockCacheService] Received revoke request for lock f
-2025-10-23 23:53:32 [INFO] [LockCacheService] Lock f is Locked — waiting until it becomes Free...
-2025-10-23 23:53:49 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:53:49 [INFO] [CacheManager] Released lock f → Free
-2025-10-23 23:53:49 [INFO] Lock f released successfully by 127.0.0.1:1003:DfsClient
-2025-10-23 23:53:49 [INFO] [CacheManager] Reused cached lock f (owner=127.0.0.1:1003:DfsClient)
-2025-10-23 23:53:49 [INFO] Lock f successfully acquired by 127.0.0.1:1003:DfsClient (seq=2)
-2025-10-23 23:53:52 [INFO] Releasing lock: lock_id=f owner_id=127.0.0.1:1003:DfsClient seq=2
-2025-10-23 23:53:52 [INFO] [CacheManager] Released lock f → Free
-2025-10-23 23:53:52 [INFO] Lock f released successfully by 127.0.0.1:1003:DfsClient
-2025-10-23 23:53:52 [INFO] [LockCacheService] Lock f now Free — sending to Releaser
-2025-10-23 23:53:52 [INFO] [CacheManager] Release RPC succeeded for f → None
-2025-10-23 23:53:52 [INFO] [Releaser] Lock f released successfully (server response: )
+2025-10-24 19:08:03 [INFO] [Main] Starting DFS server on port 10003
+2025-10-24 19:08:03 [INFO] [Releaser] Starting release task...
+2025-10-24 19:08:03 [INFO] [Releaser] Task successfully started.
+2025-10-24 19:08:03 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-24 19:08:03 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-24 19:08:03 [INFO] [Main] DFS is running on port 10003
+2025-10-24 19:08:35 [INFO] Trying to acquire lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-24 19:08:35 [INFO] [CacheManager] Acquire lock failed for /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file
+2025-10-24 19:08:35 [INFO] [CacheManager] Cache info /test-file 1
+2025-10-24 19:08:35 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Broadcasting retry signal for lock /test-file (seq=1)
+2025-10-24 19:08:35 [INFO] [LockCacheService] Retry signal broadcast completed for lock /test-file

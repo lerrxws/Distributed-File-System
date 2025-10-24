@@ -122,39 +122,39 @@ func (s *DfsServiceServer) Stop(ctx context.Context, req *api.StopRequest) (*api
 }
 
 func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.DirResponse, error) {
-	// if !strings.HasSuffix(req.DirectoryName, "/") {
-	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
-	// }
+	if !strings.HasSuffix(req.DirectoryName, "/") {
+		return &api.DirResponse{Success: proto.Bool(false)}, nil
+	}
 
-	// if req.DirectoryName == "" {
-	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
-	// }
+	if req.DirectoryName == "" {
+		return &api.DirResponse{Success: proto.Bool(false)}, nil
+	}
 
 	err := s.acquireLock(ctx, s.lockClient, req.DirectoryName)
 	if err != nil {
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
-	fmt.Printf("enter your input: ")
-	fmt.Scanf("%s")
-	defer s.releaseLock(ctx, s.lockClient, req.DirectoryName)
+	// fmt.Printf("enter your input: ")
+	// fmt.Scanf("%s")
+	// defer s.releaseLock(ctx, s.lockClient, req.DirectoryName)
 
-	// resp, err := s.extentClient.Get(ctx, &extent.GetRequest{
-	// 	FileName: req.DirectoryName,
-	// })
-	// if err != nil {
-	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
-	// }
-	// if resp == nil {
-	// 	return &api.DirResponse{Success: proto.Bool(false)}, nil
-	// }
+	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{
+		FileName: req.DirectoryName,
+	})
+	if err != nil {
+		return &api.DirResponse{Success: proto.Bool(false)}, nil
+	}
+	if resp == nil {
+		return &api.DirResponse{Success: proto.Bool(false)}, nil
+	}
 
-	// fileDataString := string(resp.FileData)
-	// fileDataList := strings.Split(fileDataString, "\n")
-	// return &api.DirResponse{Success: proto.Bool(true), DirList: fileDataList}, nil
+	fileDataString := string(resp.FileData)
+	fileDataList := strings.Split(fileDataString, "\n")
+	return &api.DirResponse{Success: proto.Bool(true), DirList: fileDataList}, nil
 
-	s.logger.Debugf("Lockid: %s\nOwnerId: %s\nSequence: %d", req.DirectoryName, s.dfsClient.ownerId, s.dfsClient.GetCurrentSeqNum())
+	// s.logger.Debugf("Lockid: %s\nOwnerId: %s\nSequence: %d", req.DirectoryName, s.dfsClient.ownerId, s.dfsClient.GetCurrentSeqNum())
 
-	return &api.DirResponse{Success: proto.Bool(true)}, nil
+	// return &api.DirResponse{Success: proto.Bool(true)}, nil
 }
 
 func (s *DfsServiceServer) Mkdir(ctx context.Context, req *api.MkdirRequest) (*api.MkdirResponse, error) {

@@ -52,23 +52,27 @@ func (cm *CacheManager) IsCached(lockId string) bool {
 	return exist
 }
 
-func (cm *CacheManager) getOrCreateCache(lockId string) *CacheInfo {
+func (cm *CacheManager) getOrCreateCache(lockId string, seqNum int64) *CacheInfo {
 	if !cm.IsCached(lockId) {
 		cm.AddCache(NewCacheInfo(lockId))
 	}
-	return cm.GetCacheInfo(lockId)
+	cache := cm.GetCacheInfo(lockId)
+	cache.SeqNum = seqNum
+	return cache
 }
 
 func (cm *CacheManager) Acquire(ctx context.Context, req *lockapi.AcquireRequest) (*lockapi.AcquireResponse, error) {
-	cacheInfo := cm.getOrCreateCache(req.LockId)
+	cacheInfo := cm.getOrCreateCache(req.LockId, req.Sequence)
+	cm.logger.Infof("[CacheManager] Acquire lock failed for %s", req.LockId)
 
 	for {
 		cacheInfo.mu.Lock()
 		state := cacheInfo.State
 		cacheInfo.mu.Unlock()
 
-		switch state {
+		cm.logger.Infof("[CacheManager] Cache info %s %d", cacheInfo.LockId, cacheInfo.SeqNum)
 
+		switch state {
 		case None:
 			acqResp, err := cm.lockClient.Acquire(ctx, req)
 			if err != nil {

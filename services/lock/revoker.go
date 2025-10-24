@@ -17,13 +17,13 @@ type RevokerTarget struct {
 	LockId  string
 }
 
-type RevokerTask struct {
+type RevokeTask struct {
 	revokeQueue chan *RevokerTarget
 	logger      seelog.LoggerInterface
 }
 
-func NewRevokerTask(logger seelog.LoggerInterface) *RevokerTask {
-	r := &RevokerTask{
+func NewRevokeTask(logger seelog.LoggerInterface) *RevokeTask {
+	r := &RevokeTask{
 		revokeQueue: make(chan *RevokerTarget, 100),
 		logger:      logger,
 	}
@@ -32,7 +32,7 @@ func NewRevokerTask(logger seelog.LoggerInterface) *RevokerTask {
 	return r
 }
 
-func (r *RevokerTask) Start() {
+func (r *RevokeTask) Start() {
 	r.logger.Infof("[Revoker] Starting revoke task...")
 
 	go func() {
@@ -44,7 +44,7 @@ func (r *RevokerTask) Start() {
 	r.logger.Infof("[Revoker] Task successfully started.")
 }
 
-func (r *RevokerTask) AddTask(target *RevokerTarget) {
+func (r *RevokeTask) AddTask(target *RevokerTarget) {
 	select {
 	case r.revokeQueue <- target:
 		r.logger.Infof("[Revoker] queued revoke task for lock %s (owner %s)", target.LockId, target.OwnerId)
@@ -53,7 +53,7 @@ func (r *RevokerTask) AddTask(target *RevokerTarget) {
 	}
 }
 
-func (r *RevokerTask) SendRevoke(target *RevokerTarget) {
+func (r *RevokeTask) SendRevoke(target *RevokerTarget) {
 	r.logger.Debugf("[Revoker] Processing revoke task: lock=%s, owner=%s", target.LockId, target.OwnerId)
 
 	addrParts := strings.Split(target.OwnerId, ":")
@@ -79,8 +79,8 @@ func (r *RevokerTask) SendRevoke(target *RevokerTarget) {
 	}
 }
 
-func (r *RevokerTask) Stop() {
-	r.logger.Infof("[Revoker] Stopping revoke worker...")
+func (r *RevokeTask) Stop() {
+	r.logger.Infof("[Revoker] Stopping revoke task...")
 	defer func() {
 		recover()
 		r.logger.Infof("[Revoker] Revoker stopped cleanly.")
