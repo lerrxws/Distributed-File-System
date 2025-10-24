@@ -42,7 +42,6 @@ func main() {
 	releaser := lockcache.NewReleaser(cacheManager, logger)
 	releaser.Start()
 
-
 	dfsService, err := dfs.NewDfsServiceServer(lockClient, cacheManager, extentClient, dfsClient, grpcServer, logger)
 	if err != nil {
 		logger.Criticalf("[Main] Failed to initialize DFS service: %v", err)
@@ -50,11 +49,14 @@ func main() {
 	}
 
 	lockCacheService := lockcache.NewLockCacheService(grpcServer, cacheManager, releaser, logger)
+	defer lockCacheService.Stop()
 
 	dfsapi.RegisterDfsServiceServer(grpcServer, dfsService)
 	lcapi.RegisterLockCacheServiceServer(grpcServer, lockCacheService)
 
 	startGrpcServer(grpcServer, port, logger)
+
+	logger.Infof("[Main] DfsServer shutdown completed.")
 }
 
 func initLogger(configPath string) seelog.LoggerInterface {

@@ -124,7 +124,12 @@ func (cl *LockCacheService) Retry(ctx context.Context, req *lcapi.RetryRequest) 
 func (cl *LockCacheService) Stop() {
 	cl.logger.Infof("[LockCacheService] received stop request — starting graceful shutdown")
 
-	cl.releaser.Stop()
+	cl.releaser.Stop()	
+
+    go func() {
+        cl.grpc.GracefulStop()
+        cl.logger.Infof("[Stop] gRPC LockCache stopped successfully")
+    }()
 
 	cl.logger.Infof("[LockCacheService] gRPC LockServer stopped successfully")
 }
