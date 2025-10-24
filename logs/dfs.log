@@ -1,0 +1,67 @@
+2025-10-25 00:36:35 [INFO] [Main] Starting DFS server on port 10003
+2025-10-25 00:36:35 [INFO] [Releaser] Starting release task...
+2025-10-25 00:36:35 [INFO] [Releaser] Task successfully started.
+2025-10-25 00:36:35 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-25 00:36:35 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-25 00:36:35 [INFO] [Main] DFS is running on port 10003
+2025-10-25 00:37:06 [INFO] [DFS] Put request: /test-file
+2025-10-25 00:37:06 [INFO] [DFS] Trying to acquire lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-25 00:37:06 [INFO] [CacheManager] Trying to acquire lock /test-file (seq=1)
+2025-10-25 00:37:06 [INFO] [CacheManager] Lock /test-file busy — waiting for Retry...
+2025-10-25 00:37:11 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
+2025-10-25 00:37:11 [INFO] [LockCacheService] Lock /test-file is in Acquiring state — broadcasting condition
+2025-10-25 00:37:11 [INFO] [LockCacheService] Retry handling completed for lock /test-file
+2025-10-25 00:37:11 [INFO] [CacheManager] Trying to acquire lock /test-file (seq=1)
+2025-10-25 00:37:11 [INFO] [CacheManager] Lock /test-file acquired (seq=1)
+2025-10-25 00:37:11 [INFO] [DFS] Lock /test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=1)
+2025-10-25 00:37:11 [INFO] [DFS] Put: file /test-file saved successfully
+2025-10-25 00:37:11 [INFO] [DFS] Releasing lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-25 00:37:11 [INFO] [CacheManager] Released lock /test-file → Free
+2025-10-25 00:37:11 [INFO] Lock /test-file released successfully by 127.0.0.1:10003:DfsClient
+2025-10-25 00:37:16 [INFO] [LockCacheService] Received revoke request for lock /test-file
+2025-10-25 00:37:16 [INFO] [LockCacheService] Lock /test-file now Free — sending to Releaser
+2025-10-25 00:37:16 [INFO] [Releaser] Added release task for lock=/test-file
+2025-10-25 00:37:16 [INFO] [LockCacheService] Revoke completed for lock /test-file
+2025-10-25 00:37:16 [INFO] [Releaser] Processing release task: lock=/test-file, owner=127.0.0.1:10003:DfsClient, seq=1
+2025-10-25 00:37:16 [INFO] [Releaser] Changing state: Free → Releasing
+2025-10-25 00:37:16 [INFO] [CacheManager] Release RPC succeeded for /test-file → None
+2025-10-25 00:37:16 [INFO] [Releaser] Lock /test-file released successfully (server response: )
+2025-10-25 00:37:21 [INFO] [DFS] Trying to acquire lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
+2025-10-25 00:37:21 [INFO] [CacheManager] Trying to acquire lock /test-file (seq=2)
+2025-10-25 00:37:21 [INFO] [CacheManager] Lock /test-file acquired (seq=2)
+2025-10-25 00:37:21 [INFO] [DFS] Lock /test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=2)
+2025-10-25 00:37:21 [INFO] [DFS] Releasing lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
+2025-10-25 00:37:21 [INFO] [CacheManager] Released lock /test-file → Free
+2025-10-25 00:37:21 [INFO] Lock /test-file released successfully by 127.0.0.1:10003:DfsClient
+2025-10-25 00:37:26 [INFO] [LockCacheService] Received revoke request for lock /test-file
+2025-10-25 00:37:26 [INFO] [LockCacheService] Lock /test-file now Free — sending to Releaser
+2025-10-25 00:37:26 [INFO] [Releaser] Added release task for lock=/test-file
+2025-10-25 00:37:26 [INFO] [LockCacheService] Revoke completed for lock /test-file
+2025-10-25 00:37:26 [INFO] [Releaser] Processing release task: lock=/test-file, owner=127.0.0.1:10003:DfsClient, seq=2
+2025-10-25 00:37:26 [INFO] [Releaser] Changing state: Free → Releasing
+2025-10-25 00:37:26 [INFO] [CacheManager] Release RPC succeeded for /test-file → None
+2025-10-25 00:37:26 [INFO] [Releaser] Lock /test-file released successfully (server response: )
+2025-10-25 00:39:08 [INFO] [Main] Starting DFS server on port 1003
+2025-10-25 00:39:08 [INFO] [Releaser] Starting release task...
+2025-10-25 00:39:08 [INFO] [Releaser] Task successfully started.
+2025-10-25 00:39:08 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-25 00:39:08 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-25 00:39:08 [INFO] [Main] DFS is running on port 1003
+2025-10-25 00:40:52 [INFO] [Main] Starting DFS server on port 3001
+2025-10-25 00:40:52 [INFO] [Releaser] Starting release task...
+2025-10-25 00:40:52 [INFO] [Releaser] Task successfully started.
+2025-10-25 00:40:52 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-25 00:40:52 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-25 00:40:52 [INFO] [Main] DFS is running on port 3001
+2025-10-25 00:43:59 [INFO] [Main] Starting DFS server on port 3001
+2025-10-25 00:43:59 [INFO] [Releaser] Starting release task...
+2025-10-25 00:43:59 [INFO] [Releaser] Task successfully started.
+2025-10-25 00:43:59 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-25 00:43:59 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-25 00:43:59 [INFO] [Main] DFS is running on port 3001
+2025-10-25 00:46:28 [INFO] [Main] Starting DFS server on port 3001
+2025-10-25 00:46:28 [INFO] [Releaser] Starting release task...
+2025-10-25 00:46:28 [INFO] [Releaser] Task successfully started.
+2025-10-25 00:46:28 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-25 00:46:28 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-25 00:46:28 [INFO] [Main] DFS is running on port 3001

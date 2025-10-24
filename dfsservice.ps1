@@ -47,6 +47,8 @@ switch ($command) {
         # TODO: write regex check
 
         $dfsAddr = $arg1
+        $pidNum = Get-Content -Path $pidFile
+        
         Write-Host "Stopping DFS Service at $dfsAddr"
         Write-Host "Stopping Lock Service with PID $pidNum"
         Stop-Process -Id $pidNum -Force
