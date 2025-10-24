@@ -48,7 +48,6 @@ func (s *LockCacheService) Revoke(ctx context.Context, req *api.RevokeRequest) (
 	return &api.RevokeResponse{}, nil
 }
 
-
 func (s *LockCacheService) Retry( ctx context.Context, req *api.RetryRequest) (*api.RetryResponse, error) {
 	s.lockCache.Mu.Lock()
 	defer s.lockCache.Mu.Unlock()
