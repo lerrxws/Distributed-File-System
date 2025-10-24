@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	api "dfs/proto-gen/dfs"
+	api "dfs/proto-gen/lockcache"
 	cache "dfs/services/dfs/lockcache"
 )
 
