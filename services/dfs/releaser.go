@@ -14,7 +14,7 @@ type Releaser struct {
 	lockClient lockapi.LockServiceClient
 }
 
-func newReleaser(cache *cache.LockCache, lockClient lockapi.LockServiceClient) *Releaser {
+func NewReleaser(cache *cache.LockCache, lockClient lockapi.LockServiceClient) *Releaser {
 	return &Releaser{
 		cache:      cache,
 		lockClient: lockClient,

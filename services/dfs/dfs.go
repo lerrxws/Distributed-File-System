@@ -10,6 +10,7 @@ import (
 	extent "dfs/proto-gen/extent"
 	lock "dfs/proto-gen/lock"
 
+	extentdfs "dfs/services/dfs/extentcache"
 	lockcache "dfs/services/lockcache"
 
 	seelog "github.com/cihub/seelog"
@@ -50,7 +51,7 @@ func (dc *DfsClient) GetCurrentSeqNum() int64 {
 type DfsServiceServer struct {
 	lockClient   lock.LockServiceClient
 	cacheMangaer *lockcache.CacheManager
-	extentClient extent.ExtentServiceClient
+	extentHandler  extentdfs.ExtentInterface
 	dfsClient    *DfsClient
 	grpc         *grpc.Server
 
@@ -60,20 +61,20 @@ type DfsServiceServer struct {
 }
 
 func NewDfsServiceServer(lockClient lock.LockServiceClient, cacheManager *lockcache.CacheManager,
-						 extentClient extent.ExtentServiceClient,
+						 extentHandler extentdfs.ExtentInterface,
 						dfsClient *DfsClient, grpcServer *grpc.Server, logger seelog.LoggerInterface) (*DfsServiceServer, error) {
 	return &DfsServiceServer{
 		lockClient:   lockClient,
 		cacheMangaer: cacheManager,
 
-		extentClient: extentClient,
+		extentHandler: extentHandler,
 		dfsClient:    dfsClient,
 		grpc:         grpcServer,
 		logger:       logger,
 	}, nil
 }
 
-func (s *DfsServiceServer) acquireLock(ctx context.Context, lockClient lock.LockServiceClient, lockId string) error {
+func (s *DfsServiceServer) acquireLock(ctx context.Context, lockId string) error {
 	seqNum := s.dfsClient.GetNewSeqNum()
 
 	s.logger.Infof("[DFS] Trying to acquire lock: lock_id=%s owner_id=%s seq=%d", lockId, s.dfsClient.ownerId, seqNum)
@@ -94,7 +95,7 @@ func (s *DfsServiceServer) acquireLock(ctx context.Context, lockClient lock.Lock
 	return nil
 }
 
-func (s *DfsServiceServer) releaseLock(ctx context.Context, lockClient lock.LockServiceClient, lockId string) {
+func (s *DfsServiceServer) releaseLock(ctx context.Context, lockId string) {
 	seq := s.dfsClient.GetCurrentSeqNum()
 
 	s.logger.Infof("[DFS] Releasing lock: lock_id=%s owner_id=%s seq=%d",
@@ -114,7 +115,6 @@ func (s *DfsServiceServer) releaseLock(ctx context.Context, lockClient lock.Lock
 	s.logger.Infof("Lock %s released successfully by %s", lockId, s.dfsClient.ownerId)
 }
 
-// todo : ось тут треба не забути вбивати і releaser
 func (s *DfsServiceServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
 	go func() {
 		s.grpc.GracefulStop()
@@ -131,12 +131,12 @@ func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.D
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
 
-	err := s.acquireLock(ctx, s.lockClient, req.DirectoryName)
+	err := s.acquireLock(ctx, req.DirectoryName)
 	if err != nil {
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
 
-	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{
+	resp, err := s.extentHandler.Get(ctx, &extent.GetRequest{
 		FileName: req.DirectoryName,
 	})
 	if err != nil {
@@ -160,13 +160,13 @@ func (s *DfsServiceServer) Mkdir(ctx context.Context, req *api.MkdirRequest) (*a
 		return &api.MkdirResponse{Success: proto.Bool(false)}, nil
 	}
 
-	err := s.acquireLock(ctx, s.lockClient, req.DirectoryName)
+	err := s.acquireLock(ctx, req.DirectoryName)
 	if err != nil {
 		return &api.MkdirResponse{Success: proto.Bool(false)}, nil
 	}
-	defer s.releaseLock(ctx, s.lockClient, req.DirectoryName)
+	defer s.releaseLock(ctx, req.DirectoryName)
 
-	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{
+	resp, err := s.extentHandler.Put(ctx, &extent.PutRequest{
 		FileName: req.DirectoryName,
 		FileData: []byte{},
 	})
@@ -186,13 +186,13 @@ func (s *DfsServiceServer) Rmdir(ctx context.Context, req *api.RmdirRequest) (*a
 		return &api.RmdirResponse{Success: proto.Bool(false)}, nil
 	}
 
-	err := s.acquireLock(ctx, s.lockClient, req.DirectoryName)
+	err := s.acquireLock(ctx, req.DirectoryName)
 	if err != nil {
 		return &api.RmdirResponse{Success: proto.Bool(false)}, nil
 	}
-	defer s.releaseLock(ctx, s.lockClient, req.DirectoryName)
+	defer s.releaseLock(ctx, req.DirectoryName)
 
-	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{FileName: req.DirectoryName})
+	resp, err := s.extentHandler.Put(ctx, &extent.PutRequest{FileName: req.DirectoryName})
 	if err != nil || !(*resp.Success) {
 		return &api.RmdirResponse{Success: proto.Bool(false)}, nil
 	}
@@ -207,19 +207,19 @@ func (s *DfsServiceServer) Put(ctx context.Context, req *api.PutRequest) (*api.P
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
-	err := s.acquireLock(ctx, s.lockClient, req.FileName)
+	err := s.acquireLock(ctx, req.FileName)
 	if err != nil {
 		s.logger.Errorf("[DFS] Put: failed to acquire lock for %s", req.FileName)
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
-	defer s.releaseLock(ctx, s.lockClient, req.FileName)
+	defer s.releaseLock(ctx, req.FileName)
 
 	if req.FileData == nil {
 		s.logger.Warnf("[DFS] Put: empty file data for %s", req.FileName)
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
-	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{
+	resp, err := s.extentHandler.Put(ctx, &extent.PutRequest{
 		FileName: req.FileName,
 		FileData: req.FileData,
 	})
@@ -241,13 +241,13 @@ func (s *DfsServiceServer) Get(ctx context.Context, req *api.GetRequest) (*api.G
 		return &api.GetResponse{}, nil
 	}
 
-	err := s.acquireLock(ctx, s.lockClient, req.FileName)
+	err := s.acquireLock(ctx, req.FileName)
 	if err != nil {
 		return &api.GetResponse{}, nil
 	}
-	defer s.releaseLock(ctx, s.lockClient, req.FileName)
+	defer s.releaseLock(ctx, req.FileName)
 
-	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{FileName: req.FileName})
+	resp, err := s.extentHandler.Get(ctx, &extent.GetRequest{FileName: req.FileName})
 	if (resp == &extent.GetResponse{}) || err != nil {
 		return &api.GetResponse{}, nil
 	}
@@ -265,13 +265,13 @@ func (s *DfsServiceServer) Delete(ctx context.Context, req *api.DeleteRequest) (
 		return &api.DeleteResponse{Success: proto.Bool(false)}, nil
 	}
 
-	err := s.acquireLock(ctx, s.lockClient, req.FileName)
+	err := s.acquireLock(ctx, req.FileName)
 	if err != nil {
 		return &api.DeleteResponse{Success: proto.Bool(false)}, nil
 	}
-	defer s.releaseLock(ctx, s.lockClient, req.FileName)
+	defer s.releaseLock(ctx, req.FileName)
 
-	resp, err := s.extentClient.Put(ctx, &extent.PutRequest{FileName: req.FileName})
+	resp, err := s.extentHandler.Put(ctx, &extent.PutRequest{FileName: req.FileName})
 	if err != nil || !(*resp.Success) {
 		return &api.DeleteResponse{Success: proto.Bool(false)}, nil
 	}

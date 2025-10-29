@@ -11,6 +11,7 @@ import (
 	lockapi "dfs/proto-gen/lock"
 
 	dfs "dfs/services/dfs"
+	extentdfs "dfs/services/dfs/extentcache"
 	lockcache "dfs/services/lockcache"
 
 	seelog "github.com/cihub/seelog"
@@ -42,7 +43,9 @@ func main() {
 	releaser := lockcache.NewReleaser(cacheManager, logger)
 	releaser.Start()
 
-	dfsService, err := dfs.NewDfsServiceServer(lockClient, cacheManager, extentClient, dfsClient, grpcServer, logger)
+	extentHandler := extentdfs.NewExtentCache(extentClient)
+
+	dfsService, err := dfs.NewDfsServiceServer(lockClient, cacheManager, extentHandler, dfsClient, grpcServer, logger)
 	if err != nil {
 		logger.Criticalf("[Main] Failed to initialize DFS service: %v", err)
 		os.Exit(1)
