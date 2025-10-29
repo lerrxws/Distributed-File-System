@@ -20,9 +20,10 @@ const (
 
 // Cached extent entry
 type ExtentCache struct {
-	FileID  string
-	Data    []byte
-	IsDirty CacheState
+	FileID   string
+	Data     []byte
+	IsDirty  CacheState
+	ParentID string
 }
 
 func (c *ExtentCache) SetCacheData(data []byte) {
@@ -34,14 +35,16 @@ func (c *ExtentCache) SetCacheDirtyState(isDirty CacheState) {
 }
 
 type ExtentCacheManager struct {
-	mu    sync.Mutex
-	cache map[string]*ExtentCache
+	mu     sync.Mutex
+	logger seelog.LoggerInterface
+	cache  map[string]*ExtentCache
 }
 
 // Constructor
-func NewCacheManager() *ExtentCacheManager {
+func NewCacheManager(logger seelog.LoggerInterface) *ExtentCacheManager {
 	return &ExtentCacheManager{
-		cache: make(map[string]*ExtentCache),
+		logger: logger,
+		cache:  make(map[string]*ExtentCache),
 	}
 }
 
@@ -59,10 +62,24 @@ func (cm *ExtentCacheManager) GetCache(fileID string) (*ExtentCache, bool) {
 	return cache, exist
 }
 
-func (cm *ExtentCacheManager) AddCache(fileID string, newCache *ExtentCache) {
+func (cm *ExtentCacheManager) AddExistingFileToCache(fileID string, data []byte) {
 	cm.mu.Lock()
 	defer cm.mu.Unlock()
-	cm.cache[fileID] = newCache
+	cm.cache[fileID] = &ExtentCache{
+		FileID:  fileID,
+		Data:    data,
+		IsDirty: Clean,
+	}
+}
+
+func (cm *ExtentCacheManager) AddLocalyCreatedFileToCache(fileID string, data []byte) {
+	cm.mu.Lock()
+	defer cm.mu.Unlock()
+	cm.cache[fileID] = &ExtentCache{
+		FileID:  fileID,
+		Data:    data,
+		IsDirty: Dirty,
+	}
 }
 
 func (cm *ExtentCacheManager) RemoveCache(fileID string) {
@@ -113,11 +130,7 @@ func (ec *ExtentCacheHandler) Get(ctx context.Context, req *extentapi.GetRequest
 
 		// Add to cache
 		ec.logger.Warnf("[ExtentCache] adding to cache file-data for %s", req.FileName)
-		ec.cacheManager.AddCache(req.FileName, &ExtentCache{
-			FileID:  req.FileName,
-			Data:    getResp.FileData,
-			IsDirty: false,
-		})
+		ec.cacheManager.AddExistingFileToCache(req.FileName, getResp.FileData)
 
 		ec.logger.Infof("[ExtentCache] cached new extent: %s", req.FileName)
 	}
@@ -132,13 +145,21 @@ func (ec *ExtentCacheHandler) Get(ctx context.Context, req *extentapi.GetRequest
 
 // Put() - create, update or delete file only in cache
 func (ec *ExtentCacheHandler) Put(ctx context.Context, req *extentapi.PutRequest, opts ...grpc.CallOption) (*extentapi.PutResponse, error) {
+	ec.logger.Infof("[ExtentCache] Put request received for file %s", req.FileName)
+
+	_, err := ec.Get(ctx, &extentapi.GetRequest{FileName: req.FileName})
+	if err != nil {
+		ec.logger.Errorf("[ExtentCache] failed to get existing file %s from cache or server: %v", req.FileName, err)
+		return nil, err
+	}
+
 	if req.FileData == nil {
 		ec.logger.Infof("[ExtentCache] no file-data is present for file %s - performing deleting", req.FileName)
-		return ec.deleteFile(req)
+		return ec.deleteFile(req.FileName)
 	}
 
 	ec.logger.Infof("[ExtentCache] put new file-data for file %s", req.FileName)
-	return ec.updateFile(req)
+	return ec.updateFile(req.FileName, req.FileData)
 }
 
 func (ec *ExtentCacheHandler) Stop(ctx context.Context, req *extentapi.StopRequest, opts ...grpc.CallOption) (*extentapi.StopResponse, error) {
@@ -148,12 +169,10 @@ func (ec *ExtentCacheHandler) Stop(ctx context.Context, req *extentapi.StopReque
 func (ec *ExtentCacheHandler) Update(ctx context.Context, fileId string) {
 	cache, exist := ec.cacheManager.GetCache(fileId)
 	if !exist {
-		ec.logger.Warnf("[ExtentCache] file '%s' is not present in cache — skipping update", fileId)
+		ec.logger.Warnf("[ExtentCache] file '%s' not in cache — skipping update", fileId)
 		return
 	}
-
 	if cache.IsDirty == Clean {
-		ec.logger.Infof("[ExtentCache] file '%s' has not been modified — skipping update", fileId)
 		return
 	}
 
@@ -162,19 +181,17 @@ func (ec *ExtentCacheHandler) Update(ctx context.Context, fileId string) {
 		FileData: cache.Data,
 	})
 	if err != nil {
-		ec.logger.Errorf("[ExtentCache] failed to update dirty file '%s' on main server: %v", cache.FileID, err)
+		ec.logger.Errorf("[ExtentCache] failed to update dirty file '%s': %v", cache.FileID, err)
 		return
 	}
-
 	if putResp == nil || !(*putResp.Success) {
-		ec.logger.Warnf("[ExtentCache] main server returned unsuccessful response while updating file '%s'", cache.FileID)
+		ec.logger.Warnf("[ExtentCache] unsuccessful response updating file '%s'", cache.FileID)
 		return
 	}
 
 	cache.IsDirty = Clean
 	ec.logger.Infof("[ExtentCache] successfully synchronized dirty file '%s' with main server", cache.FileID)
 }
-
 
 func (ec *ExtentCacheHandler) Flush(fileId string) {
 	cache, exist := ec.cacheManager.GetCache(fileId)
@@ -192,32 +209,28 @@ func (ec *ExtentCacheHandler) Flush(fileId string) {
 	ec.logger.Infof("[ExtentCache] successfully flushed file '%s' from local cache", fileId)
 }
 
-func (ec *ExtentCacheHandler) updateFile(req *extentapi.PutRequest) (*extentapi.PutResponse, error) {
-	_, exist := ec.cacheManager.GetCache(req.FileName)
+func (ec *ExtentCacheHandler) updateFile(FileName string, FileData []byte) (*extentapi.PutResponse, error) {
+	_, exist := ec.cacheManager.GetCache(FileName)
 	if !exist {
-		ec.cacheManager.AddCache(req.FileName, &ExtentCache{
-			FileID:  req.FileName,
-			Data:    req.FileData,
-			IsDirty: true,
-		})
+		ec.cacheManager.AddLocalyCreatedFileToCache(FileName, FileData)
 
-		ec.logger.Info("[ExtentCache] adding new file %s to cache", req.FileName)
+		ec.logger.Info("[ExtentCache] adding new file %s to cache", FileName)
 		return &extentapi.PutResponse{Success: proto.Bool(true)}, nil
 	}
-	ec.logger.Info("[ExtentCache] file %s is present in cache - updating its data", req.FileName)
-	ec.cacheManager.UpdateCacheData(req.FileName, req.FileData)
+	ec.logger.Info("[ExtentCache] file %s is present in cache - updating its data", FileName)
+	ec.cacheManager.UpdateCacheData(FileName, FileData)
 
 	return &extentapi.PutResponse{Success: proto.Bool(true)}, nil
 }
 
-func (ec *ExtentCacheHandler) deleteFile(req *extentapi.PutRequest) (*extentapi.PutResponse, error) {
-	_, exist := ec.cacheManager.GetCache(req.FileName)
+func (ec *ExtentCacheHandler) deleteFile(FileName string) (*extentapi.PutResponse, error) {
+	_, exist := ec.cacheManager.GetCache(FileName)
 	if !exist {
-		ec.logger.Errorf("[ExtentCache] file %s does not exist - unable to perform Delete operation", req.FileName)
+		ec.logger.Errorf("[ExtentCache] file %s does not exist - unable to perform Delete operation", FileName)
 		return &extentapi.PutResponse{Success: proto.Bool(false)}, nil
 	}
-	ec.logger.Info("[ExtentCache] deleting %s file is successful", req.FileName)
-	ec.cacheManager.RemoveCache(req.FileName)
+	ec.logger.Info("[ExtentCache] deleting %s file is successful", FileName)
+	ec.cacheManager.UpdateCacheData(FileName, nil)
 
 	return &extentapi.PutResponse{Success: proto.Bool(true)}, nil
 }

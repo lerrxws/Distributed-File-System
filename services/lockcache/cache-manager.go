@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	lockapi "dfs/proto-gen/lock"
+	extentcache "dfs/services/dfs/extentcache"
 
 	seelog "github.com/cihub/seelog"
 	"google.golang.org/protobuf/proto"
@@ -14,16 +15,18 @@ import (
 type CacheManager struct {
 	cacheManager map[string]*CacheInfo
 	lockClient   lockapi.LockServiceClient
+	extentHandler *extentcache.ExtentCacheHandler
 	logger       seelog.LoggerInterface
 
 	mu sync.Mutex
 }
 
-func NewCacheManager(lockClient lockapi.LockServiceClient, logger seelog.LoggerInterface) *CacheManager {
+func NewCacheManager(lockClient lockapi.LockServiceClient, logger seelog.LoggerInterface, extentHandler *extentcache.ExtentCacheHandler) *CacheManager {
 	return &CacheManager{
 		cacheManager: make(map[string]*CacheInfo),
 		lockClient:   lockClient,
 		logger:       logger,
+		extentHandler: extentHandler,
 	}
 }
 
@@ -156,6 +159,7 @@ func (cm *CacheManager) Release(ctx context.Context, req *lockapi.ReleaseRequest
 
 	switch cacheInfo.State {
 	case Locked:
+		cm.extentHandler.Update(ctx, req.LockId)
 		cacheInfo.State = Free
 		cacheInfo.cond.Broadcast()
 		cm.logger.Infof("[CacheManager] Released lock %s → Free", req.LockId)
@@ -171,6 +175,10 @@ func (cm *CacheManager) Release(ctx context.Context, req *lockapi.ReleaseRequest
 }
 
 func (cm *CacheManager) ReleaseRPC(ctx context.Context, req *lockapi.ReleaseRequest) (*lockapi.ReleaseResponse, error) {
+	cm.logger.Infof("[CacheManager] releasing lock for '%s' — starting update and flush sequence", req.LockId)
+	cm.extentHandler.Update(ctx, req.LockId)
+	cm.extentHandler.Flush(req.LockId)
+
 	cacheInfo := cm.GetCacheInfo(req.LockId)
 
 	resp, err := cm.lockClient.Release(ctx, req)

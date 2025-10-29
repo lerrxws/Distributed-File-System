@@ -39,12 +39,12 @@ func main() {
 	extentClient := connectExtentClient(extentAddr)
 	dfsClient := dfs.NewDfsClient(port)
 
-	cacheManager := lockcache.NewCacheManager(lockClient, logger)
-	releaser := lockcache.NewReleaser(cacheManager, logger)
-	releaser.Start()
-
-	extentCacheManager := extentdfs.NewCacheManager()
+	extentCacheManager := extentdfs.NewCacheManager(logger)
 	extentHandler := extentdfs.NewExtentCacheHandler(extentClient, extentCacheManager, logger)
+
+	cacheManager := lockcache.NewCacheManager(lockClient, logger, extentHandler)
+	releaser := lockcache.NewReleaser(cacheManager, logger, extentHandler)
+	releaser.Start()
 
 	dfsService, err := dfs.NewDfsServiceServer(lockClient, cacheManager, extentHandler, dfsClient, grpcServer, logger)
 	if err != nil {

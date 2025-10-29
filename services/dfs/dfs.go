@@ -144,6 +144,7 @@ func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.D
 	if resp == nil {
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
+	defer s.releaseLock(ctx, req.DirectoryName)
 
 	fileDataString := string(resp.FileData)
 	fileDataList := strings.Split(fileDataString, "\n")
