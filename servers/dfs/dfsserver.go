@@ -6,9 +6,9 @@ import (
 	"os"
 
 	dfsapi "dfs/proto-gen/dfs"
-	lcapi "dfs/proto-gen/lockcache"
 	extentapi "dfs/proto-gen/extent"
 	lockapi "dfs/proto-gen/lock"
+	lcapi "dfs/proto-gen/lockcache"
 
 	dfs "dfs/services/dfs"
 	extentdfs "dfs/services/dfs/extentcache"
@@ -43,7 +43,8 @@ func main() {
 	releaser := lockcache.NewReleaser(cacheManager, logger)
 	releaser.Start()
 
-	extentHandler := extentdfs.NewExtentCache(extentClient)
+	extentCacheManager := extentdfs.NewCacheManager()
+	extentHandler := extentdfs.NewExtentCacheHandler(extentClient, extentCacheManager, logger)
 
 	dfsService, err := dfs.NewDfsServiceServer(lockClient, cacheManager, extentHandler, dfsClient, grpcServer, logger)
 	if err != nil {

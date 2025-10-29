@@ -55,3 +55,14 @@
 2025-10-29 16:17:02 [INFO] [Retrier] Queued retry for lock /test-file (owner=127.0.0.1:10004:client1, seq=5)
 2025-10-29 16:17:02 [INFO] [Release] Lock /test-file released successfully by owner 127.0.0.1:10003:DfsClient
 2025-10-29 16:17:02 [INFO] [Retrier] Successfully sent retry to 127.0.0.1:10004:client1 for lock /test-file (seq=5)
+2025-10-29 18:23:23 [INFO] [Main] Starting LockServer initialization...
+2025-10-29 18:23:23 [INFO] [Revoker] Initialized (queue capacity=100)
+2025-10-29 18:23:23 [INFO] [Retrier] Initialized (queue capacity=100)
+2025-10-29 18:23:23 [INFO] [Revoker] Starting revoke task...
+2025-10-29 18:23:23 [INFO] [Revoker] Task successfully started.
+2025-10-29 18:23:23 [INFO] [Retrier] Starting retry task processor...
+2025-10-29 18:23:23 [INFO] [Retrier] Retry task processor started successfully.
+2025-10-29 18:23:23 [INFO] LockService] LockServiceServer initialized successfully
+2025-10-29 18:23:23 [INFO] [Main] LockServer is running on port :1001
+2025-10-29 18:26:02 [INFO] [Acquire] received acquire request: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=1
+2025-10-29 18:26:02 [INFO] [Acquire] lock tests/ successfully acquired by owner 127.0.0.1:3001:DfsClient

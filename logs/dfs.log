@@ -41,3 +41,25 @@
 2025-10-29 16:17:02 [INFO] [Releaser] Changing state: Free → Releasing
 2025-10-29 16:17:02 [INFO] [CacheManager] Release RPC succeeded for /test-file → None
 2025-10-29 16:17:02 [INFO] [Releaser] Lock /test-file released successfully (server response: )
+2025-10-29 18:23:55 [INFO] [Main] Starting DFS server on port 3001
+2025-10-29 18:23:55 [INFO] [Releaser] Starting release task...
+2025-10-29 18:23:55 [INFO] [Releaser] Task successfully started.
+2025-10-29 18:23:55 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-29 18:23:55 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-29 18:23:55 [INFO] [Main] DFS is running on port 3001
+2025-10-29 18:26:02 [INFO] [DFS] Trying to acquire lock: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=1
+2025-10-29 18:26:02 [INFO] [CacheManager] Trying to acquire lock tests/ (seq=1)
+2025-10-29 18:26:02 [INFO] [CacheManager] Lock tests/ acquired (seq=1)
+2025-10-29 18:26:02 [INFO] [DFS] Lock tests/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=1)
+2025-10-29 18:26:02 [WARN] [ExtentCache] empty file-data for tests/
+2025-10-29 18:26:02 [WARN] [ExtentCache] adding to cache file-data for tests/
+2025-10-29 18:26:02 [INFO] [ExtentCache] cached new extent: tests/
+2025-10-29 18:26:02 [INFO] [ExtentCache] returning cached data for tests/
+2025-10-29 18:26:49 [INFO] [DFS] Trying to acquire lock: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=2
+2025-10-29 18:26:49 [INFO] [CacheManager] Lock tests/ already held locally
+2025-10-29 18:26:49 [INFO] [DFS] Lock tests/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=2)
+2025-10-29 18:26:49 [INFO] [ExtentCache] no file-data is present for file tests/ - performing deleting
+2025-10-29 18:26:49 [INFO] [ExtentCache] deleting %s file is successfultests/
+2025-10-29 18:26:49 [INFO] [DFS] Releasing lock: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=2
+2025-10-29 18:26:49 [INFO] [CacheManager] Released lock tests/ → Free
+2025-10-29 18:26:49 [INFO] Lock tests/ released successfully by 127.0.0.1:3001:DfsClient
