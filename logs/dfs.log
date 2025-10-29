@@ -1,65 +1,69 @@
-2025-10-29 16:16:13 [INFO] [Main] Starting DFS server on port 10003
-2025-10-29 16:16:13 [INFO] [Releaser] Starting release task...
-2025-10-29 16:16:13 [INFO] [Releaser] Task successfully started.
-2025-10-29 16:16:13 [INFO] [LockCacheService] Initializing LockCache service...
-2025-10-29 16:16:13 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
-2025-10-29 16:16:13 [INFO] [Main] DFS is running on port 10003
-2025-10-29 16:16:42 [INFO] [DFS] Put request: /test-file
-2025-10-29 16:16:42 [INFO] [DFS] Trying to acquire lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
-2025-10-29 16:16:42 [INFO] [CacheManager] Trying to acquire lock /test-file (seq=1)
-2025-10-29 16:16:42 [INFO] [CacheManager] Lock /test-file busy — waiting for Retry...
-2025-10-29 16:16:47 [INFO] [LockCacheService] Received Retry request for lock /test-file (seq=1)
-2025-10-29 16:16:47 [INFO] [LockCacheService] Lock /test-file is in Acquiring state — broadcasting condition
-2025-10-29 16:16:47 [INFO] [LockCacheService] Retry handling completed for lock /test-file
-2025-10-29 16:16:47 [INFO] [CacheManager] Trying to acquire lock /test-file (seq=1)
-2025-10-29 16:16:47 [INFO] [CacheManager] Lock /test-file acquired (seq=1)
-2025-10-29 16:16:47 [INFO] [DFS] Lock /test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=1)
-2025-10-29 16:16:47 [INFO] [DFS] Put: file /test-file saved successfully
-2025-10-29 16:16:47 [INFO] [DFS] Releasing lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=1
-2025-10-29 16:16:47 [INFO] [CacheManager] Released lock /test-file → Free
-2025-10-29 16:16:47 [INFO] Lock /test-file released successfully by 127.0.0.1:10003:DfsClient
-2025-10-29 16:16:52 [INFO] [LockCacheService] Received revoke request for lock /test-file
-2025-10-29 16:16:52 [INFO] [LockCacheService] Lock /test-file now Free — sending to Releaser
-2025-10-29 16:16:52 [INFO] [Releaser] Added release task for lock=/test-file
-2025-10-29 16:16:52 [INFO] [LockCacheService] Revoke completed for lock /test-file
-2025-10-29 16:16:52 [INFO] [Releaser] Processing release task: lock=/test-file, owner=127.0.0.1:10003:DfsClient, seq=1
-2025-10-29 16:16:52 [INFO] [Releaser] Changing state: Free → Releasing
-2025-10-29 16:16:52 [INFO] [CacheManager] Release RPC succeeded for /test-file → None
-2025-10-29 16:16:52 [INFO] [Releaser] Lock /test-file released successfully (server response: )
-2025-10-29 16:16:57 [INFO] [DFS] Trying to acquire lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
-2025-10-29 16:16:57 [INFO] [CacheManager] Trying to acquire lock /test-file (seq=2)
-2025-10-29 16:16:57 [INFO] [CacheManager] Lock /test-file acquired (seq=2)
-2025-10-29 16:16:57 [INFO] [DFS] Lock /test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=2)
-2025-10-29 16:16:57 [INFO] [DFS] Releasing lock: lock_id=/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
-2025-10-29 16:16:57 [INFO] [CacheManager] Released lock /test-file → Free
-2025-10-29 16:16:57 [INFO] Lock /test-file released successfully by 127.0.0.1:10003:DfsClient
-2025-10-29 16:17:02 [INFO] [LockCacheService] Received revoke request for lock /test-file
-2025-10-29 16:17:02 [INFO] [LockCacheService] Lock /test-file now Free — sending to Releaser
-2025-10-29 16:17:02 [INFO] [Releaser] Added release task for lock=/test-file
-2025-10-29 16:17:02 [INFO] [LockCacheService] Revoke completed for lock /test-file
-2025-10-29 16:17:02 [INFO] [Releaser] Processing release task: lock=/test-file, owner=127.0.0.1:10003:DfsClient, seq=2
-2025-10-29 16:17:02 [INFO] [Releaser] Changing state: Free → Releasing
-2025-10-29 16:17:02 [INFO] [CacheManager] Release RPC succeeded for /test-file → None
-2025-10-29 16:17:02 [INFO] [Releaser] Lock /test-file released successfully (server response: )
-2025-10-29 18:23:55 [INFO] [Main] Starting DFS server on port 3001
-2025-10-29 18:23:55 [INFO] [Releaser] Starting release task...
-2025-10-29 18:23:55 [INFO] [Releaser] Task successfully started.
-2025-10-29 18:23:55 [INFO] [LockCacheService] Initializing LockCache service...
-2025-10-29 18:23:55 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
-2025-10-29 18:23:55 [INFO] [Main] DFS is running on port 3001
-2025-10-29 18:26:02 [INFO] [DFS] Trying to acquire lock: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=1
-2025-10-29 18:26:02 [INFO] [CacheManager] Trying to acquire lock tests/ (seq=1)
-2025-10-29 18:26:02 [INFO] [CacheManager] Lock tests/ acquired (seq=1)
-2025-10-29 18:26:02 [INFO] [DFS] Lock tests/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=1)
-2025-10-29 18:26:02 [WARN] [ExtentCache] empty file-data for tests/
-2025-10-29 18:26:02 [WARN] [ExtentCache] adding to cache file-data for tests/
-2025-10-29 18:26:02 [INFO] [ExtentCache] cached new extent: tests/
-2025-10-29 18:26:02 [INFO] [ExtentCache] returning cached data for tests/
-2025-10-29 18:26:49 [INFO] [DFS] Trying to acquire lock: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=2
-2025-10-29 18:26:49 [INFO] [CacheManager] Lock tests/ already held locally
-2025-10-29 18:26:49 [INFO] [DFS] Lock tests/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=2)
-2025-10-29 18:26:49 [INFO] [ExtentCache] no file-data is present for file tests/ - performing deleting
-2025-10-29 18:26:49 [INFO] [ExtentCache] deleting %s file is successfultests/
-2025-10-29 18:26:49 [INFO] [DFS] Releasing lock: lock_id=tests/ owner_id=127.0.0.1:3001:DfsClient seq=2
-2025-10-29 18:26:49 [INFO] [CacheManager] Released lock tests/ → Free
-2025-10-29 18:26:49 [INFO] Lock tests/ released successfully by 127.0.0.1:3001:DfsClient
+2025-10-29 18:30:50 [INFO] [Main] Starting DFS server on port 10003
+2025-10-29 18:30:50 [INFO] [Releaser] Starting release task...
+2025-10-29 18:30:50 [INFO] [Releaser] Task successfully started.
+2025-10-29 18:30:50 [INFO] [LockCacheService] Initializing LockCache service...
+2025-10-29 18:30:50 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-10-29 18:30:50 [INFO] [Main] DFS is running on port 10003
+2025-10-29 18:30:51 [INFO] [DFS] Trying to acquire lock: lock_id=/test-dir/ owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-29 18:30:51 [INFO] [CacheManager] Trying to acquire lock /test-dir/ (seq=1)
+2025-10-29 18:30:51 [INFO] [CacheManager] Lock /test-dir/ acquired (seq=1)
+2025-10-29 18:30:51 [INFO] [DFS] Lock /test-dir/ successfully acquired by 127.0.0.1:10003:DfsClient (seq=1)
+2025-10-29 18:30:51 [INFO] [ExtentCache] put new file-data for file /test-dir/
+2025-10-29 18:30:51 [INFO] [ExtentCache] adding new file %s to cache/test-dir/
+2025-10-29 18:30:51 [INFO] [DFS] Releasing lock: lock_id=/test-dir/ owner_id=127.0.0.1:10003:DfsClient seq=1
+2025-10-29 18:30:51 [INFO] [CacheManager] Released lock /test-dir/ → Free
+2025-10-29 18:30:51 [INFO] Lock /test-dir/ released successfully by 127.0.0.1:10003:DfsClient
+2025-10-29 18:30:51 [INFO] [DFS] Put request: /test-dir/test-file
+2025-10-29 18:30:51 [INFO] [DFS] Trying to acquire lock: lock_id=/test-dir/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
+2025-10-29 18:30:51 [INFO] [CacheManager] Trying to acquire lock /test-dir/test-file (seq=2)
+2025-10-29 18:30:51 [INFO] [CacheManager] Lock /test-dir/test-file acquired (seq=2)
+2025-10-29 18:30:51 [INFO] [DFS] Lock /test-dir/test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=2)
+2025-10-29 18:30:51 [INFO] [ExtentCache] put new file-data for file /test-dir/test-file
+2025-10-29 18:30:51 [INFO] [ExtentCache] adding new file %s to cache/test-dir/test-file
+2025-10-29 18:30:51 [INFO] [DFS] Put: file /test-dir/test-file saved successfully
+2025-10-29 18:30:51 [INFO] [DFS] Releasing lock: lock_id=/test-dir/test-file owner_id=127.0.0.1:10003:DfsClient seq=2
+2025-10-29 18:30:51 [INFO] [CacheManager] Released lock /test-dir/test-file → Free
+2025-10-29 18:30:51 [INFO] Lock /test-dir/test-file released successfully by 127.0.0.1:10003:DfsClient
+2025-10-29 18:30:51 [INFO] [DFS] Trying to acquire lock: lock_id=/test-dir/ owner_id=127.0.0.1:10003:DfsClient seq=3
+2025-10-29 18:30:51 [INFO] [CacheManager] Reused cached lock /test-dir/ (local reuse)
+2025-10-29 18:30:51 [INFO] [DFS] Lock /test-dir/ successfully acquired by 127.0.0.1:10003:DfsClient (seq=3)
+2025-10-29 18:30:51 [INFO] [ExtentCache] returning cached data for /test-dir/
+2025-10-29 18:30:51 [INFO] [DFS] Trying to acquire lock: lock_id=/test-dir/test-file owner_id=127.0.0.1:10003:DfsClient seq=4
+2025-10-29 18:30:51 [INFO] [CacheManager] Reused cached lock /test-dir/test-file (local reuse)
+2025-10-29 18:30:51 [INFO] [DFS] Lock /test-dir/test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=4)
+2025-10-29 18:30:51 [INFO] [ExtentCache] returning cached data for /test-dir/test-file
+2025-10-29 18:30:51 [INFO] [DFS] Releasing lock: lock_id=/test-dir/test-file owner_id=127.0.0.1:10003:DfsClient seq=4
+2025-10-29 18:30:51 [INFO] [CacheManager] Released lock /test-dir/test-file → Free
+2025-10-29 18:30:51 [INFO] Lock /test-dir/test-file released successfully by 127.0.0.1:10003:DfsClient
+2025-10-29 18:30:51 [INFO] [DFS] Trying to acquire lock: lock_id=/test-dir/test-file owner_id=127.0.0.1:10003:DfsClient seq=5
+2025-10-29 18:30:51 [INFO] [CacheManager] Reused cached lock /test-dir/test-file (local reuse)
+2025-10-29 18:30:51 [INFO] [DFS] Lock /test-dir/test-file successfully acquired by 127.0.0.1:10003:DfsClient (seq=5)
+2025-10-29 18:30:51 [INFO] [ExtentCache] no file-data is present for file /test-dir/test-file - performing deleting
+2025-10-29 18:30:51 [INFO] [ExtentCache] deleting %s file is successful/test-dir/test-file
+2025-10-29 18:30:51 [INFO] [DFS] Releasing lock: lock_id=/test-dir/test-file owner_id=127.0.0.1:10003:DfsClient seq=5
+2025-10-29 18:30:51 [INFO] [CacheManager] Released lock /test-dir/test-file → Free
+2025-10-29 18:30:51 [INFO] Lock /test-dir/test-file released successfully by 127.0.0.1:10003:DfsClient
+2025-10-29 18:30:51 [INFO] [DFS] Trying to acquire lock: lock_id=/test-dir/ owner_id=127.0.0.1:10003:DfsClient seq=6
+2025-10-29 18:30:51 [INFO] [CacheManager] Lock /test-dir/ already held locally
+2025-10-29 18:30:51 [INFO] [DFS] Lock /test-dir/ successfully acquired by 127.0.0.1:10003:DfsClient (seq=6)
+2025-10-29 18:30:51 [INFO] [ExtentCache] no file-data is present for file /test-dir/ - performing deleting
+2025-10-29 18:30:51 [INFO] [ExtentCache] deleting %s file is successful/test-dir/
+2025-10-29 18:30:51 [INFO] [DFS] Releasing lock: lock_id=/test-dir/ owner_id=127.0.0.1:10003:DfsClient seq=6
+2025-10-29 18:30:51 [INFO] [CacheManager] Released lock /test-dir/ → Free
+2025-10-29 18:30:51 [INFO] Lock /test-dir/ released successfully by 127.0.0.1:10003:DfsClient
+2025-10-29 18:30:51 [INFO] [LockCacheService] Received revoke request for lock /test-dir/test-file
+2025-10-29 18:30:51 [INFO] [LockCacheService] Lock /test-dir/test-file now Free — sending to Releaser
+2025-10-29 18:30:51 [INFO] [Releaser] Added release task for lock=/test-dir/test-file
+2025-10-29 18:30:51 [INFO] [LockCacheService] Revoke completed for lock /test-dir/test-file
+2025-10-29 18:30:51 [INFO] [Releaser] Processing release task: lock=/test-dir/test-file, owner=127.0.0.1:10003:DfsClient, seq=5
+2025-10-29 18:30:51 [INFO] [Releaser] Changing state: Free → Releasing
+2025-10-29 18:30:51 [INFO] [CacheManager] Release RPC succeeded for /test-dir/test-file → None
+2025-10-29 18:30:51 [INFO] [Releaser] Lock /test-dir/test-file released successfully (server response: )
+2025-10-29 18:30:56 [INFO] [LockCacheService] Received revoke request for lock /test-dir/
+2025-10-29 18:30:56 [INFO] [LockCacheService] Lock /test-dir/ now Free — sending to Releaser
+2025-10-29 18:30:56 [INFO] [Releaser] Added release task for lock=/test-dir/
+2025-10-29 18:30:56 [INFO] [LockCacheService] Revoke completed for lock /test-dir/
+2025-10-29 18:30:56 [INFO] [Releaser] Processing release task: lock=/test-dir/, owner=127.0.0.1:10003:DfsClient, seq=6
+2025-10-29 18:30:56 [INFO] [Releaser] Changing state: Free → Releasing
+2025-10-29 18:30:56 [INFO] [CacheManager] Release RPC succeeded for /test-dir/ → None
+2025-10-29 18:30:56 [INFO] [Releaser] Lock /test-dir/ released successfully (server response: )

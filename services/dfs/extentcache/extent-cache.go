@@ -145,12 +145,51 @@ func (ec *ExtentCacheHandler) Stop(ctx context.Context, req *extentapi.StopReque
 	return ec.extentClient.Stop(ctx, req, opts...)
 }
 
-func (ec *ExtentCacheHandler) Update() {
-	return
+func (ec *ExtentCacheHandler) Update(ctx context.Context, fileId string) {
+	cache, exist := ec.cacheManager.GetCache(fileId)
+	if !exist {
+		ec.logger.Warnf("[ExtentCache] file '%s' is not present in cache — skipping update", fileId)
+		return
+	}
+
+	if cache.IsDirty == Clean {
+		ec.logger.Infof("[ExtentCache] file '%s' has not been modified — skipping update", fileId)
+		return
+	}
+
+	putResp, err := ec.extentClient.Put(ctx, &extentapi.PutRequest{
+		FileName: cache.FileID,
+		FileData: cache.Data,
+	})
+	if err != nil {
+		ec.logger.Errorf("[ExtentCache] failed to update dirty file '%s' on main server: %v", cache.FileID, err)
+		return
+	}
+
+	if putResp == nil || !(*putResp.Success) {
+		ec.logger.Warnf("[ExtentCache] main server returned unsuccessful response while updating file '%s'", cache.FileID)
+		return
+	}
+
+	cache.IsDirty = Clean
+	ec.logger.Infof("[ExtentCache] successfully synchronized dirty file '%s' with main server", cache.FileID)
 }
 
-func (ec *ExtentCacheHandler) Flush() {
-	return
+
+func (ec *ExtentCacheHandler) Flush(fileId string) {
+	cache, exist := ec.cacheManager.GetCache(fileId)
+	if !exist {
+		ec.logger.Warnf("[ExtentCache] file '%s' is not present in cache — skipping flush", fileId)
+		return
+	}
+
+	if cache.IsDirty == Dirty {
+		ec.logger.Warnf("[ExtentCache] file '%s' is still dirty — flush should only occur after successful update", fileId)
+		return
+	}
+
+	ec.cacheManager.RemoveCache(fileId)
+	ec.logger.Infof("[ExtentCache] successfully flushed file '%s' from local cache", fileId)
 }
 
 func (ec *ExtentCacheHandler) updateFile(req *extentapi.PutRequest) (*extentapi.PutResponse, error) {
@@ -174,7 +213,7 @@ func (ec *ExtentCacheHandler) updateFile(req *extentapi.PutRequest) (*extentapi.
 func (ec *ExtentCacheHandler) deleteFile(req *extentapi.PutRequest) (*extentapi.PutResponse, error) {
 	_, exist := ec.cacheManager.GetCache(req.FileName)
 	if !exist {
-		ec.logger.Errorf("[ExtentCache] file %s does not exist - unable to perform delete operation", req.FileName)
+		ec.logger.Errorf("[ExtentCache] file %s does not exist - unable to perform Delete operation", req.FileName)
 		return &extentapi.PutResponse{Success: proto.Bool(false)}, nil
 	}
 	ec.logger.Info("[ExtentCache] deleting %s file is successful", req.FileName)
