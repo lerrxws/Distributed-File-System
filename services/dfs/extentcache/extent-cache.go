@@ -35,7 +35,6 @@ func (ec *ExtentCacheHandler) Get(ctx context.Context, req *extentapi.GetRequest
 	if err != nil {
 		return nil, err
 	}
-	ec.logger.Infof("[ExtentCache] Returning cached data for '%s'.", req.FileName)
 
 	parentId := getParentPath(fileId)
 	parentCache, err := ec.getCacheFromRemoteServer(ctx, parentId)
@@ -50,20 +49,20 @@ func (ec *ExtentCacheHandler) Get(ctx context.Context, req *extentapi.GetRequest
 
 // Put() - create, update or delete file only in cache
 func (ec *ExtentCacheHandler) Put(ctx context.Context, req *extentapi.PutRequest, opts ...grpc.CallOption) (*extentapi.PutResponse, error) {
-	ec.logger.Infof("[ExtentCache] Received Put request for '%s'.", req.FileName)
+	ec.logger.Infof("[ExtentCache][Put] Received Put request for '%s'.", req.FileName)
 
 	_, err := ec.Get(ctx, &extentapi.GetRequest{FileName: req.FileName})
 	if err != nil {
-		ec.logger.Errorf("[ExtentCache] Failed to get existing file '%s' from cache or server: %v", req.FileName, err)
+		ec.logger.Errorf("[ExtentCache][Put] Failed to get existing file '%s' from cache or server: %v", req.FileName, err)
 		return nil, err
 	}
 
 	if req.FileData == nil {
-		ec.logger.Infof("[ExtentCache] No file-data provided for '%s' — performing delete.", req.FileName)
+		ec.logger.Infof("[ExtentCache][Put] No file-data provided for '%s' — performing delete.", req.FileName)
 		return ec.deleteFile(req.FileName)
 	}
 
-	ec.logger.Infof("[ExtentCache] Updating file-data for '%s'.", req.FileName)
+	ec.logger.Infof("[ExtentCache][Put] Updating file-data for '%s'.", req.FileName)
 	return ec.updateFile(req.FileName, req.FileData)
 }
 
@@ -74,30 +73,30 @@ func (ec *ExtentCacheHandler) Stop(ctx context.Context, req *extentapi.StopReque
 func (ec *ExtentCacheHandler) Update(ctx context.Context, fileId string) {
 	cache, exist := ec.cacheManager.GetCache(fileId)
 	if !exist {
-		ec.logger.Warnf("[ExtentCache] File '%s' not in cache — skipping update.", fileId)
+		ec.logger.Warnf("[ExtentCache][Update] File '%s' not in cache — skipping update.", fileId)
 		return
 	}
 	
 	ec.handleUpdate(ctx, cache)
-	ec.logger.Infof("[ExtentCache] Successfully synchronized dirty file '%s' with server.", cache.FileID)
+	ec.logger.Infof("[ExtentCache][Update] Successfully synchronized dirty file '%s' with server.", cache.FileID)
 
 	parentCache := cache.Parent
 	if parentCache == nil{
 		return
 	}
 	ec.handleUpdate(ctx, parentCache)
-	ec.logger.Infof("[ExtentCache] Successfully synchronized parent '%s' with server.", parentCache.FileID)
+	ec.logger.Infof("[ExtentCache][Update] Successfully synchronized parent '%s' with server.", parentCache.FileID)
 }
 
 func (ec *ExtentCacheHandler) Flush(fileId string) {
 	cache, exist := ec.cacheManager.GetCache(fileId)
 	if !exist {
-		ec.logger.Warnf("[ExtentCache] File '%s' not in cache — skipping flush.", fileId)
+		ec.logger.Warnf("[ExtentCache][Flush] File '%s' not in cache — skipping flush.", fileId)
 		return
 	}
 
 	ec.handleFlash(cache)
-	ec.logger.Infof("[ExtentCache] Successfully flushed '%s' from local cache.", fileId)
+	ec.logger.Infof("[ExtentCache][Flush] Successfully flushed '%s' from local cache.", fileId)
 
 	parentCache := cache.Parent
 	if parentCache == nil{
@@ -105,7 +104,7 @@ func (ec *ExtentCacheHandler) Flush(fileId string) {
 	}
 
 	ec.handleFlash(parentCache)
-	ec.logger.Infof("[ExtentCache] Successfully flushed parent '%s' from local cache.", parentCache.FileID)
+	ec.logger.Infof("[ExtentCache][Flush] Successfully flushed parent '%s' from local cache.", parentCache.FileID)
 }
 
 // endregion

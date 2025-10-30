@@ -35,21 +35,21 @@ func NewExtentServiceServer(rootpath string, grpcServer *grpc.Server, logger see
 
 func (s *ExtentServiceServer) Get(ctx context.Context, req *api.GetRequest) (*api.GetResponse, error) {
 	fullPath := s.rootpath + req.FileName
-	s.logger.Infof("[ExtentServer] Received Get request for: %s", req.FileName)
+	s.logger.Infof("[ExtentServer][Get] Received Get request for: %s", req.FileName)
 
 	data, err := s.handleGet(fullPath)
 	if err != nil {
-		s.logger.Errorf("[ExtentServer] Failed to get %s: %v", req.FileName, err)
+		s.logger.Errorf("[ExtentServer][Get] Failed to get %s: %v", req.FileName, err)
 		return nil, err
 	}
 
-	s.logger.Infof("[ExtentServer] Returning file data for %s (%d bytes)", req.FileName, len(data))
+	s.logger.Infof("[ExtentServer][Get] Returning file data for %s (%d bytes)", req.FileName, len(data))
 	return &api.GetResponse{FileData: data}, nil
 }
 
 func (s *ExtentServiceServer) Put(ctx context.Context, req *api.PutRequest) (*api.PutResponse, error) {
 	fullPath := s.rootpath + req.FileName
-	s.logger.Infof("[ExtentServer] Put request for: %s", req.FileName)
+	s.logger.Infof("[ExtentServer][Put] Put request for: %s", req.FileName)
 
 	isSuccess, err := s.handlePut(fullPath, req.FileData)
 	if err != nil {
@@ -60,16 +60,16 @@ func (s *ExtentServiceServer) Put(ctx context.Context, req *api.PutRequest) (*ap
 		return &api.PutResponse{Success: proto.Bool(false)}, nil
 	}
 
-	s.logger.Infof("[ExtentServer] successfully deleted file: %s", fullPath)
+	s.logger.Infof("[ExtentServer][Put] successfully deleted file: %s", fullPath)
 	return &api.PutResponse{Success: proto.Bool(true)}, nil
 }
 
 func (s *ExtentServiceServer) Stop(ctx context.Context, req *api.StopRequest) (*api.StopResponse, error) {
-	s.logger.Infof("[ExtentServer] Stop request received, shutting down gracefully")
+	s.logger.Infof("[ExtentServer][Stop] Stop request received, shutting down gracefully")
 	go func() {
 		// shut down server in a goroutine so we can return the response first
 		s.grpc.GracefulStop()
-		s.logger.Infof("[ExtentServer] Server stopped")
+		s.logger.Infof("[ExtentServer][Stop] Server stopped")
 	}()
 	return &api.StopResponse{}, nil
 }
