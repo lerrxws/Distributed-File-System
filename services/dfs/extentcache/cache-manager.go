@@ -22,6 +22,8 @@ func NewCacheManager(logger seelog.LoggerInterface) *ExtentCacheManager {
 	}
 }
 
+// region public methods
+
 func (cm *ExtentCacheManager) IsCached(fileID string) bool {
 	cm.mu.Lock()
 	defer cm.mu.Unlock()
@@ -89,3 +91,5 @@ func (cm *ExtentCacheManager) UpdateParentOnCreate(child *ExtentCache) {
 		cm.logger.Infof("[ExtentCache] Added '%s' to parent '%s'.", childName, parent.FileID)
 	}
 }
+
+//endregion
