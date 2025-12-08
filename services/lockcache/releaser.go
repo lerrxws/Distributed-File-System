@@ -4,6 +4,7 @@ import (
 	"context"
 
 	lockapi "dfs/proto-gen/lock"
+	extentcache "dfs/services/dfs/extentcache"
 
 	seelog "github.com/cihub/seelog"
 )
@@ -13,14 +14,18 @@ type ReleaserTask struct {
 	cacheManager *CacheManager
 	logger       seelog.LoggerInterface
 	stopCh       chan struct{}
+
+	extentCache *extentcache.ExtentCacheHandler
 }
 
-func NewReleaser(cacheManager *CacheManager, logger seelog.LoggerInterface) *ReleaserTask {
+func NewReleaser(cacheManager *CacheManager, logger seelog.LoggerInterface, extentCache *extentcache.ExtentCacheHandler) *ReleaserTask {
 	return &ReleaserTask{
 		releaseQueue: make(chan *CacheInfo, 100),
 		cacheManager: cacheManager,
 		logger:       logger,
 		stopCh:       make(chan struct{}),
+
+		extentCache: extentCache,
 	}
 }
 
@@ -62,6 +67,8 @@ func (r *ReleaserTask) Stop() {
 }
 
 func (r *ReleaserTask) handleRelease(cacheInfo *CacheInfo) {
+
+
 	r.logger.Infof("[Releaser] Processing release task: lock=%s, owner=%s, seq=%d",
 							cacheInfo.LockId, cacheInfo.OwnerId, cacheInfo.SeqNum)
 
