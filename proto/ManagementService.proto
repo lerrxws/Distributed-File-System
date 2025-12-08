@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package dfs.replica;
+
+service ManagementService {
+  rpc heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
+}
+
+message HeartbeatRequest {
+  string sender = 1;
+}
+
+message HeartbeatResponse {
+}

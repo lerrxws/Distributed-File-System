@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package dfs.replica;
+
+service ReplicaService {
+  rpc stop(StopRequest) returns (StopResponse);
+  rpc getView(GetViewRequest) returns (GetViewResponse);
+  rpc executeMethod(ExecuteMethodRequest) returns (ExecuteMethodResponse);
+  rpc getExecutedMethods(GetExecutedMethodsRequest) returns (GetExecutedMethodsResponse);
+  rpc isRecovered(IsRecoveredRequest) returns (IsRecoveredResponse);
+}
+
+message StopRequest {
+}
+
+message StopResponse {
+}
+
+message GetViewRequest {
+}
+
+message GetViewResponse {
+  int64 viewId = 1;
+  repeated string view = 2;
+}
+
+message ExecuteMethodRequest {
+  MethodRequest methodRequest = 1;
+  Viewstamp viewstamp = 2;
+}
+
+message ExecuteMethodResponse {
+  bool isPrimary = 1;
+  optional string returnValue = 2;  // Value is serialized JSON object
+}
+
+message MethodRequest {
+  string methodName = 1;
+  repeated string methodParameters = 2;  // Each method parameter is serialized JSON object
+}
+
+message Viewstamp {
+  int64 viewId = 1;
+  int64 sequence = 2;
+}
+
+message GetExecutedMethodsRequest {
+}
+
+message GetExecutedMethodsResponse {
+  repeated MethodRequest methodRequests = 1;
+}
+
+message IsRecoveredRequest {
+}
+
+message IsRecoveredResponse {
+  bool isRecovered = 1;
+}
