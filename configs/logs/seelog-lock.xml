@@ -1,9 +1,0 @@
-<seelog minlevel="info">
-    <outputs formatid="main">
-        <console/>
-        <rollingfile type="size" filename="logs/lock.log" maxsize="1000000" maxrolls="5"/>
-    </outputs>
-    <formats>
-        <format id="main" format="%Date %Time [%LEVEL] %Msg%n"/>
-    </formats>
-</seelog>

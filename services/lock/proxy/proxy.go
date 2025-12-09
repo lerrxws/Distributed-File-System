@@ -2,24 +2,26 @@ package proxy
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	lock "dfs/proto-gen/lock"
 	replica "dfs/proto-gen/replica"
 
 	seelog "github.com/cihub/seelog"
-	
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/proto"
 )
+
+const retries int = 3
 
 type LockProxyServiceServer struct {
 	replica     replica.ReplicaServiceClient
 	primaryAddr string
 	view        []string
 	viewId      int64
-	retries     int
 
 	logger seelog.LoggerInterface
 
@@ -33,7 +35,9 @@ func NewLockProxyService(grpcServer *grpc.Server, replica replica.ReplicaService
 		replica: replica,
 	}
 
-	s.updateView(context.Background())
+	if err := s.updateView(context.Background()); err != nil {
+		s.logger.Criticalf("[LockProxy] Error occurred during view update: %s", err)
+	}
 
 	return s
 }
@@ -41,20 +45,33 @@ func NewLockProxyService(grpcServer *grpc.Server, replica replica.ReplicaService
 func (s *LockProxyServiceServer) Acquire(ctx context.Context, req *lock.AcquireRequest) (*lock.AcquireResponse, error) {
 	reqAcq := buildAcquireRequest(req, s.viewId)
 
-	resp, err := s.makeRequest(ctx, reqAcq)
+	resp, err := s.replica.ExecuteMethod(ctx, reqAcq)
 	if err != nil {
 		s.logger.Errorf("[LockProxy] Error occured: %s", err)
+		return &lock.AcquireResponse{Success: proto.Bool(false)}, nil
 	}
 
-	return &lock.AcquireResponse{Success: proto.Bool(resp)}, nil
+	if resp.ReturnValue == nil {
+		s.logger.Errorf("[LockProxy] Unable to process return value. Return Value is nil")
+		return &lock.AcquireResponse{Success: proto.Bool(false)}, nil
+	}
+
+	respBool, err := strconv.ParseBool(*resp.ReturnValue)
+	if err != nil {
+		s.logger.Errorf("[LockProxy] Unable to process return value. Error while converting %s to bool.", *resp.ReturnValue)
+		return &lock.AcquireResponse{Success: proto.Bool(false)}, nil
+	}
+
+	return &lock.AcquireResponse{Success: proto.Bool(respBool)}, nil
 }
 
 func (s *LockProxyServiceServer) Release(ctx context.Context, req *lock.ReleaseRequest) (*lock.ReleaseResponse, error) {
 	reqAcq := buildReleaseRequest(req, s.viewId)
 
-	_, err := s.makeRequest(ctx, reqAcq)
+	_, err := s.replica.ExecuteMethod(ctx, reqAcq)
 	if err != nil {
 		s.logger.Errorf("[LockProxy] Error occured: %s", err)
+		return &lock.ReleaseResponse{}, nil
 	}
 
 	return &lock.ReleaseResponse{}, nil
@@ -83,42 +100,43 @@ func (s *LockProxyServiceServer) connectToReplica(addr string) replica.ReplicaSe
 }
 
 func (s *LockProxyServiceServer) tryExecuteMethodWithRetries(ctx context.Context, exeReq *replica.ExecuteMethodRequest) (*replica.ExecuteMethodResponse, error) {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 10*time.Millisecond)
-	defer cancel()
+	// ctxWithTimeout, cancel := context.WithTimeout(ctx, 10*time.Millisecond)
+	// defer cancel()
 
 	var resp *replica.ExecuteMethodResponse
 	var err error
 
-	for attempt := 0; attempt < s.retries; attempt++ {
-		resp, err = s.replica.ExecuteMethod(ctxWithTimeout, exeReq)
+	for attempt := 0; attempt < retries; attempt++ {
+		resp, err = s.replica.ExecuteMethod(ctx, exeReq)
 
 		if err == nil && resp != nil {
 			return resp, nil
 		}
 
 		if err != nil {
-			s.logger.Criticalf("[LockProxy] Error occurred (attempt %d/%d): %s", attempt+1, s.retries, err)
+			s.logger.Criticalf("[LockProxy] Error occurred (attempt %d/%d): %s", attempt+1, retries, err)
 		} else if resp == nil {
-			s.logger.Criticalf("[LockProxy] No response received (attempt %d/%d)", attempt+1, s.retries)
+			s.logger.Criticalf("[LockProxy] No response received (attempt %d/%d)", attempt+1, retries)
 		}
 
 		time.Sleep(time.Second * time.Duration(attempt+1))
 	}
 
-	return resp, s.logger.Errorf("[LockProxy]  Failed to execute method after %d retries", s.retries)
+	return resp, s.logger.Errorf("[LockProxy]  Failed to execute method after %d retries", retries)
 }
 
 func (s *LockProxyServiceServer) makeRequest(ctx context.Context, req *replica.ExecuteMethodRequest) (bool, error){
+	
 	for len(s.view) != 0 {
-		resp, err := s.tryExecuteMethodWithRetries(ctx, req)
-		if err != nil {
-			s.logger.Errorf("[LockProxy] Primary Node do not answer or return Error")
+		resp, _ := s.tryExecuteMethodWithRetries(ctx, req)
+		// if err != nil {
+		// 	s.logger.Errorf("[LockProxy] Primary Node do not answer or return Error")
 
-			s.deleteFromView(s.primaryAddr)
-			s.updateView(ctx)
+		// 	s.deleteFromView(s.primaryAddr)
+		// 	s.updateView(ctx)
 
-			continue
-		}
+		// 	continue
+		// }
 
 		if !resp.IsPrimary {
 			s.logger.Warnf("[LockProxy] Get response NONPRIMARY node")

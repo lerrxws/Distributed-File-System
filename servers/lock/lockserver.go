@@ -18,7 +18,7 @@ func main() {
 	}
 	port := os.Args[1]
 
-	logger, err := seelog.LoggerFromConfigAsFile("configs/logs/seelog-lock.xml")
+	logger, err := seelog.LoggerFromConfigAsFile("configs/logs/lock/seelog-lock.xml")
 	if err != nil {
 		seelog.Criticalf("[Main] Failed to load seelog config: %v", err)
 		os.Exit(1)
