@@ -12,3 +12,5 @@ message HeartbeatRequest {
 
 message HeartbeatResponse {
 }
+
+// add joinView(), leaveView() and commitView()

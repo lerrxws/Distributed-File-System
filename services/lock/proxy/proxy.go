@@ -13,8 +13,6 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-const retries int = 3
-
 type LockProxyServiceServer struct {
 	replica     replica.ReplicaServiceClient
 	primaryAddr string

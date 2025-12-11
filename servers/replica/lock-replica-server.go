@@ -5,8 +5,10 @@ import (
 	"os"
 
 	lockreplica "dfs/services/lock/replica"
+
 	lockApi "dfs/proto-gen/lock"
 	replicaApi "dfs/proto-gen/replica"
+	paxosApi "dfs/proto-gen/paxos"
 
 	seelog "github.com/cihub/seelog"
 	"google.golang.org/grpc"
@@ -21,6 +23,10 @@ func main() {
 
 	replicaAddr := os.Args[1]
 	port := os.Args[2]
+	isPrimary := false
+	if len(os.Args) == 4 && os.Args[3] == "-p"{
+		isPrimary = true;
+	}
 
 	logger, err := seelog.LoggerFromConfigAsFile("configs/logs/lock/seelog-lockreplica.xml")
 	if err != nil {
@@ -36,8 +42,10 @@ func main() {
 	s := grpc.NewServer()
 
 	addr := "127.0.0.1:" + port
-	srv := lockreplica.NewReplicaServiceServer(s, lockClient, addr, logger)
+
+	srv := lockreplica.NewReplicaServiceServer(s, lockClient, addr, isPrimary, logger)
 	replicaApi.RegisterReplicaServiceServer(s, srv)
+	paxosApi.RegisterPaxosServiceServer(s, srv)
 	
 
 	portStr := ":" + port

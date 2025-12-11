@@ -5,9 +5,11 @@ import (
 	"strconv"
 
 	lockapi "dfs/proto-gen/lock"
+	paxosApi "dfs/proto-gen/paxos"
 	replicaApi "dfs/proto-gen/replica"
 
 	lock "dfs/services/lock"
+	paxos "dfs/services/paxos"
 
 	seelog "github.com/cihub/seelog"
 
@@ -17,22 +19,30 @@ import (
 type ReplicaServiceServer struct {
 	grpc          *grpc.Server
 	lockapiClient lockapi.LockServiceClient
+	paxos         *paxos.PaxosHelper
 
-	isPrimary   bool
-	nodeId      string
-	view        []string
-	viewId      int64
-	isRecovered bool
+	isPrimary bool
+	nodeId    string
 
+	view   []string
+	viewId int64
+
+	isRecovered    bool
 	methodExecuted []*replicaApi.MethodRequest
 
 	logger seelog.LoggerInterface
 
 	replicaApi.UnimplementedReplicaServiceServer
+	paxosApi.UnimplementedPaxosServiceServer
 }
 
-func NewReplicaServiceServer(grpc *grpc.Server, lockapiClient lockapi.LockServiceClient,
-	nodeId string, logger seelog.LoggerInterface) *ReplicaServiceServer {
+func NewReplicaServiceServer(
+	grpc *grpc.Server,
+	lockapiClient lockapi.LockServiceClient,
+	nodeId string,
+	isPrimary bool,
+	logger seelog.LoggerInterface,
+) *ReplicaServiceServer {
 	s := &ReplicaServiceServer{
 		grpc:          grpc,
 		lockapiClient: lockapiClient,
@@ -40,16 +50,22 @@ func NewReplicaServiceServer(grpc *grpc.Server, lockapiClient lockapi.LockServic
 		nodeId: nodeId,
 		logger: logger,
 
-		isPrimary: true,
+		isPrimary: isPrimary,
+		view:      []string{nodeId},
+		viewId:    1,
 	}
 
-	s.view = append(s.view, nodeId)
-	s.viewId = 1
-
 	s.methodExecuted = []*replicaApi.MethodRequest{}
+	s.paxos = paxos.NewPaxosService(s.nodeId, s.viewId, s.view, s.logger)
+
+	if !isPrimary {
+		s.viewId, s.view = s.paxos.Propose(2, []string{"127.0.0.1:5000"}, []string{"127.0.0.1:5000", "127.0.0.1:6000"})
+	}
 
 	return s
 }
+
+// region replica-interface
 
 func (s *ReplicaServiceServer) Stop(context.Context, *replicaApi.StopRequest) (*replicaApi.StopResponse, error) {
 	s.logger.Infof("[Lock Replica] Received stop request — initiating graceful shutdown...")
@@ -124,6 +140,24 @@ func (s *ReplicaServiceServer) IsRecovered(ctx context.Context, req *replicaApi.
 		IsRecovered: s.isRecovered,
 	}, nil
 }
+
+// endregion
+
+// region paxos interface
+
+func (s *ReplicaServiceServer) Prepare(ctx context.Context, req *paxosApi.PrepareRequest) (*paxosApi.PrepareResponse, error) {
+	return s.paxos.Prepare(req, s.nodeId)
+}
+
+func (s *ReplicaServiceServer) Accept(ctx context.Context, req *paxosApi.AcceptRequest) (*paxosApi.AcceptResponse, error) {
+	return s.paxos.Accept(req, s.nodeId)
+}
+
+func (s *ReplicaServiceServer) Decide(ctx context.Context, req *paxosApi.DecideRequest) (*paxosApi.DecideResponse, error) {
+	return s.paxos.Decide(req, s.nodeId)
+}
+
+// endregion
 
 // region private methods
 
