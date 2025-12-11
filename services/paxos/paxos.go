@@ -37,3 +37,4 @@ func (p *PaxosHelper) Accept(req *paxosApi.AcceptRequest, node string) (*paxosAp
 func (p *PaxosHelper) Decide(req *paxosApi.DecideRequest, node string) (*paxosApi.DecideResponse, error) {
 	return p.acceptor.Decide(req)
 }
+
