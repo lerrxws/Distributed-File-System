@@ -8,6 +8,7 @@ import (
 	replica "dfs/services/replica"
 
 	paxosApi "dfs/proto-gen/paxos"
+	managementApi "dfs/proto-gen/management"
 	replicaApi "dfs/proto-gen/replica"
 
 	seelog "github.com/cihub/seelog"
@@ -40,7 +41,9 @@ func main() {
 	addr := "127.0.0.1:" + port
 
 	srv := replica.NewReplicaServiceServer(s, addr, logger, primaryAddr)
+	
 	replicaApi.RegisterReplicaServiceServer(s, srv)
+	managementApi.RegisterManagementServiceServer(s, srv)
 	paxosApi.RegisterPaxosServiceServer(s, srv)
 	
 
