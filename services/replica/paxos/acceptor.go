@@ -65,7 +65,7 @@ func (a *Acceptor) Accept(req *paxosApi.AcceptRequest) (*paxosApi.AcceptResponse
 	return a.handleAcceptReject(), nil
 }
 
-func (a *Acceptor) Decide(req *paxosApi.DecideRequest) (*paxosApi.DecideResponse, error) {
+func (a *Acceptor) Decide(req *paxosApi.DecideRequest) (bool, error) {
 	a.logger.Infof("[Paxos] Decide request with view ID - %d.", req.ViewId)
 
 	if req.ViewId > a.viewId_h {
@@ -74,9 +74,13 @@ func (a *Acceptor) Decide(req *paxosApi.DecideRequest) (*paxosApi.DecideResponse
 		a.viewId_h = req.ViewId
 
 		a.commitView(req.ViewId, req.View)
+
+		return true, nil
 	}
 
-	return  &paxosApi.DecideResponse{}, nil
+	a.logger.Infof("[Paxos] Decide request is ignored.")
+
+	return  false, nil
 }
 
 // region help functions

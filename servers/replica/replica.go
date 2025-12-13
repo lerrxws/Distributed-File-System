@@ -1,14 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"net"
 	"os"
 
-	replica "dfs/services/replica"
+	utils "dfs/utils"
 
-	paxosApi "dfs/proto-gen/paxos"
+	replica "dfs/services/replica"
+	management "dfs/services/replica/management"
+
 	managementApi "dfs/proto-gen/management"
+	paxosApi "dfs/proto-gen/paxos"
 	replicaApi "dfs/proto-gen/replica"
 
 	seelog "github.com/cihub/seelog"
@@ -21,14 +23,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	port := os.Args[1]
+	lockClientAddr := os.Args[1]
+	port := os.Args[2]
 
 	primaryAddr := ""
-	if len(os.Args) == 3{
-		primaryAddr = os.Args[2]
+	if len(os.Args) == 4{
+		primaryAddr = os.Args[3]
 	}
 
-	logger, err := createLoggerWithPortNumber(port)
+	logger, err := utils.CreateLoggerWithPortNumber(port)
 
 	if err != nil {
 		seelog.Criticalf("[Main] Failed to load seelog config: %v", err)
@@ -40,8 +43,12 @@ func main() {
 
 	addr := "127.0.0.1:" + port
 
-	srv := replica.NewReplicaServiceServer(s, addr, logger, primaryAddr)
-	
+	heartbeatIntervalInSeconds := 5
+	manager := management.NewViewManager(addr, heartbeatIntervalInSeconds, logger)
+	lockClient := utils.ConnectLockClient(lockClientAddr, logger)
+
+	srv := replica.NewReplicaServiceServer(s, lockClient, manager, logger, primaryAddr)
+
 	replicaApi.RegisterReplicaServiceServer(s, srv)
 	managementApi.RegisterManagementServiceServer(s, srv)
 	paxosApi.RegisterPaxosServiceServer(s, srv)
@@ -62,22 +69,4 @@ func main() {
 	}
 
 	logger.Infof("[Main] LockProxyServer shutdown completed.")
-}
-
-func createLoggerWithPortNumber(port string) (seelog.LoggerInterface, error) {
-	seelogConfig := fmt.Sprintf(`
-	<seelog minlevel="info">
-		<outputs formatid="main">
-			<console/>
-			<rollingfile type="size" filename="logs/replica/replica_%s.log" maxsize="1000000" maxrolls="5"/>
-		</outputs>
-		<formats>
-			<format id="main" format="%%Date %%Time [%%LEVEL] %%Msg%%n"/>
-		</formats>
-	</seelog>
-	`, port)
-
-	configBytes := []byte(seelogConfig)
-
-	return seelog.LoggerFromConfigAsBytes(configBytes)
 }

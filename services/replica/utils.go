@@ -1,31 +1,19 @@
 package replica
 
 import (
+	utils "dfs/utils"
+	
 	replicaApi "dfs/proto-gen/replica"
-	managementApi "dfs/proto-gen/management"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
-func isPrimaryAddressSet(primaryAddr string) bool {
-    return primaryAddr != ""
+func (r *ReplicaServiceServer) connectToPrimary(primaryAddr string) (replicaApi.ReplicaServiceClient, error) {
+	client, err := utils.ConnectToReplicaClient(primaryAddr)
+	if err != nil {
+		return nil, r.logger.Errorf("failed to connect to primary node %s: %v", primaryAddr, err)
+	}
+	return client, nil
 }
 
-func connectToReplicaClient(addr string) (replicaApi.ReplicaServiceClient, error) {
-	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return nil, err
-	}
-
-	return replicaApi.NewReplicaServiceClient(conn), nil
-}
-
-func connectToManagementClient(addr string) (managementApi.ManagementServiceClient, error) {
-	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return nil, err
-	}
-
-	return managementApi.NewManagementServiceClient(conn), nil
+func IsPrimaryAddressSet(primaryAddr string) bool {
+	return primaryAddr != ""
 }
