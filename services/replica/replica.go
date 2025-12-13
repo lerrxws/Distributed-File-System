@@ -24,6 +24,13 @@ func (r *ReplicaServiceServer) GetView(ctx context.Context, req *replicaApi.GetV
 }
 
 func (s *ReplicaServiceServer) ExecuteMethod(ctx context.Context, req *replicaApi.ExecuteMethodRequest) (*replicaApi.ExecuteMethodResponse, error) {
+	if req.Viewstamp.ViewId != s.manager.ViewId {
+		s.logger.Warnf("[Replica] Incorrect viewId %d (current viewId is %d). Unable to execute method.", req.Viewstamp.ViewId, s.manager.ViewId)
+		return &replicaApi.ExecuteMethodResponse{
+			IsPrimary: s.manager.IsPrimary,
+		}, nil
+	}
+
 	if !s.isRecovered {
 		s.logger.Warnf("[Replica] Replica (%s) is not recovered. Cannot execute methods until recovery is complete.", s.manager.Addr)
 		return &replicaApi.ExecuteMethodResponse{

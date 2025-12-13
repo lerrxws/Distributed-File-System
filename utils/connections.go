@@ -12,7 +12,7 @@ import (
 
 func ConnectToReplicaClient(addr string) (replicaApi.ReplicaServiceClient, error) {
 	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
+	if err != nil || conn == nil{
 		return nil, err
 	}
 
