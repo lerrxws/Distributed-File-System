@@ -44,9 +44,11 @@ func (p *Proposer) Propose(viewId int64, oldView []string, newView []string) {
 		return
 	}
 
+	proposedView := p.decideOnViewValue(prepareResponses, viewId, newView)
+
 	p.logger.Infof("[Paxos] Starting Accept phase with proposal number %d.", n)
 
-	acceptResponses := p.sendAcceptRequestToAcceptors(clients, n, newView)
+	acceptResponses := p.sendAcceptRequestToAcceptors(clients, n, proposedView)
 	if !p.isAcceptOkMajority(majority, acceptResponses) {
 		p.logger.Infof("[Paxos] Accept (%d) rejected, not enough votes for majority.", n)
 		return
@@ -54,8 +56,34 @@ func (p *Proposer) Propose(viewId int64, oldView []string, newView []string) {
 
 	p.logger.Infof("[Paxos] Starting Decide phase with proposal number %d.", n)
 
-	p.sendDecideRequestToAcceptors(clients, viewId, newView)
+	p.sendDecideRequestToAcceptors(clients, viewId, proposedView)
 }
+
+func (p *Proposer) decideOnViewValue(
+	responses []*paxosApi.PrepareResponse,
+	ownViewId int64,
+	ownView []string,
+) []string {
+
+	var (
+		maxNA     int64 = -1
+		chosenView      []string
+	)
+
+	for _, resp := range responses {
+		if resp.ViewId > maxNA && resp.View != nil {
+			maxNA = resp.ViewId
+			chosenView = resp.View
+		}
+	}
+
+	if maxNA == -1 {
+		return ownView
+	}
+
+	return chosenView
+}
+
 
 // region help functions
 

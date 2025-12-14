@@ -89,23 +89,23 @@ func (s *ReplicaServiceServer) handleExecuteMethod(ctx context.Context, methodRe
 
 	switch methodName {
 	case Acquire:
-		s.logger.Errorf("[Replica] Get Acquire request.")
+		s.logger.Infof("[Replica] Get Acquire request.")
 		resp, err = s.handleAcquire(ctx, methodParams)
 
 	case Release:
-		s.logger.Errorf("[Replica] Get Release request.")
+		s.logger.Infof("[Replica] Get Release request.")
 		resp, err = s.handleRelease(ctx, methodParams)
 
 	case Stop:
-		s.logger.Errorf("[Replica] Get Stop request.")
+		s.logger.Infof("[Replica] Get Stop request.")
 		resp, err = s.handleStop(ctx)
 
 	default:
-		s.logger.Errorf("[Replica] Unknown method name %s.", methodName)
+		s.logger.Infof("[Replica] Unknown method name %s.", methodName)
 		resp, err = s.handleUnknownMethod(methodName)
 	}
 
-	if err == nil && resp != nil && resp.IsPrimary {
+	if err == nil && resp != nil {
 		s.methodExecuted = append(s.methodExecuted, methodReq)
 
 		err = s.logToFileExecutedMethod(methodReq)

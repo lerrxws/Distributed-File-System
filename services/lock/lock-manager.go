@@ -39,3 +39,26 @@ func (lm *LockManager) IsLocked(lockId string) bool {
 func (lm *LockManager) GetLockInfo(lockId string) *LockInfo {
 	return lm.lockManager[lockId]
 }
+
+func (lm *LockManager) GetBiggestSeqNumForUser(userId string) int64{
+	bigestSeq := int64(-1)
+	for _, lockinfo := range lm.lockManager {
+		if lockinfo.Owner == userId {
+			if lockinfo.SeqNum > bigestSeq {
+				bigestSeq = lockinfo.SeqNum
+			}
+		}
+	}
+
+	return bigestSeq
+}
+
+func (lm *LockManager) GetOwnerOfLock(lockId string) string {
+	lockinfo, isLocked := lm.lockManager[lockId]
+
+	if !isLocked {
+		return ""
+	}
+
+	return lockinfo.Owner
+}

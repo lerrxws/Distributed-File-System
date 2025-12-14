@@ -1,13 +1,18 @@
 package paxos
 
 import (
+	"sync"
+	
 	paxosApi "dfs/proto-gen/paxos"
 
 	fl "dfs/utils/filelogger"
+
 	seelog "github.com/cihub/seelog"
 )
 
 type Acceptor struct {
+	mu sync.Mutex
+	
 	viewId int64
 	n_h      int64
 	n_a      int64
@@ -96,6 +101,8 @@ func (a *Acceptor) Decide(req *paxosApi.DecideRequest) (bool, error) {
 			)
 		}
 
+		a.resetViewData()
+
 		return true, nil
 	}
 
@@ -149,4 +156,9 @@ func (a *Acceptor) handleAcceptReject() *paxosApi.AcceptResponse {
 
 // endregion
 
+
+func (a *Acceptor) resetViewData() {
+	a.n_a = 0
+	a.v_a = nil
+}
 // endregion
