@@ -107,6 +107,16 @@ func (s *ReplicaServiceServer) handleExecuteMethod(ctx context.Context, methodRe
 
 	if err == nil && resp != nil && resp.IsPrimary {
 		s.methodExecuted = append(s.methodExecuted, methodReq)
+
+		err = s.logToFileExecutedMethod(methodReq)
+		if err != nil {
+			s.logger.Errorf(
+				"[Replica] Failed to log executed method '%s' with parameters %v: %v",
+				methodReq.MethodName,
+				methodReq.MethodParameters,
+				err,
+			)
+		}
 	}
 
 	return resp, err

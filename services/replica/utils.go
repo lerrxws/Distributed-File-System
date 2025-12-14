@@ -2,6 +2,7 @@ package replica
 
 import (
 	utils "dfs/utils"
+	fl "dfs/utils/filelogger"
 	
 	replicaApi "dfs/proto-gen/replica"
 )
@@ -16,4 +17,16 @@ func (r *ReplicaServiceServer) connectToPrimary(primaryAddr string) (replicaApi.
 
 func IsPrimaryAddressSet(primaryAddr string) bool {
 	return primaryAddr != ""
+}
+
+func (r *ReplicaServiceServer) logToFileExecutedMethod(methodReq *replicaApi.MethodRequest) error{
+	timestamp := utils.GetTimeStamp()
+
+	entry := fl.MethodLogEntry{
+		Timestamp: timestamp,
+		Method: methodReq.MethodName,
+		Params: methodReq.MethodParameters,
+	}
+
+	return r.filelogger.Append(entry)
 }

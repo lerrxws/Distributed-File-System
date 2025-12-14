@@ -1,6 +1,8 @@
 package replica
 
 import (
+	fl "dfs/utils/filelogger"
+
 	lockapi "dfs/proto-gen/lock"
 	managementApi "dfs/proto-gen/management"
 	paxosApi "dfs/proto-gen/paxos"
@@ -23,7 +25,8 @@ type ReplicaServiceServer struct {
 
 	synchronizer *Synchronizer
 
-	logger seelog.LoggerInterface
+	filelogger *fl.JsonFileLogger
+	logger     seelog.LoggerInterface
 
 	replicaApi.UnimplementedReplicaServiceServer
 	managementApi.ManagementServiceServer
@@ -35,6 +38,7 @@ func NewReplicaServiceServer(
 	lockClient lockapi.LockServiceClient,
 	manager *management.ViewManager,
 	logger seelog.LoggerInterface,
+	filelogger *fl.JsonFileLogger,
 
 	primaryAddr string,
 ) *ReplicaServiceServer {
@@ -46,6 +50,7 @@ func NewReplicaServiceServer(
 		isRecovered:    false,
 
 		logger: logger,
+		filelogger: filelogger,
 	}
 
 	r.synchronizer = NewSyncronizer(logger)

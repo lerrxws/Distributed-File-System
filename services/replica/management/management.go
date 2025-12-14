@@ -11,7 +11,8 @@ import (
 
 	paxos "dfs/services/replica/paxos"
 
-	"github.com/cihub/seelog"
+	fl "dfs/utils/filelogger"
+	seelog "github.com/cihub/seelog"
 )
 
 type ViewManager struct {
@@ -28,7 +29,12 @@ type ViewManager struct {
 	logger            seelog.LoggerInterface
 }
 
-func NewViewManager(addr string, heartbeatIntervalInSeconds int, logger seelog.LoggerInterface) *ViewManager {
+func NewViewManager(
+	addr string, 
+	heartbeatIntervalInSeconds int, 
+	logger seelog.LoggerInterface, 
+	filelogger *fl.JsonFileLogger,
+) *ViewManager {
 	m := &ViewManager{
 		Addr:              addr,
 		View:              []string{addr},
@@ -38,7 +44,7 @@ func NewViewManager(addr string, heartbeatIntervalInSeconds int, logger seelog.L
 		logger: logger,
 	}
 
-	m.Acceptor = *paxos.NewAcceptor(m.ViewId, m.View, m.CommitView, m.logger)
+	m.Acceptor = *paxos.NewAcceptor(m.ViewId, m.View, m.CommitView, m.logger, filelogger)
 	m.Proposer = *paxos.NewProposer(m.CommitView, logger)
 
 	return m

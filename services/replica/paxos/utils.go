@@ -1,8 +1,12 @@
 package paxos
 
 import (
+	utils "dfs/utils"
+
 	paxosApi "dfs/proto-gen/paxos"
 
+	fl "dfs/utils/filelogger"
+	
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -29,4 +33,18 @@ func connectToPaxosClient(addr string) (paxosApi.PaxosServiceClient, error) {
 	}
 
 	return paxosApi.NewPaxosServiceClient(conn), nil
+}
+
+func (a *Acceptor) logToFile() error{
+	timestamp := utils.GetTimeStamp()
+
+	entry := fl.PaxosLogEntry{
+		Timestamp: timestamp,
+		Instance: a.viewId,
+		NH: a.n_h,
+		NA: a.n_a,
+		VA: a.v_a,	
+	}
+
+	return a.filelogger.Append(entry)
 }

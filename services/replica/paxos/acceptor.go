@@ -3,47 +3,56 @@ package paxos
 import (
 	paxosApi "dfs/proto-gen/paxos"
 
+	fl "dfs/utils/filelogger"
 	seelog "github.com/cihub/seelog"
 )
 
 type Acceptor struct {
-	viewId_h int64
+	viewId int64
 	n_h      int64
 	n_a      int64
 	v_a      []string
 
 	commitView CommitViewFunc
 
-	logger seelog.LoggerInterface
+	filelogger *fl.JsonFileLogger
+	logger     seelog.LoggerInterface
 }
 
-func NewAcceptor(initialViewId int64, initialView []string, commitView CommitViewFunc, logger seelog.LoggerInterface) *Acceptor{
+func NewAcceptor(
+	initialViewId int64, 
+	initialView []string, 
+	commitView CommitViewFunc, 
+	logger seelog.LoggerInterface, 
+	filelogger *fl.JsonFileLogger,
+) *Acceptor {
 	return &Acceptor{
-		viewId_h: initialViewId,
+		viewId: initialViewId,
 		v_a:      initialView,
 
 		commitView: commitView,
 
 		logger: logger,
+		filelogger: filelogger,
 	}
 }
 
 func (a *Acceptor) Prepare(req *paxosApi.PrepareRequest) (*paxosApi.PrepareResponse, error) {
 	a.logger.Infof("[Paxos] Prepare request with propose number - %d and view ID - %d.", req.N, req.ViewId)
 
-	if req.ViewId <= a.viewId_h {
-		a.logger.Infof("[Paxos] This viewId is older or equal to current viewId_h=%d. Returning previous view.", req.ViewId)
+	if req.ViewId <= a.viewId {
+		a.logger.Infof("[Paxos] This viewId is older or equal to current viewId=%d. Returning previous view.", req.ViewId)
 
 		return a.handleOldInstance(req.ViewId)
 	} else if req.N > a.n_h {
-		a.logger.Infof("[Paxos] Sending prepare-ok for propose %d", req.N) 
+		a.logger.Infof("[Paxos] Sending prepare-ok for propose %d", req.N)
 
 		a.n_h = req.N
 
 		return a.handlePrepareOk(), nil
 	}
 
-	a.logger.Infof("[Paxos] Sending prepare-reject for propose %d", req.N) 
+	a.logger.Infof("[Paxos] Sending prepare-reject for propose %d", req.N)
 
 	return a.handlePrepareReject(), nil
 }
@@ -68,19 +77,31 @@ func (a *Acceptor) Accept(req *paxosApi.AcceptRequest) (*paxosApi.AcceptResponse
 func (a *Acceptor) Decide(req *paxosApi.DecideRequest) (bool, error) {
 	a.logger.Infof("[Paxos] Decide request with view ID - %d.", req.ViewId)
 
-	if req.ViewId > a.viewId_h {
+	if req.ViewId > a.viewId {
 		a.logger.Infof("[Paxos] Decide request is accepted.")
 
-		a.viewId_h = req.ViewId
+		a.viewId = req.ViewId
 
 		a.commitView(req.ViewId, req.View)
+
+		err := a.logToFile()
+		if err != nil {
+			a.logger.Errorf(
+				"[Paxos] Failed to log Paxos state (instance=%d, n_h=%d, n_a=%d, v_a=%v): %v",
+				a.viewId,
+				a.n_h,
+				a.n_a,
+				a.v_a,
+				err,
+			)
+		}
 
 		return true, nil
 	}
 
 	a.logger.Infof("[Paxos] Decide request is ignored.")
 
-	return  false, nil
+	return false, nil
 }
 
 // region help functions
@@ -91,7 +112,7 @@ func (a *Acceptor) handleOldInstance(vId int64) (*paxosApi.PrepareResponse, erro
 	return &paxosApi.PrepareResponse{
 		Success: false,
 		IsOld:   true,
-		ViewId:  a.viewId_h,
+		ViewId:  a.viewId,
 		View:    a.v_a,
 	}, nil
 }
