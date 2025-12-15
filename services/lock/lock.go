@@ -90,10 +90,6 @@ func (s *LockServiceServer) Release(
 		req.Sequence,
 	)
 
-	if s.isDuplicateRelease(req) {
-		return s.releaseResponse()
-	}
-
 	if !s.lockExists(req) {
 		return s.releaseResponse()
 	}
@@ -196,7 +192,7 @@ func (s *LockServiceServer) releaseResponse() (*api.ReleaseResponse, error) {
 
 func (s *LockServiceServer) isDuplicateRelease(req *api.ReleaseRequest) bool {
 	lockInfo := s.locked.GetLockInfo(req.LockId)
-	return lockInfo != nil && req.Sequence <= lockInfo.SeqNum
+	return lockInfo != nil && req.OwnerId == lockInfo.Owner && req.Sequence <= lockInfo.SeqNum
 }
 
 func (s *LockServiceServer) lockExists(req *api.ReleaseRequest) bool {
