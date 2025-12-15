@@ -58,6 +58,10 @@ func (m *ViewManager) MonitorViewHealth() {
 		m.logger.Infof("[Management] Starting new heartbeat cycle for view: %v", m.View)
 
 		for _, node := range m.View {
+			if node == m.Addr {
+				continue
+			}
+			
 			m.sendHeartbeat(node)
 		}
 	}
@@ -117,7 +121,7 @@ func (m *ViewManager) JoinView(primaryAddr string) {
 	newView := append(resp.View, m.Addr)
 
 	m.logger.Infof("[Management] Proposing new view with ViewId %d: %v", newViewId, newView)
-	go m.Proposer.Propose(newViewId, newView, newView)
+	go m.Proposer.Propose(newViewId, resp.View, newView)
 }
 
 func (m *ViewManager) removeFromView(nodeAddr string) {

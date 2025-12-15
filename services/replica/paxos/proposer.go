@@ -18,7 +18,7 @@ type Proposer struct {
 func NewProposer(commitView CommitViewFunc, logger seelog.LoggerInterface) *Proposer {
 	return &Proposer{
 		commitView: commitView,
-		logger:  logger,
+		logger:     logger,
 	}
 }
 
@@ -29,6 +29,7 @@ func (p *Proposer) Propose(viewId int64, oldView []string, newView []string) {
 
 	n := p.generateUniqueProposalNumber()
 
+	p.logger.Infof("[Paxos] Majority: %d.", majority)
 	p.logger.Infof("[Paxos] Starting Prepare phase with proposal number %d.", n)
 
 	prepareResponses := p.sendPrepareRequestToAcceptors(clients, viewId, n)
@@ -65,25 +66,25 @@ func (p *Proposer) decideOnViewValue(
 	ownView []string,
 ) []string {
 
-	var (
-		maxNA     int64 = -1
-		chosenView      []string
-	)
+	p.logger.Infof("[Paxos] Decide value after Prepare: ownViewId=%d ownView=%v", ownViewId, ownView)
+
+	maxNA := ownViewId
+	chosenView := append([]string{}, ownView...)
 
 	for _, resp := range responses {
-		if resp.ViewId > maxNA && resp.View != nil {
+		p.logger.Infof("[Paxos] PrepareResponse: viewId=%d view=%v", resp.ViewId, resp.View)
+
+		if resp.View != nil && resp.ViewId > maxNA {
 			maxNA = resp.ViewId
-			chosenView = resp.View
+			chosenView = append([]string{}, resp.View...)
+			p.logger.Infof("[Paxos] New candidate selected: viewId=%d view=%v", resp.ViewId, resp.View)
 		}
 	}
 
-	if maxNA == -1 {
-		return ownView
-	}
+	p.logger.Infof("[Paxos] Final chosen value: n_a=%d view=%v", maxNA, chosenView)
 
 	return chosenView
 }
-
 
 // region help functions
 

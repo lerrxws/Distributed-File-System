@@ -1,7 +1,7 @@
 package paxos
 
 import (
-	"sync"
+	// "sync"
 	
 	paxosApi "dfs/proto-gen/paxos"
 
@@ -11,7 +11,7 @@ import (
 )
 
 type Acceptor struct {
-	mu sync.Mutex
+	// mu sync.Mutex
 	
 	viewId int64
 	n_h      int64
@@ -63,10 +63,10 @@ func (a *Acceptor) Prepare(req *paxosApi.PrepareRequest) (*paxosApi.PrepareRespo
 }
 
 func (a *Acceptor) Accept(req *paxosApi.AcceptRequest) (*paxosApi.AcceptResponse, error) {
-	a.logger.Infof("[Paxos] Access request with propose number - %d and view - %s.", req.N, req.View)
+	a.logger.Infof("[Paxos] Accept request with propose number - %d and view - %s.", req.N, req.View)
 
 	if req.N >= a.n_h {
-		a.logger.Infof("[Paxos] Sending access-ok for propose %d", req.N)
+		a.logger.Infof("[Paxos] Sending accept-ok for propose %d", req.N)
 
 		a.n_a = req.N
 		a.v_a = req.View
@@ -74,7 +74,7 @@ func (a *Acceptor) Accept(req *paxosApi.AcceptRequest) (*paxosApi.AcceptResponse
 		return a.handleAcceptOk(), nil
 	}
 
-	a.logger.Infof("[Paxos] Sending access-reject for propose %d", req.N)
+	a.logger.Infof("[Paxos] Sending accept-reject for propose %d", req.N)
 
 	return a.handleAcceptReject(), nil
 }
