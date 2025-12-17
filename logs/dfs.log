@@ -104,3 +104,61 @@
 2025-12-15 01:43:08 [WARN] [ExtentCache][Flush] File '/test-dir/' not in cache — skipping flush.
 2025-12-15 01:43:08 [INFO] [CacheManager] Release RPC succeeded for /test-dir/ → None
 2025-12-15 01:43:08 [INFO] [Releaser] Lock /test-dir/ released successfully (server response: )
+2025-12-17 12:07:03 [INFO] [Main] Starting DFS server on port 3001
+2025-12-17 12:07:03 [INFO] [Releaser] Starting release task...
+2025-12-17 12:07:03 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:07:03 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:07:03 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:07:03 [INFO] [Main] DFS is running on port 3001
+2025-12-17 12:08:17 [INFO] [Main] Starting DFS server on port 3001
+2025-12-17 12:08:17 [INFO] [Releaser] Starting release task...
+2025-12-17 12:08:17 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:08:17 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:08:17 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:08:17 [INFO] [Main] DFS is running on port 3001
+2025-12-17 12:09:17 [ERROR] [DFS][Dir] Validation failed for directory test: invalid name: expected directory but got file: test
+2025-12-17 12:10:52 [ERROR] [DFS][Dir] Validation failed for directory test\: invalid name: expected directory but got file: test\
+2025-12-17 12:11:05 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:3001:DfsClient seq=1
+2025-12-17 12:11:05 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:11:05 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 12:11:05 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=1)
+2025-12-17 12:11:05 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:11:05 [ERROR] [ExtentCache] Failed to get file-data from server for 'test/': rpc error: code = Unknown desc = open C:\Users\lerrxwsb\Desktop\tuke\DS\dfstest/: The system cannot find the file specified.
+2025-12-17 12:11:05 [ERROR] [DFS][Dir] Extent service Get request failed for directory: test/, error: rpc error: code = Unknown desc = open C:\Users\lerrxwsb\Desktop\tuke\DS\dfstest/: The system cannot find the file specified.
+2025-12-17 12:15:15 [INFO] [Main] Starting DFS server on port 3001
+2025-12-17 12:15:15 [INFO] [Releaser] Starting release task...
+2025-12-17 12:15:15 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:15:15 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:15:15 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:15:15 [INFO] [Main] DFS is running on port 3001
+2025-12-17 12:15:24 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:3001:DfsClient seq=1
+2025-12-17 12:15:24 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:15:24 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 12:15:24 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=1)
+2025-12-17 12:15:24 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:15:24 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 12:15:24 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 12:15:24 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 12:16:37 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:3001:DfsClient seq=2
+2025-12-17 12:16:37 [INFO] [CacheManager] Lock test/ already held locally
+2025-12-17 12:16:37 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=2)
+2025-12-17 12:16:37 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:16:37 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 12:18:55 [INFO] [Main] Starting DFS server on port 3002
+2025-12-17 12:18:55 [INFO] [Releaser] Starting release task...
+2025-12-17 12:18:55 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:18:55 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:18:55 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:18:55 [INFO] [Main] DFS is running on port 3002
+2025-12-17 12:19:17 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:3002:DfsClient seq=1
+2025-12-17 12:19:17 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:19:18 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 12:19:18 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 12:19:18 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 12:19:18 [INFO] [LockCacheService] Lock test/ is Locked — waiting until it becomes Free...
+2025-12-17 12:19:18 [INFO] [LockCacheService] Lock test/ is Locked — waiting until it becomes Free...
+2025-12-17 12:21:57 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:3001:DfsClient seq=3
+2025-12-17 12:21:57 [INFO] [CacheManager] Lock test/ already held locally
+2025-12-17 12:21:57 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=3)
+2025-12-17 12:21:57 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:21:57 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
