@@ -16,7 +16,7 @@ import (
 
 func main() {
 	if len(os.Args) < 3 {
-		seelog.Critical("[Main] Usage: go run lockserver.go <port>")
+		seelog.Critical("[Main] Usage: go run <lockserver> <port>")
 		os.Exit(1)
 	}
 

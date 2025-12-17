@@ -16,14 +16,14 @@ type SynchronizeRequest struct {
 	view      []string
 }
 
-type Synchronizer struct {
+type SynchronizeModule struct {
 	synchChan chan SynchronizeRequest
 
 	logger seelog.LoggerInterface
 }
 
-func NewSyncronizer(logger seelog.LoggerInterface) *Synchronizer {
-	s := &Synchronizer{
+func NewSyncronizer(logger seelog.LoggerInterface) *SynchronizeModule {
+	s := &SynchronizeModule{
 		synchChan: make(chan SynchronizeRequest, 100),
 		logger:    logger,
 	}
@@ -31,8 +31,8 @@ func NewSyncronizer(logger seelog.LoggerInterface) *Synchronizer {
 	return s
 }
 
-func (s *Synchronizer) Start() {
-	s.logger.Infof("[Synchronizer] Starting synchonize task processor...")
+func (s *SynchronizeModule) Start() {
+	s.logger.Infof("[SynchronizeModule] Starting synchonize task processor...")
 
 	go func() {
 		for req := range s.synchChan {
@@ -40,72 +40,72 @@ func (s *Synchronizer) Start() {
 		}
 	}()
 
-	s.logger.Infof("[Synchronizer] Retry task processor started successfully.")
+	s.logger.Infof("[SynchronizeModule] Retry task processor started successfully.")
 }
 
-func (s *Synchronizer) AddMethodExecutionToQueue(req SynchronizeRequest) {
-	s.logger.Infof("[Synchronizer] Adding method execution request to sync queue: %v", req)
+func (s *SynchronizeModule) AddMethodExecutionToQueue(req SynchronizeRequest) {
+	s.logger.Infof("[SynchronizeModule] Adding method execution request to sync queue: %v", req)
 
 	select {
 	case s.synchChan <- req:
-		s.logger.Infof("[Synchronizer] Method execution request successfully added to queue: %v", req)
+		s.logger.Infof("[SynchronizeModule] Method execution request successfully added to queue: %v", req)
 	default:
-		s.logger.Errorf("[Synchronizer] Failed to add method execution request to queue. Channel is full.")
+		s.logger.Errorf("[SynchronizeModule] Failed to add method execution request to queue. Channel is full.")
 	}
 }
 
-func (s *Synchronizer) Stop() {
-	s.logger.Infof("[Retrier] Stopping retry task...")
+func (s *SynchronizeModule) Stop() {
+	s.logger.Infof("[SynchronizeModule] Stopping retry task...")
 	defer func() {
 		if rec := recover(); rec != nil {
-			s.logger.Warnf("[Retrier] Panic during stop: %v", rec)
+			s.logger.Warnf("[SynchronizeModule] Panic during stop: %v", rec)
 		}
-		s.logger.Infof("[Retrier] Retry task stopped cleanly.")
+		s.logger.Infof("[SynchronizeModule] Retry task stopped cleanly.")
 	}()
 	close(s.synchChan)
 }
 
-func (s *Synchronizer) synchronizeAllReplicas(req SynchronizeRequest) {
-	view := req.view
+func (s *SynchronizeModule) synchronizeAllReplicas(req SynchronizeRequest) {
+	view := req.view[1:]
 	methodReq := req.methodReq
 
 	for _, replicaAddr := range view {
 		client, err := utils.ConnectToReplicaClient(replicaAddr)
 		if err != nil {
-			s.logger.Errorf("[Synchronizer] Failed to connect to replica at %s: %v", replicaAddr, err)
+			s.logger.Errorf("[SynchronizeModule] Failed to connect to replica at %s: %v", replicaAddr, err)
 			continue
 		}
 
 		err = s.executeMethodOnReplica(client, methodReq)
 		if err != nil {
-			s.logger.Errorf("[Synchronizer] Failed to execute method on replica %s: %v", replicaAddr, err)
+			s.logger.Errorf("[SynchronizeModule] Failed to execute method on replica %s: %v", replicaAddr, err)
 			continue
 		}
 
-		s.logger.Infof("[Synchronizer] Successfully synchronized method on replica %s", replicaAddr)
+		s.logger.Infof("[SynchronizeModule] Successfully synchronized method on replica %s", replicaAddr)
 	}
 	
 }
 
-func (s *Synchronizer) executeMethodOnReplica(client replicaApi.ReplicaServiceClient, req *replicaApi.ExecuteMethodRequest) error {
+func (s *SynchronizeModule) executeMethodOnReplica(client replicaApi.ReplicaServiceClient, req *replicaApi.ExecuteMethodRequest) error {
 	resp, err := client.IsRecovered(context.Background(), &replicaApi.IsRecoveredRequest{})
 	if err != nil {
-		s.logger.Errorf("[Synchronizer] Failed to check recovery status: %v", err)
+		s.logger.Errorf("[SynchronizeModule] Failed to check recovery status: %v", err)
 		return err
 
 	}
 
 	if !resp.IsRecovered {
-		s.logger.Errorf("[Synchronizer] Replica is not recovered, cannot execute method.")
+		s.logger.Errorf("[SynchronizeModule] Replica is not recovered, cannot execute method.")
 		return fmt.Errorf("replica is not recovered")
 	}
 
 	_, err = client.ExecuteMethod(context.Background(), req)
 	if err != nil {
-		s.logger.Errorf("[Synchronizer] Failed to execute method on replica: %v", err)
+		s.logger.Errorf("[SynchronizeModule] Failed to execute method on replica: %v", err)
 		return err
 	}
 
-	s.logger.Infof("[Synchronizer] Method executed successfully on replica")
+	s.logger.Infof("[SynchronizeModule] Method executed successfully on replica")
 	return nil
 }

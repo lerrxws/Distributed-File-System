@@ -2,31 +2,21 @@ package replica
 
 import (
 	utils "dfs/utils"
-	fl "dfs/utils/filelogger"
-	
-	replicaApi "dfs/proto-gen/replica"
+
+	paxosApi "dfs/proto-gen/paxos"
 )
 
-func (r *ReplicaServiceServer) connectToPrimary(primaryAddr string) (replicaApi.ReplicaServiceClient, error) {
-	client, err := utils.ConnectToReplicaClient(primaryAddr)
-	if err != nil {
-		return nil, r.logger.Errorf("failed to connect to primary node %s: %v", primaryAddr, err)
-	}
-	return client, nil
-}
+func connectToAllPaxosClients(addrs []string) []paxosApi.PaxosServiceClient{
+	clients := []paxosApi.PaxosServiceClient{}
 
-func IsPrimaryAddressSet(primaryAddr string) bool {
-	return primaryAddr != ""
-}
+	for _, addr := range addrs {
+		client, err := utils.ConnectToPaxosClient(addr)
+		if err != nil {
+			continue
+		}
 
-func (r *ReplicaServiceServer) logToFileExecutedMethod(methodReq *replicaApi.MethodRequest) error{
-	timestamp := utils.GetTimeStamp()
-
-	entry := fl.MethodLogEntry{
-		Timestamp: timestamp,
-		Method: methodReq.MethodName,
-		Params: methodReq.MethodParameters,
+		clients = append(clients, client)
 	}
 
-	return r.filelogger.Append(entry)
+	return clients
 }

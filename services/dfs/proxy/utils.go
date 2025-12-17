@@ -7,30 +7,30 @@ import (
 	replica "dfs/proto-gen/replica"
 )
 
-func buildAcquireRequest(req *lock.AcquireRequest, viewId int64) *replica.ExecuteMethodRequest {
+func buildAcquireRequest(req *lock.AcquireRequest, viewId int64, sequence int64) *replica.ExecuteMethodRequest {
 	paramStr := []string{
 		req.LockId,
 		req.OwnerId,
 		strconv.FormatInt(req.Sequence, 10),
 	}
 
-	return buildRequest(paramStr, viewId, "Acquire", req.Sequence)
+	return buildRequest(paramStr, viewId, "Acquire", sequence)
 }
 
-func buildReleaseRequest(req *lock.ReleaseRequest, viewId int64) *replica.ExecuteMethodRequest {
+func buildReleaseRequest(req *lock.ReleaseRequest, viewId int64, sequence int64) *replica.ExecuteMethodRequest {
 	paramStr := []string{
 		req.LockId,
 		req.OwnerId,
 		strconv.FormatInt(req.Sequence, 10),
 	}
 
-	return buildRequest(paramStr, viewId, "Release", req.Sequence)
+	return buildRequest(paramStr, viewId, "Release", sequence)
 }
 
-func buildStopRequest(req *lock.StopRequest, viewId int64) *replica.ExecuteMethodRequest{
+func buildStopRequest(req *lock.StopRequest, viewId int64, sequence int64) *replica.ExecuteMethodRequest{
 	paramStr := []string{}
 
-	return buildRequest(paramStr, viewId, "Stop", -1)
+	return buildRequest(paramStr, viewId, "Stop", sequence)
 }
 
 func buildRequest(paramsStr []string, viewId int64, requestName string, sequence int64) *replica.ExecuteMethodRequest {

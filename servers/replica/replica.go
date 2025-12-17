@@ -4,78 +4,57 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strconv"
 
 	utils "dfs/utils"
 
 	replica "dfs/services/replica"
-	management "dfs/services/replica/management"
 
 	managementApi "dfs/proto-gen/management"
 	paxosApi "dfs/proto-gen/paxos"
 	replicaApi "dfs/proto-gen/replica"
 
 	fl "dfs/utils/filelogger"
+
 	seelog "github.com/cihub/seelog"
 	"google.golang.org/grpc"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		seelog.Critical("[Main] Usage: go run replica.go <lockserver> <port> <primary>")
-		os.Exit(1)
-	}
+	// parse input 
+	lockClientAddr, port, isPrimary, primaryAddr := parseInput()
+	addr := getNodeAddr(port)
 
-	lockClientAddr := os.Args[1]
-	port := os.Args[2]
-
-	primaryAddr := ""
-	if len(os.Args) == 4{
-		primaryAddr = os.Args[3]
-	}
-
+	// init logger
 	logger, err := utils.CreateLoggerWithPortNumber(port)
-
 	if err != nil {
-		seelog.Criticalf("[Main] Failed to load seelog config: %v", err)
-		os.Exit(1)
+		panic("failed to load seelog config.")
 	}
 	defer seelog.Flush()
 
-	s := grpc.NewServer()
-
-	addr := "127.0.0.1:" + port
-
+	// init filelogger
 	logFile := fmt.Sprintf("%s.json", port)
 	storagePath := "storage/replica/"
 
-	executionLogPath := storagePath + "execution/" + logFile
-	executionLogger, err := fl.NewJsonFileLogger(executionLogPath)
+	executionLogger, err := createJsonFileLogger(storagePath+"execution/", logFile, logger)
 	if err != nil {
-		logger.Criticalf(
-			"[Main] Failed to initialize execution state logger at path '%s': %v",
-			executionLogPath,
-			err,
-		)
 		os.Exit(1)
 	}
 
-
-	paxosLogPath := storagePath + "paxos/" + logFile
-	paxosLogger, err := fl.NewJsonFileLogger(paxosLogPath)
+	paxosLogger, err := createJsonFileLogger(storagePath+"paxos/", logFile, logger)
 	if err != nil {
-		logger.Criticalf(
-			"[Main] Failed to initialize paxos state logger at path '%s': %v",
-			executionLogPath,
-			err,
-		)
 		os.Exit(1)
 	}
 
-	heartbeatIntervalInSeconds := 5
-	manager := management.NewViewManager(addr, heartbeatIntervalInSeconds, logger, paxosLogger)
-	lockClient := utils.ConnectLockClient(lockClientAddr, logger)
+	// connect to lock server
+	lockClient, err := utils.ConnectLockClient(lockClientAddr, logger)
+	if err != nil {
+		// panic("failed to cinnect to lock server.")
+	}
 
-	srv := replica.NewReplicaServiceServer(s, lockClient, manager, logger, executionLogger, primaryAddr)
+	s := grpc.NewServer()
+
+	srv := replica.NewReplicaServiceServer(primaryAddr, addr, isPrimary, lockClient, logger, executionLogger, paxosLogger, s)
 
 	replicaApi.RegisterReplicaServiceServer(s, srv)
 	managementApi.RegisterManagementServiceServer(s, srv)
@@ -97,4 +76,46 @@ func main() {
 	}
 
 	logger.Infof("[Main] Replica shutdown completed.")
+}
+
+func parseInput() (lockClientAddr string, addr string, isPrimary bool, primaryAddr string) {
+	if len(os.Args) < 4 {
+		panic("usage: <lockClientAddr> <port> <isPrimary>")
+	}
+
+	lockClientAddr = os.Args[1]
+	addr = os.Args[2]
+	var err error
+	isPrimary, err = strconv.ParseBool(os.Args[3])
+	if err != nil {
+		panic(fmt.Sprintf("invalid boolean value for isPrimary: %v", os.Args[2]))
+	}
+
+	primaryAddr = ""
+	if !isPrimary {
+		if len(os.Args) < 5 {
+			panic("usage: <lockClientAddr> <port> <false> <primaryAddr>")
+		}
+		primaryAddr = os.Args[4]
+	}
+
+	return lockClientAddr, addr, isPrimary, primaryAddr
+}
+
+func getNodeAddr(port string) string {
+	return "127.0.0.1:" + port
+}
+
+func createJsonFileLogger(logPath, logFile string, logger seelog.LoggerInterface) (*fl.JsonFileLogger, error) {
+	logFilePath := logPath + logFile
+	loggerInstance, err := fl.NewJsonFileLogger(logFilePath)
+	if err != nil {
+		logger.Criticalf(
+			"[Main] Failed to initialize logger at path '%s': %v",
+			logFilePath,
+			err,
+		)
+		return nil, fmt.Errorf("failed to initialize logger at path '%s': %v", logFilePath, err)
+	}
+	return loggerInstance, nil
 }

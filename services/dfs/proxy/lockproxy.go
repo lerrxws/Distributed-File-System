@@ -20,9 +20,9 @@ type LockProxyServiceServer struct {
 	replica     replica.ReplicaServiceClient
 	primaryAddr string
 
-	view    []string
-	viewId  int64
-	retries int
+	view     []string
+	viewId   int64
+	sequence int64
 
 	logger seelog.LoggerInterface
 
@@ -37,9 +37,9 @@ func NewLockProxyService(grpcServer *grpc.Server, replica replica.ReplicaService
 		replica:     replica,
 		primaryAddr: primaryAddr,
 
-		viewId:  1,
-		view:    []string{primaryAddr},
-		retries: 5,
+		viewId:   -1,
+		view:     []string{primaryAddr},
+		sequence: -1,
 
 		logger: logger,
 	}
@@ -50,33 +50,35 @@ func NewLockProxyService(grpcServer *grpc.Server, replica replica.ReplicaService
 }
 
 func (s *LockProxyServiceServer) Acquire(ctx context.Context, req *lock.AcquireRequest) (*lock.AcquireResponse, error) {
-	reqAcq := buildAcquireRequest(req, s.viewId)
+	reqAcq := buildAcquireRequest(req, s.viewId, s.sequence)
 
 	resp, err := s.makeRequest(ctx, reqAcq)
 	if err != nil {
-		s.logger.Errorf("[LockProxy] Error occured: %s", err)
+		s.logger.Errorf("[LockProxy] Error occurred: %s", err)
+		return &lock.AcquireResponse{Success: proto.Bool(false)}, err
 	}
 
 	return &lock.AcquireResponse{Success: proto.Bool(resp)}, nil
 }
 
 func (s *LockProxyServiceServer) Release(ctx context.Context, req *lock.ReleaseRequest) (*lock.ReleaseResponse, error) {
-	reqAcq := buildReleaseRequest(req, s.viewId)
+	reqRel := buildReleaseRequest(req, s.viewId, s.sequence)
 
-	_, err := s.makeRequest(ctx, reqAcq)
+	_, err := s.makeRequest(ctx, reqRel)
 	if err != nil {
-		s.logger.Errorf("[LockProxy] Error occured: %s", err)
+		s.logger.Errorf("[LockProxy] Error occurred: %s", err)
+		return &lock.ReleaseResponse{}, err
 	}
 
 	return &lock.ReleaseResponse{}, nil
 }
 
 func (s *LockProxyServiceServer) Stop(ctx context.Context, req *lock.StopRequest) (*lock.StopResponse, error) {
-	reqAcq := buildStopRequest(req, s.viewId)
+	reqStop := buildStopRequest(req, s.viewId, s.sequence)
 
-	_, err := s.makeRequest(ctx, reqAcq)
+	_, err := s.makeRequest(ctx, reqStop)
 	if err != nil {
-		s.logger.Errorf("[LockProxy] Error occured: %s", err)
+		s.logger.Errorf("[LockProxy] Error occurred: %s", err)
 	}
 
 	return &lock.StopResponse{}, nil
@@ -85,79 +87,123 @@ func (s *LockProxyServiceServer) Stop(ctx context.Context, req *lock.StopRequest
 // region private methods
 
 func (s *LockProxyServiceServer) makeRequest(ctx context.Context, req *replica.ExecuteMethodRequest) (bool, error) {
-	for len(s.view) != 0 {
-		resp, err := s.tryExecuteMethodWithRetries(ctx, req)
+	attempt := 0
+
+	for {
+		attempt++
+		s.logger.Infof("[LockProxy] Attempt #%d: trying to execute method on primary %s", attempt, s.primaryAddr)
+
+		if len(s.view) == 0 {
+			s.logger.Errorf("[LockProxy] View is empty, cannot proceed")
+			return false, fmt.Errorf("no replicas available in view")
+		}
+
+		resp, err := s.tryExecuteMethod(ctx, req)
+
 		if err != nil {
-			s.logger.Errorf("[LockProxy] Primary Node %s do not answer or return Error.", s.primaryAddr)
+			s.logger.Warnf("[LockProxy] Primary node %s did not respond: %v", s.primaryAddr, err)
 
 			s.deleteFromView(s.primaryAddr)
 
-			newPrimaryAddr := s.view[0]
-			s.updatePrimaryClient(newPrimaryAddr)
-			
-			s.updateView(ctx)
+			if len(s.view) == 0 {
+				s.logger.Errorf("[LockProxy] All replicas are unavailable")
+				return false, fmt.Errorf("all replicas are unavailable")
+			}
 
+			newPrimaryAddr := s.view[0]
+			s.logger.Infof("[LockProxy] Switching to new primary: %s", newPrimaryAddr)
+
+			if err := s.updatePrimaryClient(newPrimaryAddr); err != nil {
+				s.logger.Errorf("[LockProxy] Failed to connect to new primary %s: %v", newPrimaryAddr, err)
+				s.deleteFromView(newPrimaryAddr)
+			}
+
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
 		if !resp.IsPrimary {
-			s.logger.Warnf("[LockProxy] Get response NONPRIMARY node")
+			s.logger.Warnf("[LockProxy] Response from NON-PRIMARY node %s", s.primaryAddr)
 
-			s.updateView(ctx)
-			s.updatePrimaryClient(s.primaryAddr)
+			if err := s.updateView(ctx); err != nil {
+				s.logger.Errorf("[LockProxy] Failed to update view from %s: %v", s.primaryAddr, err)
 
+				s.deleteFromView(s.primaryAddr)
+
+				if len(s.view) > 0 {
+					newPrimaryAddr := s.view[0]
+					s.updatePrimaryClient(newPrimaryAddr)
+				}
+
+				time.Sleep(100 * time.Millisecond)
+				continue
+			}
+
+			s.logger.Infof("[LockProxy] View updated: viewId=%d, new primary=%s", s.viewId, s.primaryAddr)
+
+			if err := s.updatePrimaryClient(s.primaryAddr); err != nil {
+				s.logger.Errorf("[LockProxy] Failed to connect to updated primary %s: %v", s.primaryAddr, err)
+				s.deleteFromView(s.primaryAddr)
+			}
+
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
-		s.logger.Infof("[LockProxy] Get response PRIMARY node")
+		s.logger.Infof("[LockProxy] Successfully received response from PRIMARY node %s", s.primaryAddr)
+
+		if resp.ReturnValue != nil {
+			return parseBoolFromString(*resp.ReturnValue), nil
+		}
+
 		return true, nil
 	}
-
-	return false, nil
 }
 
-func (s *LockProxyServiceServer) tryExecuteMethodWithRetries(ctx context.Context, exeReq *replica.ExecuteMethodRequest) (*replica.ExecuteMethodResponse, error) {
-	ctxWithTimeout, cancel := context.WithTimeout(ctx, 10*time.Millisecond)
+func (s *LockProxyServiceServer) tryExecuteMethod(ctx context.Context, exeReq *replica.ExecuteMethodRequest) (*replica.ExecuteMethodResponse, error) {
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 
-	var resp *replica.ExecuteMethodResponse
-	var err error
-
-	for attempt := 0; attempt < s.retries; attempt++ {
-		resp, err = s.replica.ExecuteMethod(ctxWithTimeout, exeReq)
-
-		if err == nil && resp != nil {
-			return resp, nil
-		}
-
-		if err != nil {
-			s.logger.Criticalf("[LockProxy] Error occurred (attempt %d/%d): %s", attempt+1, s.retries, err)
-		} else if resp == nil {
-			s.logger.Criticalf("[LockProxy] No response received (attempt %d/%d)", attempt+1, s.retries)
-		}
-
-		time.Sleep(time.Second * time.Duration(attempt+1))
+	resp, err := s.replica.ExecuteMethod(ctxWithTimeout, exeReq)
+	if err != nil {
+		return nil, err
 	}
 
-	return resp, s.logger.Errorf("[LockProxy]  Failed to execute method after %d retries", s.retries)
+	if resp == nil {
+		return nil, fmt.Errorf("received nil response")
+	}
+
+	return resp, nil
 }
 
 // region view methods
 
 func (s *LockProxyServiceServer) updateView(ctx context.Context) error {
-	replicaResp, err := s.replica.GetView(ctx, &replica.GetViewRequest{})
+	// ctxWithTimeout, cancel := context.WithTimeout(ctx, 2*time.Second)
+	// defer cancel()
+
+	replicaResp, err := s.replica.GetView(context.Background(), &replica.GetViewRequest{})
 	if err != nil {
-		return s.logger.Errorf("[LockProxy] Error ocurred: %s", err)
+		return fmt.Errorf("failed to get view: %w", err)
 	}
 
+	if len(replicaResp.View) == 0 {
+		return fmt.Errorf("received empty view")
+	}
+
+	s.logger.Infof("[LockProxy] View updated: view: %v → %v",
+		s.viewId, replicaResp.ViewId, s.view, replicaResp.View)
+
 	s.view = replicaResp.View
-	s.viewId = replicaResp.ViewId
+	// s.viewId = replicaResp.ViewId
 	s.primaryAddr = s.view[0]
 
 	return nil
 }
 
 func (s *LockProxyServiceServer) deleteFromView(nodeId string) {
+	s.logger.Infof("[LockProxy] Removing node %s from local view", nodeId)
+
 	var updatedView []string
 
 	for _, addr := range s.view {
@@ -167,11 +213,12 @@ func (s *LockProxyServiceServer) deleteFromView(nodeId string) {
 	}
 
 	s.view = updatedView
+
+	s.logger.Infof("[LockProxy] Updated local view: %v", s.view)
 }
 
 func (s *LockProxyServiceServer) updatePrimaryClient(primaryAddr string) error {
 	if primaryAddr == "" {
-		s.logger.Errorf("[LockProxy] Cannot update primary client: primary address is empty")
 		return fmt.Errorf("primary address is empty")
 	}
 
@@ -181,14 +228,21 @@ func (s *LockProxyServiceServer) updatePrimaryClient(primaryAddr string) error {
 
 	newReplicaClient, err := utils.ConnectToReplicaClient(s.primaryAddr)
 	if err != nil {
-		s.logger.Errorf("[LockProxy] Failed to connect to primary replica at %s: %v", s.primaryAddr, err)
-		return err
+		return fmt.Errorf("failed to connect to primary replica at %s: %w", s.primaryAddr, err)
 	}
 
 	s.replica = newReplicaClient
 	s.logger.Infof("[LockProxy] Successfully connected to primary replica at %s", s.primaryAddr)
 
 	return nil
+}
+
+// endregion
+
+// region helper functions
+
+func parseBoolFromString(s string) bool {
+	return s == "true"
 }
 
 // endregion
