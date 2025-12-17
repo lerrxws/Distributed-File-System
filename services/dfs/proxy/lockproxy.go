@@ -90,6 +90,9 @@ func (s *LockProxyServiceServer) makeRequest(ctx context.Context, req *replica.E
 	attempt := 0
 
 	for {
+		viewstamp, _ := s.replica.GetView(ctx, &replica.GetViewRequest{})
+		s.view = viewstamp.View
+
 		attempt++
 		s.logger.Infof("[LockProxy] Attempt #%d: trying to execute method on primary %s", attempt, s.primaryAddr)
 

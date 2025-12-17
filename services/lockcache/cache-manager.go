@@ -2,7 +2,7 @@ package dfs
 
 import (
 	"context"
-	"fmt"
+	// "fmt"
 	"sync"
 
 	lockapi "dfs/proto-gen/lock"
@@ -147,31 +147,35 @@ func (cm *CacheManager) Acquire(ctx context.Context, req *lockapi.AcquireRequest
 }
 
 func (cm *CacheManager) Release(ctx context.Context, req *lockapi.ReleaseRequest) (*lockapi.ReleaseResponse, error) {
-	cacheInfo := cm.GetCacheInfo(req.LockId)
-	if cacheInfo == nil {
-		cm.logger.Errorf("[CacheManager] release: lock %s not found in cache", req.LockId)
-		return &lockapi.ReleaseResponse{}, fmt.Errorf("release: lock %s not found in cache", req.LockId)
+    lockId := req.LockId
+    
+    cm.logger.Infof("[CacheManager] Release request for lock %s", lockId)
 
-	}
+    cacheInfo := cm.GetCacheInfo(lockId)
+    if cacheInfo == nil {
+        cm.logger.Warnf("[CacheManager] Release for unknown lock %s", lockId)
+        return &lockapi.ReleaseResponse{}, nil
+    }
 
-	cacheInfo.mu.Lock()
-	defer cacheInfo.mu.Unlock()
+    cacheInfo.mu.Lock()
+    
+    if cacheInfo.State != Locked {
+        cm.logger.Warnf("[CacheManager] Release for lock %s but state is %s, not Locked", 
+            lockId, cacheInfo.State)
+        cacheInfo.mu.Unlock()
+        return &lockapi.ReleaseResponse{}, nil
+    }
 
-	switch cacheInfo.State {
-	case Locked:
-		cm.extentHandler.Update(ctx, req.LockId)
-		cacheInfo.State = Free
-		cacheInfo.cond.Broadcast()
-		cm.logger.Infof("[CacheManager] Released lock %s → Free", req.LockId)
-		return &lockapi.ReleaseResponse{}, nil
+    // Змінюємо стан на Free локально
+    cacheInfo.State = Free
+    cacheInfo.cond.Broadcast()
+    
+    cm.logger.Infof("[CacheManager] Lock %s released locally (state: Free)", lockId)
+    
+    cacheInfo.mu.Unlock()
 
-	case Free:
-		cm.logger.Infof("[CacheManager] Lock %s already free", req.LockId)
-		return &lockapi.ReleaseResponse{}, nil
-
-	default:
-		return nil, fmt.Errorf("[CacheManager] release: invalid state for lock %s (%s)", req.LockId, cacheInfo.State)
-	}
+    // НЕ викликаємо RPC тут - це зробить Releaser при Revoke
+    return &lockapi.ReleaseResponse{}, nil
 }
 
 func (cm *CacheManager) ReleaseRPC(ctx context.Context, req *lockapi.ReleaseRequest) (*lockapi.ReleaseResponse, error) {

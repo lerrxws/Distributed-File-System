@@ -162,3 +162,459 @@
 2025-12-17 12:21:57 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:3001:DfsClient (seq=3)
 2025-12-17 12:21:57 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
 2025-12-17 12:21:57 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 12:47:41 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 12:47:41 [INFO] [Releaser] Starting release task...
+2025-12-17 12:47:41 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:47:41 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:47:41 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:47:41 [INFO] [Main] DFS is running on port 5001
+2025-12-17 12:48:19 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 12:48:19 [INFO] [Releaser] Starting release task...
+2025-12-17 12:48:19 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:48:19 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:48:19 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:48:19 [INFO] [Main] DFS is running on port 5002
+2025-12-17 12:48:43 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 12:48:43 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:48:43 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 12:48:43 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 12:48:43 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:48:43 [ERROR] [ExtentCache] Failed to get file-data from server for 'test/': rpc error: code = Unknown desc = open C:\Users\lerrxwsb\Desktop\tuke\DS\dfs\test/: The system cannot find the file specified.
+2025-12-17 12:48:43 [ERROR] [DFS][Dir] Extent service Get request failed for directory: test/, error: rpc error: code = Unknown desc = open C:\Users\lerrxwsb\Desktop\tuke\DS\dfs\test/: The system cannot find the file specified.
+2025-12-17 12:49:07 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 12:49:07 [INFO] [CacheManager] Lock test/ already held locally
+2025-12-17 12:49:07 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=2)
+2025-12-17 12:49:07 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:49:07 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 12:49:07 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 12:49:07 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 12:49:20 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 12:49:20 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:49:20 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 12:49:20 [INFO] [LockCacheService] Lock test/ is Locked — waiting until it becomes Free...
+2025-12-17 12:49:20 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 12:49:20 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 12:49:20 [INFO] [LockCacheService] Lock test/ is Locked — waiting until it becomes Free...
+2025-12-17 12:57:52 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 12:57:52 [INFO] [Releaser] Starting release task...
+2025-12-17 12:57:52 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:57:52 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:57:52 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:57:52 [INFO] [Main] DFS is running on port 5002
+2025-12-17 12:57:57 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 12:57:57 [INFO] [Releaser] Starting release task...
+2025-12-17 12:57:57 [INFO] [Releaser] Task successfully started.
+2025-12-17 12:57:57 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 12:57:57 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 12:57:57 [INFO] [Main] DFS is running on port 5001
+2025-12-17 12:58:09 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 12:58:09 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:58:09 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 12:58:09 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 12:58:09 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 12:58:09 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 12:58:09 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 12:58:09 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 12:58:15 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 12:58:15 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 12:58:15 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 12:58:15 [INFO] [LockCacheService] Lock test/ is Locked — waiting until it becomes Free...
+2025-12-17 12:58:15 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:01:05 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:01:05 [INFO] [Releaser] Starting release task...
+2025-12-17 13:01:05 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:01:05 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:01:05 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:01:05 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:01:14 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:01:14 [INFO] [Releaser] Starting release task...
+2025-12-17 13:01:14 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:01:14 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:01:14 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:01:14 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:01:25 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:01:25 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:01:25 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:02:51 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:02:51 [INFO] [Releaser] Starting release task...
+2025-12-17 13:02:51 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:02:51 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:02:51 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:02:51 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:02:58 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:02:58 [INFO] [Releaser] Starting release task...
+2025-12-17 13:02:58 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:02:58 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:02:58 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:02:58 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:03:14 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:03:14 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:03:14 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:03:14 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 13:03:14 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:03:14 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:03:14 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:03:14 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:03:14 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:03:14 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:03:14 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:03:14 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:03:19 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:03:19 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:03:19 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:03:19 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:03:19 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:03:19 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:03:19 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:03:19 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5001:DfsClient, seq=1
+2025-12-17 13:03:19 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:03:19 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:03:19 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:03:19 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:03:19 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:03:19 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:03:19 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:03:19 [INFO] [Releaser] Lock test/ released successfully on server
+2025-12-17 13:03:19 [INFO] [Releaser] Lock test/ state changed to None and threads notified
+2025-12-17 13:03:19 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:03:19 [INFO] [LockCacheService] Lock test/ is in Acquiring state — broadcasting condition
+2025-12-17 13:03:19 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:03:19 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:03:19 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:03:19 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5002:DfsClient (seq=1)
+2025-12-17 13:03:19 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:03:19 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:03:19 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:03:19 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:03:19 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:03:19 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:03:19 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:03:19 [INFO] Lock test/ released successfully by 127.0.0.1:5002:DfsClient
+2025-12-17 13:03:41 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:03:41 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:03:41 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:03:41 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:03:41 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5002:DfsClient, seq=1
+2025-12-17 13:03:41 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:03:41 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:03:41 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:03:41 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:03:41 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:03:41 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:03:41 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:03:41 [WARN] [LockCacheService] Retry received for lock test/ but state is None — likely late message, ignoring
+2025-12-17 13:03:41 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:03:41 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:03:41 [INFO] [Releaser] Lock test/ released successfully on server
+2025-12-17 13:03:41 [INFO] [Releaser] Lock test/ state changed to None and threads notified
+2025-12-17 13:11:22 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:11:22 [INFO] [Releaser] Starting release task...
+2025-12-17 13:11:22 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:11:22 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:11:22 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:11:22 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:11:29 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:11:29 [INFO] [Releaser] Starting release task...
+2025-12-17 13:11:29 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:11:29 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:11:29 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:11:29 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:11:36 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:11:36 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:11:36 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:11:36 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 13:11:36 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:11:36 [ERROR] [ExtentCache] Failed to get file-data from server for 'test/': rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:4001: connectex: No connection could be made because the target machine actively refused it."
+2025-12-17 13:11:36 [ERROR] [DFS][Dir] Extent service Get request failed for directory: test/, error: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:4001: connectex: No connection could be made because the target machine actively refused it."
+2025-12-17 13:11:36 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:11:36 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:11:36 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:11:36 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:12:46 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 13:12:46 [INFO] [CacheManager] Reused cached lock test/ (local reuse)
+2025-12-17 13:12:46 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=2)
+2025-12-17 13:12:46 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:12:46 [ERROR] [ExtentCache] Failed to get file-data from server for 'test/': rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:4001: connectex: No connection could be made because the target machine actively refused it."
+2025-12-17 13:12:46 [ERROR] [DFS][Dir] Extent service Get request failed for directory: test/, error: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing: dial tcp 127.0.0.1:4001: connectex: No connection could be made because the target machine actively refused it."
+2025-12-17 13:12:46 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 13:12:46 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:12:46 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:12:46 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:14:26 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:14:26 [INFO] [Releaser] Starting release task...
+2025-12-17 13:14:26 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:14:26 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:14:26 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:14:26 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:14:32 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:14:32 [INFO] [Releaser] Starting release task...
+2025-12-17 13:14:32 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:14:32 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:14:32 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:14:32 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:14:39 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:14:39 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:14:39 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:14:39 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 13:14:39 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:14:39 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:14:39 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:14:39 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:14:39 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:14:39 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:14:39 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:14:39 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:14:44 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:14:44 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:14:44 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:14:44 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:14:44 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:14:44 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:14:44 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:14:44 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5001:DfsClient, seq=1
+2025-12-17 13:14:44 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:14:44 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:14:44 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:14:44 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:14:44 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:14:45 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:14:45 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:14:45 [INFO] [LockCacheService] Lock test/ is in Acquiring state — broadcasting condition
+2025-12-17 13:14:45 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:14:45 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:14:45 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:14:45 [INFO] [Releaser] Lock test/ released successfully (server response: )
+2025-12-17 13:14:45 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:14:45 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5002:DfsClient (seq=1)
+2025-12-17 13:14:45 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:14:45 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:14:45 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:14:45 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:14:45 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:14:45 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:14:45 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:14:45 [INFO] Lock test/ released successfully by 127.0.0.1:5002:DfsClient
+2025-12-17 13:14:53 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:14:53 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:14:53 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:14:53 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:14:53 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5002:DfsClient, seq=1
+2025-12-17 13:14:53 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:14:53 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:14:53 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:14:53 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:14:53 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:14:53 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:14:53 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:14:53 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:14:53 [INFO] [Releaser] Lock test/ released successfully (server response: )
+2025-12-17 13:14:53 [WARN] [LockCacheService] Retry received for lock test/ but state is None — likely late message, ignoring
+2025-12-17 13:14:53 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:20:12 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:20:12 [INFO] [Releaser] Starting release task...
+2025-12-17 13:20:12 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:20:12 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:20:12 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:20:13 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:20:23 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:20:23 [INFO] [Releaser] Starting release task...
+2025-12-17 13:20:23 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:20:23 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:20:23 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:20:23 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:20:33 [INFO] [DFS] Trying to acquire lock: lock_id=test1/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:20:33 [INFO] [CacheManager] Trying to acquire lock test1/ (seq=1)
+2025-12-17 13:20:34 [INFO] [CacheManager] Lock test1/ acquired (seq=1)
+2025-12-17 13:20:34 [INFO] [DFS] Lock test1/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 13:20:34 [INFO] [DFS][Dir] Fetching directory listing from extent service: test1/
+2025-12-17 13:20:34 [ERROR] [ExtentCache] Failed to get file-data from server for 'test1/': rpc error: code = Unknown desc = open C:\Users\lerrxwsb\Desktop\tuke\DS\dfs\test1/: The system cannot find the file specified.
+2025-12-17 13:20:34 [ERROR] [DFS][Dir] Extent service Get request failed for directory: test1/, error: rpc error: code = Unknown desc = open C:\Users\lerrxwsb\Desktop\tuke\DS\dfs\test1/: The system cannot find the file specified.
+2025-12-17 13:20:34 [INFO] [DFS] Releasing lock: lock_id=test1/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:20:34 [INFO] [CacheManager] Release request for lock test1/
+2025-12-17 13:20:34 [INFO] [CacheManager] Lock test1/ released locally (state: Free)
+2025-12-17 13:20:34 [INFO] Lock test1/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:20:40 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 13:20:40 [INFO] [CacheManager] Trying to acquire lock test/ (seq=2)
+2025-12-17 13:20:40 [INFO] [CacheManager] Lock test/ acquired (seq=2)
+2025-12-17 13:20:40 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=2)
+2025-12-17 13:20:40 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:20:40 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:20:40 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:20:40 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:20:40 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 13:20:40 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:20:40 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:20:40 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:20:53 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:20:53 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:20:53 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:20:53 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:20:53 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:20:53 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:20:53 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:20:53 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5001:DfsClient, seq=2
+2025-12-17 13:20:53 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:20:53 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:20:53 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:20:53 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:20:53 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:20:53 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:20:53 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:20:53 [INFO] [Releaser] Lock test/ released successfully (server response: )
+2025-12-17 13:21:36 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=2
+2025-12-17 13:21:36 [INFO] [CacheManager] Waiting for Retry for lock test/...
+2025-12-17 13:24:33 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:24:33 [INFO] [Releaser] Starting release task...
+2025-12-17 13:24:33 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:24:33 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:24:33 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:24:33 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:24:47 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:24:47 [INFO] [Releaser] Starting release task...
+2025-12-17 13:24:47 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:24:47 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:24:47 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:24:47 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:24:55 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:24:55 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:24:55 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:24:55 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 13:24:55 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:24:55 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:24:55 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:24:55 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:24:55 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:24:55 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:24:55 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:24:55 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:25:02 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:25:02 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:25:02 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:25:02 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:25:02 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:25:02 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:25:02 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:25:02 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5001:DfsClient, seq=1
+2025-12-17 13:25:02 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:25:02 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:25:02 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:25:02 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:25:02 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:25:02 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:25:02 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:25:02 [INFO] [LockCacheService] Lock test/ is in Acquiring state — broadcasting condition
+2025-12-17 13:25:02 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:25:02 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:25:02 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:25:02 [INFO] [Releaser] Lock test/ released successfully (server response: )
+2025-12-17 13:25:02 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:25:02 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5002:DfsClient (seq=1)
+2025-12-17 13:25:02 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:25:02 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:25:02 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:25:02 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:25:02 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:25:02 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:25:02 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:25:02 [INFO] Lock test/ released successfully by 127.0.0.1:5002:DfsClient
+2025-12-17 13:25:59 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:25:59 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:25:59 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:25:59 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:25:59 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5002:DfsClient, seq=1
+2025-12-17 13:25:59 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:25:59 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:25:59 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:25:59 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:25:59 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:25:59 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:25:59 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:25:59 [WARN] [LockCacheService] Retry received for lock test/ but state is None — likely late message, ignoring
+2025-12-17 13:25:59 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:25:59 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:25:59 [INFO] [Releaser] Lock test/ released successfully (server response: )
+2025-12-17 13:29:52 [INFO] [Main] Starting DFS server on port 5001
+2025-12-17 13:29:52 [INFO] [Releaser] Starting release task...
+2025-12-17 13:29:52 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:29:52 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:29:52 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:29:52 [INFO] [Main] DFS is running on port 5001
+2025-12-17 13:30:00 [INFO] [Main] Starting DFS server on port 5002
+2025-12-17 13:30:00 [INFO] [Releaser] Starting release task...
+2025-12-17 13:30:00 [INFO] [Releaser] Task successfully started.
+2025-12-17 13:30:00 [INFO] [LockCacheService] Initializing LockCache service...
+2025-12-17 13:30:00 [INFO] [LockCacheService] Successfully initialized (attached to gRPC server).
+2025-12-17 13:30:00 [INFO] [Main] DFS is running on port 5002
+2025-12-17 13:30:15 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:30:15 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:30:15 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:30:15 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5001:DfsClient (seq=1)
+2025-12-17 13:30:15 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:30:15 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:30:15 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:30:15 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:30:15 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=1
+2025-12-17 13:30:15 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:30:15 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:30:15 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:30:22 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:30:22 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:30:22 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:30:22 [INFO] [LockCacheService] Lock test/ now Free — sending to Releaser
+2025-12-17 13:30:22 [INFO] [Releaser] Added release task for lock=test/
+2025-12-17 13:30:22 [INFO] [CacheManager] Lock test/ busy — waiting for Retry...
+2025-12-17 13:30:22 [INFO] [LockCacheService] Revoke completed for lock test/
+2025-12-17 13:30:22 [INFO] [Releaser] Processing release task: lock=test/, owner=127.0.0.1:5001:DfsClient, seq=1
+2025-12-17 13:30:22 [INFO] [Releaser] Changing state: Free → Releasing
+2025-12-17 13:30:22 [INFO] [CacheManager] releasing lock for 'test/' — starting update and flush sequence
+2025-12-17 13:30:22 [INFO] [ExtentCache][Update] Successfully synchronized dirty file 'test/' with server.
+2025-12-17 13:30:22 [INFO] [ExtentCache][Update] Successfully synchronized parent '/' with server.
+2025-12-17 13:30:22 [INFO] [ExtentCache][Flush] Successfully flushed 'test/' from local cache.
+2025-12-17 13:30:22 [INFO] [ExtentCache][Flush] Successfully flushed parent '/' from local cache.
+2025-12-17 13:30:22 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:30:22 [INFO] [LockCacheService] Lock test/ is in Acquiring state — broadcasting condition
+2025-12-17 13:30:22 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:30:22 [INFO] [CacheManager] Release RPC succeeded for test/ → None
+2025-12-17 13:30:22 [INFO] [CacheManager] Trying to acquire lock test/ (seq=1)
+2025-12-17 13:30:22 [INFO] [Releaser] Lock test/ released successfully (server response: )
+2025-12-17 13:30:22 [INFO] [CacheManager] Lock test/ acquired (seq=1)
+2025-12-17 13:30:22 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5002:DfsClient (seq=1)
+2025-12-17 13:30:22 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:30:22 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:30:22 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:30:22 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:30:22 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=1
+2025-12-17 13:30:22 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:30:22 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:30:22 [INFO] Lock test/ released successfully by 127.0.0.1:5002:DfsClient
+2025-12-17 13:30:49 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:30:49 [INFO] [LockCacheService] Lock test/ already None — no action
+2025-12-17 13:30:49 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:30:49 [WARN] [LockCacheService] Retry received for lock test/ but state is Free — likely late message, ignoring
+2025-12-17 13:30:49 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:31:06 [INFO] [LockCacheService] Received revoke request for lock test/
+2025-12-17 13:31:06 [INFO] [LockCacheService] Lock test/ already None — no action
+2025-12-17 13:31:06 [INFO] [LockCacheService] Received Retry request for lock test/ (seq=1)
+2025-12-17 13:31:06 [WARN] [LockCacheService] Retry received for lock test/ but state is Free — likely late message, ignoring
+2025-12-17 13:31:06 [INFO] [LockCacheService] Retry handling completed for lock test/
+2025-12-17 13:32:01 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 13:32:01 [INFO] [CacheManager] Trying to acquire lock test/ (seq=2)
+2025-12-17 13:32:01 [ERROR] [CacheManager] Acquire RPC failed for test/: rpc error: code = Unknown desc = all replicas are unavailable
+2025-12-17 13:32:01 [ERROR] [DFS] Failed to acquire lock test/: rpc error: code = Unknown desc = all replicas are unavailable
+2025-12-17 13:32:01 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:32:01 [INFO] [ExtentCache] Caching new file-data for 'test/'.
+2025-12-17 13:32:01 [INFO] [ExtentCache] Caching new file-data for '/'.
+2025-12-17 13:32:01 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:32:01 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5001:DfsClient seq=2
+2025-12-17 13:32:01 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:32:01 [WARN] [CacheManager] Release for lock test/ but state is None, not Locked
+2025-12-17 13:32:01 [INFO] Lock test/ released successfully by 127.0.0.1:5001:DfsClient
+2025-12-17 13:32:31 [INFO] [DFS] Trying to acquire lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=2
+2025-12-17 13:32:31 [INFO] [CacheManager] Reused cached lock test/ (local reuse)
+2025-12-17 13:32:31 [INFO] [DFS] Lock test/ successfully acquired by 127.0.0.1:5002:DfsClient (seq=2)
+2025-12-17 13:32:31 [INFO] [DFS][Dir] Fetching directory listing from extent service: test/
+2025-12-17 13:32:31 [INFO] [DFS][Dir] Directory listing retrieved successfully for test/: 1 entries
+2025-12-17 13:32:31 [INFO] [DFS] Releasing lock: lock_id=test/ owner_id=127.0.0.1:5002:DfsClient seq=2
+2025-12-17 13:32:31 [INFO] [CacheManager] Release request for lock test/
+2025-12-17 13:32:31 [INFO] [CacheManager] Lock test/ released locally (state: Free)
+2025-12-17 13:32:31 [INFO] Lock test/ released successfully by 127.0.0.1:5002:DfsClient

@@ -65,6 +65,7 @@ func (s *DfsServiceServer) Dir(ctx context.Context, req *api.DirRequest) (*api.D
 	if err != nil {
 		return &api.DirResponse{Success: proto.Bool(false)}, nil
 	}
+	defer s.releaseLock(ctx, req.DirectoryName)
 
 	s.logger.Infof("[DFS][Dir] Fetching directory listing from extent service: %s", req.DirectoryName)
 	resp, err := s.extentClient.Get(ctx, &extent.GetRequest{FileName: req.DirectoryName})

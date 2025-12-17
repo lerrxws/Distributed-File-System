@@ -1,0 +1,12 @@
+{"timestamp":"2025-12-17T10:48:43Z","method":"Acquire","params":["test/","127.0.0.1:5001:DfsClient","1"]}
+{"timestamp":"2025-12-17T10:49:20Z","method":"Acquire","params":["test/","127.0.0.1:5002:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:04:10Z","method":"Acquire","params":["test/","127.0.0.1:5001:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:04:10Z","method":"Acquire","params":["test/","127.0.0.1:5002:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:04:10Z","method":"Release","params":["test/","127.0.0.1:5001:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:04:10Z","method":"Acquire","params":["test/","127.0.0.1:5002:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:04:10Z","method":"Release","params":["test/","127.0.0.1:5002:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:31:06Z","method":"Acquire","params":["test/","127.0.0.1:5001:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:31:06Z","method":"Acquire","params":["test/","127.0.0.1:5002:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:31:06Z","method":"Release","params":["test/","127.0.0.1:5001:DfsClient","1"]}
+{"timestamp":"2025-12-17T11:31:06Z","method":"Acquire","params":["test/","127.0.0.1:5002:DfsClient","1"]}
+{"timestamp":"2025-12-17T12:05:41Z","method":"Acquire","params":["test/","127.0.0.1:5001:DfsClient","1"]}
